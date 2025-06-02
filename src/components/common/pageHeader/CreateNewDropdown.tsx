@@ -1,14 +1,18 @@
-import { Menu, Button, Portal } from "@chakra-ui/react";
+import { Menu, Portal, HStack, Box } from "@chakra-ui/react";
 import { RiArrowDropDownLine } from "react-icons/ri";
+import TextButton from "../universal/TextButton";
 
 const CreateNewDropdown = () => {
   return (
     <Menu.Root>
       <Menu.Trigger asChild>
-        <Button>
-          Create New
-          <RiArrowDropDownLine />
-        </Button>
+        <Box>
+          <TextButton onClick={() => {}}>
+            <HStack gap={0}>
+              Create New <RiArrowDropDownLine size={"30"} />
+            </HStack>
+          </TextButton>
+        </Box>
       </Menu.Trigger>
       <Portal>
         <Menu.Positioner>
