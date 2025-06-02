@@ -1,9 +1,10 @@
-import { Box, Text } from "@chakra-ui/react";
+import { Box } from "@chakra-ui/react";
+import PageHeader from "../components/common/pageHeader/PageHeader";
 
 const TeacherHome = () => {
   return (
     <Box>
-      <Text>TeacherHome page</Text>
+      <PageHeader />
     </Box>
   );
 };
