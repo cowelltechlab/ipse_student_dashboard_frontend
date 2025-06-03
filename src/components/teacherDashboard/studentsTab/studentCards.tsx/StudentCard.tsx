@@ -18,7 +18,12 @@ const StudentCard = ({
   onClick,
 }: StudentCardProps) => {
   return (
-    <Card.Root width="320px" onClick={onClick} cursor="pointer">
+    <Card.Root
+      width="320px"
+      onClick={onClick}
+      cursor="pointer"
+      boxShadow={"md"}
+    >
       <Card.Body>
         <HStack mb="6" gap="3">
           <Avatar.Root>
