@@ -1,10 +1,10 @@
 import { SimpleGrid, Box, Spinner, Text } from "@chakra-ui/react";
-import useStudents from "../../../../hooks/teacherDashboard/useStudents";
+import useStudents from "../../../../hooks/students/useStudents";
 import StudentCard from "./StudentCard";
 
 interface StudentCardGridProps {
   searchTerm: string | null;
-  year_id: string | null;
+  year_id: number | null;
   onStudentClick?: (studentId: string) => void;
 }
 

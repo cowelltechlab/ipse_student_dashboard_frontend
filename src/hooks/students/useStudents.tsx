@@ -5,7 +5,7 @@
 
 // const useStudents = (
 //     searchTerm: string | null,
-//     year_id: string | null
+//     year_id: number | null
 // ) => {
 //   const [students, setStudents] = useState<StudentType[]>([]);
 //   const [loading, setLoading] = useState(true);
@@ -39,7 +39,7 @@ import { useEffect, useState } from "react";
 import type { ErrorType } from "../../types/ErrorType";
 import type { StudentType } from "../../types/StudentTypes";
 
-const useStudents = (searchTerm: string | null, year_id: string | null) => {
+const useStudents = (searchTerm: string | null, year_id: number | null) => {
     const [students, setStudents] = useState<StudentType[]>([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<ErrorType | null>(null);
@@ -54,7 +54,7 @@ const useStudents = (searchTerm: string | null, year_id: string | null) => {
                     id: `student-${index + 1}`,
                     first_name: `StudentFirstName${index + 1}`,
                     last_name: `StudentLastName${index + 1}`,
-                    class_year: year_id || "2023",
+                    class_year: (year_id?.toString() || "2023"),
                     reading_level: `Level ${index % 5 + 1}`,
                     writing_level: `Level ${index % 5 + 1}`,
                 }));

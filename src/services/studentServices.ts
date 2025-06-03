@@ -2,7 +2,7 @@ import apiClient from "./apiClient";
 
 export const getStudents = async (
   searchTerm: string | null,
-  year_id: string | null
+  year_id: number | null
 ) => {
   const params = new URLSearchParams();
   if (searchTerm && searchTerm.trim() !== "") {
@@ -10,7 +10,7 @@ export const getStudents = async (
   }
 
   if (year_id) {
-    params.append("year_id", year_id);
+    params.append("year_id", year_id as unknown as string);
   }
 
   const response = await apiClient.get("/students", {

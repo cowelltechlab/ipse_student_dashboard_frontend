@@ -4,10 +4,11 @@ import { useState } from "react";
 import StudentCardGrid from "./studentCards.tsx/StudentCardGrid";
 import TextButton from "../../common/universal/TextButton";
 import { CiCirclePlus } from "react-icons/ci";
+import StudentYearButtons from "./StudentYearButtons";
 
 const StudentsTab = () => {
   const [searchTerm, setSearchTerm] = useState<string>("");
-  const [yearId, setYearId] = useState<string | null>(null);
+  const [yearId, setYearId] = useState<number | null>(null);
 
   const handleCreateStudent = () => {
     // TODO: Navigate to create student page.
@@ -15,7 +16,7 @@ const StudentsTab = () => {
   };
 
   return (
-    <Box p={4}>
+    <Box p={4} spaceY={4}>
       <HStack>
         <SearchBar
           searchTerm={searchTerm}
@@ -23,6 +24,7 @@ const StudentsTab = () => {
           placeholder="Search student..."
         />
         <Spacer />
+
         <TextButton onClick={handleCreateStudent}>
           <HStack gap={1}>
             <CiCirclePlus color="#bd4f23" />
@@ -30,6 +32,11 @@ const StudentsTab = () => {
           </HStack>
         </TextButton>
       </HStack>
+
+      <StudentYearButtons
+        selectedYear={yearId}
+        onYearChange={(selectedYearId: number) => setYearId(selectedYearId)}
+      />
 
       <StudentCardGrid
         searchTerm={searchTerm}
