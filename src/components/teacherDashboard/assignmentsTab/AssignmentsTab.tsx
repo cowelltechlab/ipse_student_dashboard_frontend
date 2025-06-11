@@ -20,7 +20,6 @@ const AssignmentsTab = () => {
     from: new Date(),
     to: new Date(),
   })
-  const [recentAssignmentsOnly, setRecentAssignmentsOnly] = useState(false)
 
   const handleCreateAssignment = () => {
     console.log("Create new assignment clicked")
@@ -51,7 +50,6 @@ const AssignmentsTab = () => {
       <AssignmentsTable
         dateRange={dateRange}
         searchTerm={searchTerm}
-        recentAssignmentsOnly={recentAssignmentsOnly}
       />
     </Box>
   )
