@@ -1,6 +1,6 @@
 import React from 'react';
 import { Routes, Route } from 'react-router-dom';
-import Home from './pages/AdminPanel';
+import Home from './pages/StudentDashboard';
 import StudentDashboard from './pages/StudentDashboard';
 import ProtectedRoute from './routing/ProtectedRoute';
 import Login from './pages/Login';
