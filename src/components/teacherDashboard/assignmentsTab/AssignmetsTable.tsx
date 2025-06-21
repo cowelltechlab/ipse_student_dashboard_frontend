@@ -28,7 +28,7 @@ const AssignmentsTable = ({ dateRange, searchTerm }: AssignmentsTableProps) => {
   const handleLoadMore = () => {
     setVisibleCount((prev) => prev + 10);
   };
-
+ 
   const visibleAssignments = assignments.slice(0, visibleCount);
   const hasMore = visibleCount < assignments.length;
 

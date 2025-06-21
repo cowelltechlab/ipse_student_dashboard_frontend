@@ -6,6 +6,7 @@ import ProtectedRoute from './routing/ProtectedRoute';
 import Login from './pages/Login';
 import AdminPanel from './pages/AdminPanel';
 import TeacherHome from './pages/TeacherHome';
+import OAuthCallbackHandler from './pages/Callback';
 
 const App: React.FC = () => {
   return (
@@ -18,14 +19,19 @@ const App: React.FC = () => {
       </Route>
       
       {/* Teacher / Admin only routes */}
-      <Route element={<ProtectedRoute requiredRoles={["teacher"]} />}>
+      <Route element={<ProtectedRoute requiredRoles={["Advisor"]} />}>
         <Route path="/teacher-dashboard" element={<TeacherHome />} />
       </Route>
 
       {/* Admin routes */}
-      <Route element={<ProtectedRoute requiredRoles={["admin"]} />}>
+      <Route element={<ProtectedRoute requiredRoles={["Admin"]} />}>
         <Route path="/admin-dashboard" element={<AdminPanel />} />
       </Route>
+
+      <Route path="/auth/callback" element={<OAuthCallbackHandler />} />
+
+      <Route path="/unauthorized" element={<div>You are not authorized to view this page.</div>} />
+
     </Routes>
   );
 };

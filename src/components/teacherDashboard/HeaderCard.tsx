@@ -1,9 +1,9 @@
 import { Box, Heading, Text, Image } from "@chakra-ui/react";
-import { useAuth } from "../../contexts/useAuth";
 import HomeIcon from "../../assets/Home Page.svg";
+import useAuth from "../../contexts/useAuth";
 
 const HeaderCard = () => {
-  const { firstName, lastName } = useAuth();
+  const { first_name, last_name } = useAuth();
 
   return (
     <Box m={5} position="relative">
@@ -18,7 +18,7 @@ const HeaderCard = () => {
         overflow="visible"
       >
         <Heading color="white" fontSize="2xl" mb={2}>
-          Hello {firstName} {lastName}
+          Hello {first_name} {last_name}
         </Heading>
         <Text color="white" fontSize="md">
           Let's make space for every story, celebrate every voice, and build a
