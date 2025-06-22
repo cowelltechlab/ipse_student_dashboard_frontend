@@ -1,6 +1,5 @@
 import {
   Heading,
-  Button,
   HStack,
   Spacer,
   AvatarGroup,
@@ -10,6 +9,7 @@ import {
 import { IoIosNotifications } from "react-icons/io";
 
 import CreateNewDropdown from "./CreateNewDropdown";
+import TextButton from "../universal/TextButton";
 
 const PageHeader = () => {
   const onHomeClick = () => {
@@ -21,8 +21,8 @@ const PageHeader = () => {
     <HStack p={4}>
       <Heading>IPSE Student Dashboard</Heading>
       <Spacer />
-      <HStack>
-        <Button onClick={onHomeClick}>Home</Button>
+      <HStack gap={4}>
+        <TextButton onClick={onHomeClick}>Home</TextButton>
         <CreateNewDropdown />
         <IoIosNotifications color="#bd4f23" size={24} />
         <AvatarGroup>
