@@ -5,29 +5,44 @@ import LoginForm from "../components/login/LoginForm";
 
 const Login = () => {
   return (
-    <Flex minH="100vh" width="full" direction={{ base: "column", lg: "row" }}>
-      {/* Left Side: Login Form */}
+    <Flex
+      minH="100vh"
+      width="full"
+      direction={{ base: "column", lg: "row" }}
+      bg="#244d8a"
+    >
+      {/* Top on mobile / Left on desktop */}
       <Box
         bg="white"
         width={{ base: "100%", lg: "50%" }}
         display="flex"
-        flexDirection="column"
+        flexDirection={{ base: "row", lg: "column" }}
         alignItems="center"
         justifyContent="center"
         px={8}
         py={12}
+        pt={{ base: "12", lg: "4" }}
       >
-        <Image width="full" src={loginImage} alt="Login" objectFit="contain" />
+        <Image
+          width={{ base: "3xs", lg: "full" }}
+          src={loginImage}
+          alt="Login"
+          objectFit="contain"
+        />
         <Text fontSize="2xl" fontWeight="bold" mb={4}>
           Step into a smarter, more inclusive way to learn
         </Text>
       </Box>
 
-      {/* Right Side: Optional Background Image or Content */}
+      {/* Bottom on mobile / Right on desktop */}
       <Box
         width={{ base: "100%", lg: "50%" }}
         bg="#244d8a"
-        display={{ base: "none", lg: "block" }}
+        display="flex"
+        alignItems="center"
+        justifyContent="center"
+        px={8}
+        py={12}
       >
         <LoginForm />
       </Box>

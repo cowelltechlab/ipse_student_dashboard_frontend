@@ -3,7 +3,10 @@ import ReactDOM from "react-dom/client";
 import { BrowserRouter } from "react-router-dom";
 import App from "./App";
 import { Provider } from "./components/ui/provider";
-import { AuthProvider } from "./contexts/AuthContext";
+import { AuthProvider } from "./contexts/authContext";
+
+import "@fontsource-variable/comme/index.css"
+
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>

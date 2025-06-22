@@ -1,11 +1,4 @@
-import {
-  Box,
-  Flex,
-  Text,
-  Button,
-  Input,
-  Stack,
-} from "@chakra-ui/react";
+import { Box, Flex, Text, Button, Input, Stack } from "@chakra-ui/react";
 import { PasswordInput } from "../ui/password-input";
 import useAuth from "../../contexts/useAuth";
 import { useState } from "react";
@@ -38,10 +31,10 @@ const PasswordLogin = ({ setFormDisplay }: PasswordLoginProps) => {
         direction="column"
         align="center"
         justify="center"
-        height="80vh"
-        px={4}
+        height={{ base: "60vh", lg: "80vh" }}
+        px={{ base: 0, lg: 4 }}
       >
-        <Box maxW="sm" w="full">
+        <Box maxW={{ base: "full", lg: "sm" }} w="lg">
           <Stack spaceY={6} w="full">
             <Input
               placeholder="Enter Email"
@@ -50,6 +43,7 @@ const PasswordLogin = ({ setFormDisplay }: PasswordLoginProps) => {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               variant="flushed"
+              size={"xl"}
               w="full"
             />
             <PasswordInput
@@ -60,6 +54,7 @@ const PasswordLogin = ({ setFormDisplay }: PasswordLoginProps) => {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               variant="flushed"
+              size={"xl"}
               w="full"
             />
             <Button

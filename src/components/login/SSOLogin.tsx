@@ -5,6 +5,7 @@ import {
   Text,
   VStack,
   Image,
+  Heading,
 } from "@chakra-ui/react";
 import useAuth from "../../contexts/useAuth";
 
@@ -41,10 +42,10 @@ const SSOLogin = ({ setFormDisplay }: PasswordLoginProps) => {
       direction="column"
       align="center"
       justify="center"
-      height="80vh"
+      height={{ base: "60vh", lg: "80vh" }}
       px={4}
     >
-      <Box maxW="sm" w="full">
+      <Box maxW={{ base: "sm", lg: "lg" }} w="lg">
         <VStack spaceY={4} w="full">
           <Button
             variant="outline"
@@ -53,12 +54,19 @@ const SSOLogin = ({ setFormDisplay }: PasswordLoginProps) => {
             w="full"
             onClick={onGoogleLogin}
             size={"2xl"}
+            borderRadius={"15px"}
           >
             <Flex align="center" justify="flex-start" w="full">
-              <Image src={googleLogo} alt="Google Logo" boxSize="25px" mr={2} />
-              <Text color="#244d8a" pl={1}>
-                Login with Google
-              </Text>
+              <Image
+                src={googleLogo}
+                alt="Google Logo"
+                boxSize="30px"
+                mr={2}
+                style={{ objectFit: "contain" }}
+              />
+              <Heading color="#244d8a" pl={1}>
+                Sign in with Google
+              </Heading>
             </Flex>
           </Button>
 
@@ -68,6 +76,7 @@ const SSOLogin = ({ setFormDisplay }: PasswordLoginProps) => {
             _hover={{ bg: "gray.100" }}
             w="full"
             onClick={onGTLogin}
+            borderRadius={"15px"}
             size={"2xl"}
           >
             <Flex align="center" justify="flex-start" w="full">
@@ -78,9 +87,9 @@ const SSOLogin = ({ setFormDisplay }: PasswordLoginProps) => {
                 mr={2}
                 style={{ objectFit: "contain" }}
               />
-              <Text color="#244d8a" pl={1}>
+              <Heading color="#244d8a" pl={1}>
                 Sign in with GT ID
-              </Text>
+              </Heading>
             </Flex>
           </Button>
         </VStack>

@@ -28,7 +28,7 @@ const LoginForm = () => {
 
   return (
     <Box>
-      <Heading fontSize="5xl" color="white" mb={6} textAlign="center" mt={20}>
+      <Heading fontSize="5xl" color="white" mb={6} textAlign="center" mt={{ base: 4, lg: 20 }}>
         Sign In
       </Heading>
       {formDisplay === "googleLogin" ? (
