@@ -3,6 +3,7 @@ import apiClient from "../services/apiClient";
 
 interface AuthContextType {
   userId: number | null;
+  studentId: number | null;
   email: string | null;
   first_name: string | null;
   last_name: string | null;
@@ -22,11 +23,13 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [userId, setUserId] = useState<number | null>(null);
+  const [studentId, setStudentId] = useState<number | null>(null);
   const [email, setEmail] = useState<string | null>(null);
   const [firstName, setFirstName] = useState<string | null>(null);
   const [lastName, setLastName] = useState<string | null>(null);
   const [roles, setRoles] = useState<string[]>([]);
   const [loading, setLoading] = useState(true);
+
 
   const setTokenAndUserInfo = async (accessToken: string) => {
     localStorage.setItem("authToken", accessToken);
@@ -34,6 +37,22 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
     try {
       const userResponse = await apiClient.get("/auth/me");
+
+      
+
+      if (userResponse.data.roles?.includes("Student")) {
+        // Retrieve student ID from userID via API call
+        const studentResponse = await apiClient.get(
+          `/students/user/${userResponse.data.id}`
+        );
+        const student = studentResponse.data;
+        if (student) {
+          setStudentId(student.id);
+        }
+      } else {
+        setStudentId(null);
+      }
+
       setUserId(userResponse.data.id);
       setFirstName(userResponse.data.first_name);
       setLastName(userResponse.data.last_name);
@@ -47,6 +66,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       setLastName(null);
       setEmail(null);
       setRoles([]);
+      setStudentId(null);
     }
   };
 
@@ -74,12 +94,26 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     apiClient.defaults.headers["Authorization"] = `Bearer ${token}`;
     apiClient
       .get("/auth/me")
-      .then((response) => {
+      .then(async (response) => {
         setFirstName(response.data.first_name);
         setLastName(response.data.last_name);
         setRoles(response.data.roles || []);
         setEmail(response.data.email);
         setUserId(response.data.id);
+
+        if ((response.data.roles || []).includes("Student")) {
+          try {
+            const studentResponse = await apiClient.get(
+              `/students/user/${response.data.id}`
+            );
+            const student = studentResponse.data;
+            if (student) {
+              setStudentId(student.id);
+            }
+          } catch (err) {
+            console.error("Failed to fetch student ID:", err);
+          }
+        }
       })
       .catch(() => {
         localStorage.removeItem("authToken");
@@ -88,11 +122,11 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         setEmail(null);
         setRoles([]);
         setUserId(null);
+        setStudentId(null);
       })
       .finally(() => setLoading(false));
   }, []);
 
-  
   const loginWithGoogle = async () => {
     try {
       const response = await apiClient.get("/auth/login/google");
@@ -108,23 +142,31 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     navigate: (path: string) => void
   ) => {
     try {
-      const response = await apiClient.get(`/auth/google/callback?code=${code}`);
-      localStorage.setItem("authToken", response.data.access_token);
-      apiClient.defaults.headers[
-        "Authorization"
-      ] = `Bearer ${response.data.token}`;
-    
-      const userResponse = await apiClient.get("/auth/me");
-      setFirstName(userResponse.data.first_name);
-      setLastName(userResponse.data.last_name);
-      setRoles(userResponse.data.roles || []);
-      setEmail(userResponse.data.email);
-      setUserId(userResponse.data.id);
+      const response = await apiClient.get(
+        `/auth/google/callback?code=${code}`
+      );
+      const accessToken = response.data.access_token;
 
-      // Navigate to home
-      navigate("/");
+      await setTokenAndUserInfo(accessToken); // sets token + user info + studentId
 
-      // Remove query params from the URL
+      // Use current state instead of refetching
+      const currentRoles = roles; // already set by setTokenAndUserInfo
+      const currentUserId = userId;
+
+      if (currentRoles.includes("Student") && currentUserId !== null) {
+        const studentResponse = await apiClient.get(
+          `/students/user/${currentUserId}`
+        );
+        const student = studentResponse.data;
+        if (student) {
+          navigate(`/student/${student.id}`);
+        } else {
+          console.error("No student found for user ID:", currentUserId);
+        }
+      } else {
+        navigate("/dashboard");
+      }
+
       window.history.replaceState(null, "", "/");
     } catch (error) {
       console.error("Authentication failed", error);
@@ -163,6 +205,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     <AuthContext.Provider
       value={{
         userId,
+        studentId,
         email,
         first_name: firstName,
         last_name: lastName,

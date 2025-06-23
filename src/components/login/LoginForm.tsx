@@ -11,7 +11,7 @@ const LoginForm = () => {
     "googleLogin" | "usernameLogin"
   >("googleLogin");
 
-  const { roles, isAuthenticated, userId } = useAuth();
+  const { roles, isAuthenticated, userId, studentId } = useAuth();
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -19,15 +19,15 @@ const LoginForm = () => {
       if (roles.includes("Admin")) navigate("/dashboard");
       else if (roles.includes("Advisor") || roles.includes("Peer Tutor"))
         navigate("/dashboard");
-      else if (roles.includes("Student") && userId)
-        navigate(`/student/${userId}`);
+      else if (roles.includes("Student") && studentId)
+        navigate(`/student/${studentId}`);
       else navigate("/unauthorized");
     };
 
     if (isAuthenticated && roles.length > 0) {
       redirectUser(roles);
     }
-  }, [isAuthenticated, roles, userId, navigate]);
+  }, [isAuthenticated, roles, userId, studentId, navigate]);
 
   return (
     <Box>

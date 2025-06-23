@@ -10,24 +10,25 @@ import {
 } from "@chakra-ui/react";
 import useAssignments from "../../../hooks/assignments/useAssignments";
 import { IoDocumentText } from "react-icons/io5";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import AssignmentsTableRowButtons from "./AssignmentsTableRowButtons";
 
 interface AssignmentsTableProps {
   dateRange: { from: Date | undefined; to?: Date | undefined };
   searchTerm: string | null;
+  onAssignmentClick?: (studentId: number, assignmentId: number) => void;
 }
-const AssignmentsTable = ({ dateRange, searchTerm }: AssignmentsTableProps) => {
+const AssignmentsTable = ({
+  dateRange,
+  searchTerm,
+  onAssignmentClick,
+}: AssignmentsTableProps) => {
   const { assignments, loading, error } = useAssignments();
   const [visibleCount, setVisibleCount] = useState(10);
 
   const handleLoadMore = () => {
     setVisibleCount((prev) => prev + 10);
   };
-
-  useEffect(() => {
-    console.log("Date Range: ", dateRange, "\nSearch Term: ", searchTerm);
-  }, [dateRange, searchTerm]);
 
   const filteredAssignments = assignments.filter((assignment) => {
     const assignmentDate = new Date(
@@ -90,6 +91,7 @@ const AssignmentsTable = ({ dateRange, searchTerm }: AssignmentsTableProps) => {
                   key={assignment.id}
                   cursor="pointer"
                   _hover={{ bg: "gray.100" }}
+                  onClick={() => onAssignmentClick?.(assignment.student_id, assignment.id)}
                 >
                   <Table.Cell>
                     <HStack align="start" spaceX={3}>
