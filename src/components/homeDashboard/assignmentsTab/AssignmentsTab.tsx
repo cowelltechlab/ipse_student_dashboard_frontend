@@ -1,29 +1,26 @@
-"use client"
+"use client";
 
-import {
-  Box,
-
-  HStack,
-
-  Spacer,
-} from "@chakra-ui/react"
-import { useState } from "react"
-import { CiCirclePlus } from "react-icons/ci"
-import SearchBar from "../../common/searchBar/SearchBar"
-import TextButton from "../../common/universal/TextButton"
-import AssignmentsTable from "./AssignmetsTable"
-import AssignmentsFilterButtons from "./AssignmentsFilterButtons"
+import { Box, HStack, Spacer } from "@chakra-ui/react";
+import { useState } from "react";
+import { CiCirclePlus } from "react-icons/ci";
+import SearchBar from "../../common/searchBar/SearchBar";
+import TextButton from "../../common/universal/TextButton";
+import AssignmentsTable from "./AssignmetsTable";
+import AssignmentsFilterButtons from "./AssignmentsFilterButtons";
 
 const AssignmentsTab = () => {
-  const [searchTerm, setSearchTerm] = useState("")
-  const [dateRange, setDateRange] = useState<{ from: Date | undefined; to?: Date | undefined }>({
-    from: new Date(),
-    to: new Date(),
-  })
+  const [searchTerm, setSearchTerm] = useState("");
+  const [dateRange, setDateRange] = useState<{
+    from: Date | undefined;
+    to?: Date | undefined;
+  }>({
+    from: undefined,
+    to: undefined,
+  });
 
   const handleCreateAssignment = () => {
-    console.log("Create new assignment clicked")
-  }
+    console.log("Create new assignment clicked");
+  };
 
   return (
     <Box p={4} spaceY={4}>
@@ -47,12 +44,9 @@ const AssignmentsTab = () => {
         setDateRange={setDateRange}
       />
 
-      <AssignmentsTable
-        dateRange={dateRange}
-        searchTerm={searchTerm}
-      />
+      <AssignmentsTable dateRange={dateRange} searchTerm={searchTerm} />
     </Box>
-  )
-}
+  );
+};
 
-export default AssignmentsTab
+export default AssignmentsTab;

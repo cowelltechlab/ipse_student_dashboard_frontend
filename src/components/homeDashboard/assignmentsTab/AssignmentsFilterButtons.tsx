@@ -31,23 +31,31 @@ const AssignmetsFilterButtons = ({
     <ButtonGroup>
       <Button
         {...getButtonStyles("allAssignments")}
-        onClick={() => setActiveButton("allAssignments")}
+        onClick={() => {
+          setActiveButton("allAssignments");
+          setDateRange({ from: undefined, to: undefined });
+        }}
       >
         All Assignments
       </Button>
+
       <Button
         {...getButtonStyles("needsRating")}
-        onClick={() => setActiveButton("needsRating")}
+        onClick={() => {
+          setActiveButton("needsRating");
+          setDateRange({ from: undefined, to: undefined });
+        }}
       >
         Needs Rating
       </Button>
-  
 
       <Popover.Root open={open} onOpenChange={(e) => setOpen(e.open)}>
         <Popover.Trigger asChild>
           <Button
             {...getButtonStyles("dateFilter")}
-            onClick={() => setActiveButton("dateFilter")}
+            onClick={() => {
+              setActiveButton("dateFilter");
+            }}
           >
             Filter By Date
           </Button>

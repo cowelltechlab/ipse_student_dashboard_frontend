@@ -10,27 +10,51 @@ import {
 } from "@chakra-ui/react";
 import useAssignments from "../../../hooks/assignments/useAssignments";
 import { IoDocumentText } from "react-icons/io5";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import AssignmentsTableRowButtons from "./AssignmentsTableRowButtons";
 
 interface AssignmentsTableProps {
   dateRange: { from: Date | undefined; to?: Date | undefined };
   searchTerm: string | null;
 }
-
 const AssignmentsTable = ({ dateRange, searchTerm }: AssignmentsTableProps) => {
-  const dateArray: Date[] = [dateRange.from, dateRange.to].filter(
-    (d): d is Date => !!d
-  );
-  const { assignments, loading, error } = useAssignments(dateArray, searchTerm);
+  const { assignments, loading, error } = useAssignments();
   const [visibleCount, setVisibleCount] = useState(10);
 
   const handleLoadMore = () => {
     setVisibleCount((prev) => prev + 10);
   };
- 
-  const visibleAssignments = assignments.slice(0, visibleCount);
-  const hasMore = visibleCount < assignments.length;
+
+  useEffect(() => {
+    console.log("Date Range: ", dateRange, "\nSearch Term: ", searchTerm);
+  }, [dateRange, searchTerm]);
+
+  const filteredAssignments = assignments.filter((assignment) => {
+    const assignmentDate = new Date(
+      assignment.date_modified ?? assignment.date_created
+    );
+
+    // Handle possible undefined/null dateRange.from and dateRange.to
+    const fromDate = dateRange?.from;
+    const toDate = dateRange?.to;
+
+    const inDateRange =
+      (!fromDate || assignmentDate >= fromDate) &&
+      (!toDate || assignmentDate <= toDate);
+
+    const lowerSearch = searchTerm?.toLowerCase().trim();
+    const matchesSearch =
+      !lowerSearch ||
+      assignment.title.toLowerCase().includes(lowerSearch) ||
+      `${assignment.first_name} ${assignment.last_name}`
+        .toLowerCase()
+        .includes(lowerSearch);
+
+    return inDateRange && matchesSearch;
+  });
+
+  const visibleAssignments = filteredAssignments.slice(0, visibleCount);
+  const hasMore = visibleCount < filteredAssignments.length;
 
   if (error) {
     return (
@@ -47,7 +71,7 @@ const AssignmentsTable = ({ dateRange, searchTerm }: AssignmentsTableProps) => {
     );
   }
   return (
-    <Stack gap="10" p={4} >
+    <Stack gap="10" p={4}>
       <Table.Root size="sm">
         <Table.Body>
           {loading
@@ -75,8 +99,8 @@ const AssignmentsTable = ({ dateRange, searchTerm }: AssignmentsTableProps) => {
                           {assignment.title}
                         </Heading>
                         <Text fontSize="sm" color="gray.500">
-                          Student: {assignment.student_first_name}{" "}
-                          {assignment.student_last_name}
+                          Student: {assignment.first_name}{" "}
+                          {assignment.last_name}
                         </Text>
                         <Text fontSize="sm" color="gray.500">
                           Date Modified:{" "}
@@ -91,7 +115,9 @@ const AssignmentsTable = ({ dateRange, searchTerm }: AssignmentsTableProps) => {
                       </VStack>
                     </HStack>
                   </Table.Cell>
-                  <Table.Cell><AssignmentsTableRowButtons /></Table.Cell>
+                  <Table.Cell>
+                    <AssignmentsTableRowButtons />
+                  </Table.Cell>
                 </Table.Row>
               ))}
         </Table.Body>
