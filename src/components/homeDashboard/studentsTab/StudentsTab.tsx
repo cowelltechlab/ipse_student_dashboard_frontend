@@ -42,7 +42,7 @@ const StudentsTab = () => {
 
       <StudentYearButtons
         selectedYear={yearId}
-        onYearChange={(selectedYearId: number) => setYearId(selectedYearId)}
+        onYearChange={(selectedYearId: number | null) => setYearId(selectedYearId)}
       />
 
       <StudentCardGrid

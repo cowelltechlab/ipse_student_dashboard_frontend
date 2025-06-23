@@ -3,7 +3,7 @@ import useYears from "../../../hooks/years/useYears";
 
 interface StudentYearButtonsProps {
   selectedYear: number | null;
-  onYearChange: (yearId: number) => void;
+  onYearChange: (yearId: number | null) => void;
 }
 
 const StudentYearButtons = ({
@@ -17,7 +17,9 @@ const StudentYearButtons = ({
       {years.map((year) => (
         <Button
           key={year.id}
-          onClick={() => onYearChange(year.id)}
+          onClick={() =>
+            onYearChange(selectedYear === year.id ? null : year.id)
+          }
           variant="outline"
           borderRadius="full"
           px={6}
