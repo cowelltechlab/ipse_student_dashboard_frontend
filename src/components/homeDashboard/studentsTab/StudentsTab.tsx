@@ -5,14 +5,21 @@ import StudentCardGrid from "./studentCards.tsx/StudentCardGrid";
 import TextButton from "../../common/universal/TextButton";
 import { CiCirclePlus } from "react-icons/ci";
 import StudentYearButtons from "./StudentYearButtons";
+import { useNavigate } from "react-router-dom";
 
 const StudentsTab = () => {
   const [searchTerm, setSearchTerm] = useState<string>("");
   const [yearId, setYearId] = useState<number | null>(null);
 
+  const navigate = useNavigate();
+
   const handleCreateStudent = () => {
     // TODO: Navigate to create student page.
     console.log("Create new student clicked");
+  };
+
+  const handleNavigateStudentPage = (studentId: string) => {
+    navigate(`/student/${studentId}`);
   };
 
   return (
@@ -41,9 +48,7 @@ const StudentsTab = () => {
       <StudentCardGrid
         searchTerm={searchTerm}
         year_id={yearId}
-        onStudentClick={(studentId) => {
-          console.log("Student clicked:", studentId);
-        }}
+        onStudentClick={handleNavigateStudentPage}
       />
     </Box>
   );

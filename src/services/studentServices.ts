@@ -19,5 +19,8 @@ export const getStudents = async (
       year_id,
     },
   });
+
+  console.log("getStudents response:", response.data);
+
   return response.data;
 };

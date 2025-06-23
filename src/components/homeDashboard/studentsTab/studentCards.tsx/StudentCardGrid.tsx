@@ -52,7 +52,7 @@ const StudentCardGrid = ({
           key={student.id}
           firstName={student.first_name}
           lastName={student.last_name}
-          classYear={student.class_year}
+          classYear={student.year_name}
           profilePictureUrl={student.profile_picture_url}
           onClick={() => onStudentClick?.(student.id)}
         />

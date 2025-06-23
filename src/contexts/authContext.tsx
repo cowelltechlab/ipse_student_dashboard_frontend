@@ -2,6 +2,7 @@ import { createContext, useState, useEffect, type ReactNode } from "react";
 import apiClient from "../services/apiClient";
 
 interface AuthContextType {
+  userId: number | null;
   email: string | null;
   first_name: string | null;
   last_name: string | null;
@@ -20,6 +21,7 @@ interface AuthContextType {
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
+  const [userId, setUserId] = useState<number | null>(null);
   const [email, setEmail] = useState<string | null>(null);
   const [firstName, setFirstName] = useState<string | null>(null);
   const [lastName, setLastName] = useState<string | null>(null);
@@ -32,6 +34,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
     try {
       const userResponse = await apiClient.get("/auth/me");
+      setUserId(userResponse.data.id);
       setFirstName(userResponse.data.first_name);
       setLastName(userResponse.data.last_name);
       setRoles(userResponse.data.roles || []);
@@ -39,6 +42,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     } catch (error) {
       console.error("Error retrieving user info:", error);
       localStorage.removeItem("authToken");
+      setUserId(null);
       setFirstName(null);
       setLastName(null);
       setEmail(null);
@@ -75,6 +79,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         setLastName(response.data.last_name);
         setRoles(response.data.roles || []);
         setEmail(response.data.email);
+        setUserId(response.data.id);
       })
       .catch(() => {
         localStorage.removeItem("authToken");
@@ -82,6 +87,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         setLastName(null);
         setEmail(null);
         setRoles([]);
+        setUserId(null);
       })
       .finally(() => setLoading(false));
   }, []);
@@ -90,7 +96,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const loginWithGoogle = async () => {
     try {
       const response = await apiClient.get("/auth/login/google");
-      console.log(response.data.google_auth_url)
+      console.log(response.data.google_auth_url);
       window.location.href = response.data.google_auth_url;
     } catch (error) {
       console.error("Login failed", error);
@@ -113,6 +119,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       setLastName(userResponse.data.last_name);
       setRoles(userResponse.data.roles || []);
       setEmail(userResponse.data.email);
+      setUserId(userResponse.data.id);
 
       // Navigate to home
       navigate("/");
@@ -148,12 +155,14 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     setLastName(null);
     setEmail(null);
     setRoles([]);
+    setUserId(null);
     navigate("/login");
   };
 
   return (
     <AuthContext.Provider
       value={{
+        userId,
         email,
         first_name: firstName,
         last_name: lastName,

@@ -1,4 +1,10 @@
-import { Card, HStack, Avatar, Stack, Strong, Text } from "@chakra-ui/react";
+import {
+  Card,
+  Avatar,
+  Stack,
+  Text,
+  VStack,
+} from "@chakra-ui/react";
 
 import profileDefaultIcon from "../../../../assets/profile_default.png";
 
@@ -25,7 +31,7 @@ const StudentCard = ({
       boxShadow={"md"}
     >
       <Card.Body>
-        <HStack mb="6" gap="3">
+        <VStack my="3" gap="3">
           <Avatar.Root>
             <Avatar.Image
               src={profilePictureUrl ? profilePictureUrl : profileDefaultIcon}
@@ -35,20 +41,15 @@ const StudentCard = ({
               borderRadius="full"
             />
           </Avatar.Root>
-          <Stack gap="0">
-            <Text fontWeight="semibold" textStyle="sm">
+          <Stack gap="0" align="center">
+            <Text fontWeight="semibold" textStyle="md">
               {firstName} {lastName}
             </Text>
-            <Text color="fg.muted" textStyle="sm">
+            <Text color="fg.muted" textStyle="md">
               {classYear}
             </Text>
           </Stack>
-        </HStack>
-        <Card.Description>
-          <Strong color="fg">Nate Foss </Strong>
-          has requested to join your team. You can approve or decline their
-          request.
-        </Card.Description>
+        </VStack>
       </Card.Body>
     </Card.Root>
   );

@@ -1,37 +1,34 @@
-import React from 'react';
-import { Routes, Route } from 'react-router-dom';
-import Home from './pages/StudentDashboard';
-import StudentDashboard from './pages/StudentDashboard';
-import ProtectedRoute from './routing/ProtectedRoute';
-import Login from './pages/Login';
-import AdminPanel from './pages/AdminPanel';
-import TeacherHome from './pages/TeacherHome';
-import OAuthCallbackHandler from './pages/Callback';
+import React from "react";
+import { Routes, Route } from "react-router-dom";
+import StudentDashboard from "./pages/StudentDashboard";
+import ProtectedRoute from "./routing/ProtectedRoute";
+import Login from "./pages/Login";
+import Home from "./pages/Home";
+import OAuthCallbackHandler from "./pages/Callback";
 
 const App: React.FC = () => {
   return (
     <Routes>
       <Route path="/login" element={<Login />} />
-
-      <Route element={<ProtectedRoute />}>
-      <Route path="/" element={<Home />} />
-        <Route path="/dashboard" element={<StudentDashboard />} />
-      </Route>
-      
-      {/* Teacher / Admin only routes */}
-      <Route element={<ProtectedRoute requiredRoles={["Advisor"]} />}>
-        <Route path="/teacher-dashboard" element={<TeacherHome />} />
-      </Route>
-
-      {/* Admin routes */}
-      <Route element={<ProtectedRoute requiredRoles={["Admin"]} />}>
-        <Route path="/admin-dashboard" element={<AdminPanel />} />
-      </Route>
-
       <Route path="/auth/callback" element={<OAuthCallbackHandler />} />
+      <Route
+        path="/unauthorized"
+        element={<div>You are not authorized to view this page.</div>}
+      />
 
-      <Route path="/unauthorized" element={<div>You are not authorized to view this page.</div>} />
+      {/* Protected wrapper for roles */}
+      <Route
+        element={
+          <ProtectedRoute requiredRoles={["Admin", "Advisor", "Peer Tutor"]} />
+        }
+      >
+        <Route path="/dashboard" element={<Home />} />
+      </Route>
 
+      {/* Protected wrapper for students */}
+      <Route element={<ProtectedRoute requiredRoles={["Student"]} />}>
+        <Route path="/student/:student_id" element={<StudentDashboard />} />
+      </Route>
     </Routes>
   );
 };

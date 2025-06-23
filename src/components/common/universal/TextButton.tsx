@@ -1,4 +1,4 @@
-import { Text } from "@chakra-ui/react";
+import { Box } from "@chakra-ui/react";
 
 const TextButton = ({
   children,
@@ -8,14 +8,14 @@ const TextButton = ({
   onClick: () => void;
 }) => {
   return (
-    <Text
+    <Box
       onClick={onClick}
       fontWeight={"bold"}
       cursor={"pointer"}
       _hover={{ textDecoration: "underline" }}
     >
       {children}
-    </Text>
+    </Box>
   );
 };
 export default TextButton;

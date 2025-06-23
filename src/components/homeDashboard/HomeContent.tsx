@@ -1,9 +1,9 @@
 import { Tabs } from "@chakra-ui/react";
 import { LuFolder, LuUser } from "react-icons/lu";
 import StudentsTab from "./studentsTab/StudentsTab";
-import AssignmentsTab from "./assignmentsTab/AssignmentsTab";
+import AssignmentsTab from "../homeDashboard/assignmentsTab/AssignmentsTab";
 
-const TeacherHomeContent = () => {
+const HomeContent = () => {
   return (
     <Tabs.Root defaultValue="students" variant={"line"}>
       <Tabs.List>
@@ -22,4 +22,4 @@ const TeacherHomeContent = () => {
   );
 };
 
-export default TeacherHomeContent;
+export default HomeContent;

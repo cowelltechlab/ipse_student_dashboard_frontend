@@ -11,24 +11,33 @@ const LoginForm = () => {
     "googleLogin" | "usernameLogin"
   >("googleLogin");
 
-  const { roles, isAuthenticated } = useAuth();
+  const { roles, isAuthenticated, userId } = useAuth();
   const navigate = useNavigate();
 
   useEffect(() => {
     const redirectUser = (roles: string[]) => {
-      if (roles.includes("Admin")) navigate("/admin-dashboard");
-      else if (roles.includes("Advisor")) navigate("/teacher-dashboard");
-      else navigate("/dashboard");
+      if (roles.includes("Admin")) navigate("/dashboard");
+      else if (roles.includes("Advisor") || roles.includes("Peer Tutor"))
+        navigate("/dashboard");
+      else if (roles.includes("Student") && userId)
+        navigate(`/student/${userId}`);
+      else navigate("/unauthorized");
     };
 
     if (isAuthenticated && roles.length > 0) {
       redirectUser(roles);
     }
-  }, [isAuthenticated, roles, navigate]);
+  }, [isAuthenticated, roles, userId, navigate]);
 
   return (
     <Box>
-      <Heading fontSize="5xl" color="white" mb={6} textAlign="center" mt={{ base: 4, lg: 20 }}>
+      <Heading
+        fontSize="5xl"
+        color="white"
+        mb={6}
+        textAlign="center"
+        mt={{ base: 4, lg: 20 }}
+      >
         Sign In
       </Heading>
       {formDisplay === "googleLogin" ? (

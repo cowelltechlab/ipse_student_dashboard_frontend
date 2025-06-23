@@ -4,7 +4,7 @@ export interface StudentType {
     id: string;
     first_name: string;
     last_name: string;
-    class_year: string;
+    year_name: string;
     reading_level: string;
     writing_level: string;
     
