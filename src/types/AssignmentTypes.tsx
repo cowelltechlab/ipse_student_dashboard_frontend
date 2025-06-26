@@ -13,4 +13,3 @@ export interface AssignmentType {
   rating_status?: "Rated" | "Pending" | "Partially Rated"; // Rated if all versions are rated, Pending if none are rated, Partially Rated if some versions are rated
   date_modified?: string; // Date of the most recent modification
 }
- 
