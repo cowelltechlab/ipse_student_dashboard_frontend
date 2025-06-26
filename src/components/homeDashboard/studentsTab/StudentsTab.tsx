@@ -4,8 +4,8 @@ import { useState } from "react";
 import StudentCardGrid from "./studentCards.tsx/StudentCardGrid";
 import TextButton from "../../common/universal/TextButton";
 import { CiCirclePlus } from "react-icons/ci";
-import StudentYearButtons from "./StudentYearButtons";
 import { useNavigate } from "react-router-dom";
+import StudentYearButtons from "../../common/filterButtons/StudentYearButtons";
 
 const StudentsTab = () => {
   const [searchTerm, setSearchTerm] = useState<string>("");

@@ -6,12 +6,15 @@ import {
   Flex,
   useBreakpointValue,
 } from "@chakra-ui/react";
-import HomeIcon from "../../assets/Home Page.svg";
-import useAuth from "../../contexts/useAuth";
 
-const HeaderCard = () => {
-  const { first_name, last_name } = useAuth();
+interface HeaderCardProps {
+  cardHeading: string;
+  cardText: string;
+  cardImageUrl: string;
+  
+}
 
+const HeaderCard = ({ cardHeading, cardText, cardImageUrl }: HeaderCardProps) => {
   const imageSize = useBreakpointValue({
     base: "200px",
     md: "180px",
@@ -42,15 +45,14 @@ const HeaderCard = () => {
         >
           <Box flex="1" pr={{ md: 4 }}>
             <Heading color="white" fontSize="2xl" mb={2}>
-              Hello, {first_name} {last_name}
+                {cardHeading}
             </Heading>
             <Text color="white" fontSize="md">
-              Let's make space for every story, celebrate every voice, and build
-              a world where everyone belongs.
+              {cardText}
             </Text>
           </Box>
           <Image
-            src={HomeIcon}
+            src={cardImageUrl}
             alt="An illustration of a teacher with a student"
             width={imageSize}
             mt={{ base: 4, md: 0 }}

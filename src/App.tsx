@@ -38,6 +38,7 @@ const App: React.FC = () => {
         path="/student/:student_id/assignment/:assignment_id"
         element={<AssignmentDetails />}
       />
+
     </Routes>
   );
 };
