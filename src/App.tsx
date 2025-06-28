@@ -6,6 +6,7 @@ import Home from "./pages/Home";
 import OAuthCallbackHandler from "./pages/Callback";
 import AssignmentDetails from "./pages/AssignmentDetails";
 import Student from "./pages/Student";
+import CreateNewAssignment from "./pages/CreateNewAssignment";
 
 const App: React.FC = () => {
   return (
@@ -37,6 +38,11 @@ const App: React.FC = () => {
       <Route
         path="/student/:student_id/assignment/:assignment_id"
         element={<AssignmentDetails />}
+      />
+
+      <Route
+        path="/create-assignment"
+        element={<CreateNewAssignment/>}
       />
 
     </Routes>
