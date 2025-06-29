@@ -32,10 +32,6 @@ const OAuthCallbackHandler = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    console.log("OAuthCallbackHandler mounted");
-  }, []);
-
-  useEffect(() => {
     const params = new URLSearchParams(window.location.search);
     const code = params.get("code");
     if (code) {

@@ -1,25 +1,24 @@
 import { Box, HStack, Spacer } from "@chakra-ui/react";
 import SearchBar from "../../common/searchBar/SearchBar";
 import { useState } from "react";
-import StudentCardGrid from "../studentsTab/studentCards.tsx/StudentCardGrid";
 import TextButton from "../../common/universal/TextButton";
 import { CiCirclePlus } from "react-icons/ci";
-import { useNavigate } from "react-router-dom";
-import StudentYearButtons from "../../common/filterButtons/StudentYearButtons";
+import useRoles from "../../../hooks/roles/useRoles";
+import useUsers from "../../../hooks/users/useUsers";
+import UserCardGrid from "../../common/userCards/UserCardGrid";
 
 const PeerTutorsTab = () => {
   const [searchTerm, setSearchTerm] = useState<string>("");
-  const [yearId, setYearId] = useState<number | null>(null);
 
-  const navigate = useNavigate();
+  const { roles } = useRoles();
 
-  const handleCreateStudent = () => {
-    // TODO: Navigate to create student page.
-    console.log("Create new student clicked");
-  };
+  const peerTutorRole = roles.find((role) => role.role_name === "Peer Tutor");
 
-  const handleNavigateStudentPage = (studentId: string) => {
-    navigate(`/student/${studentId}`);
+  const { users: peerTutors, loading, error } = useUsers(peerTutorRole?.id ?? undefined);
+
+  const handleCreatePeerTutor = () => {
+    // TODO: Open a modal or navigate to a create peer tutor page
+    console.log("Create new peer tutor clicked");
   };
 
   return (
@@ -28,29 +27,23 @@ const PeerTutorsTab = () => {
         <SearchBar
           searchTerm={searchTerm}
           setSearchTerm={setSearchTerm}
-          placeholder="Search student..."
+          placeholder="Search peer tutor..."
         />
         <Spacer />
 
-        <TextButton onClick={handleCreateStudent}>
+        <TextButton onClick={handleCreatePeerTutor}>
           <HStack gap={1}>
             <CiCirclePlus color="#bd4f23" />
-            Create new Student
+            Create new Peer Tutor
           </HStack>
         </TextButton>
       </HStack>
 
-      <StudentYearButtons
-        selectedYear={yearId}
-        onYearChange={(selectedYearId: number | null) =>
-          setYearId(selectedYearId)
-        }
-      />
-
-      <StudentCardGrid
+      <UserCardGrid
         searchTerm={searchTerm}
-        year_id={yearId}
-        onStudentClick={handleNavigateStudentPage}
+        users={peerTutors}
+        loading={loading}
+        error={error}
       />
     </Box>
   );

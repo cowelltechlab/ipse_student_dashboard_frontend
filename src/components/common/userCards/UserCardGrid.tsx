@@ -65,6 +65,7 @@ const UserCardGrid = ({
           lastName={user.last_name}
           profilePictureUrl={undefined}
           onClick={() => onUserClick?.(user)}
+          roleName={user.roles?.[0] || "No Role Assigned"}
         />
       ))}
     </SimpleGrid>

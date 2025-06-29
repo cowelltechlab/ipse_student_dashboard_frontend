@@ -1,10 +1,11 @@
 import { Card, Avatar, Stack, Text, VStack } from "@chakra-ui/react";
 
-import profileDefaultIcon from "../../../../assets/profile_default.png";
+import profileDefaultIcon from "../../../assets/profile_default.png";
 
 interface UserCardProps {
   firstName: string;
   lastName: string;
+  roleName?: string;
   profilePictureUrl?: string;
   onClick?: () => void;
 }
@@ -14,6 +15,7 @@ const UserCard = ({
   lastName,
   profilePictureUrl,
   onClick,
+  roleName,
 }: UserCardProps) => {
   return (
     <Card.Root
@@ -36,6 +38,9 @@ const UserCard = ({
           <Stack gap="0" align="center">
             <Text fontWeight="semibold" textStyle="md">
               {firstName} {lastName}
+            </Text>
+            <Text color="fg.muted" textStyle="md">
+              {roleName || "No Role Assigned"}
             </Text>
           </Stack>
         </VStack>

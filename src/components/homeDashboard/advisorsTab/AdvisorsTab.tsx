@@ -14,7 +14,7 @@ const AdvisorsTab = () => {
 
   const advisorRole = roles.find((role) => role.role_name === "Advisor");
 
-  const { users: advisors, loading, error } = useUsers(advisorRole?.id || null);
+  const { users: advisors, loading, error } = useUsers(advisorRole?.id ?? undefined);
 
   const handleCreateAdvisor = () => {
     // TODO: Open a modal or navigate to a create advisor page

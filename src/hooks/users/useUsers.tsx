@@ -3,12 +3,14 @@ import type { ErrorType } from "../../types/ErrorType";
 import type { UserType } from "../../types/UserTypes";
 import { getUsers } from "../../services/userServices";
 
-const useUsers = (roleId: number | null = null) => {
+const useUsers = (roleId?: number) => {
   const [users, setUsers] = useState<UserType[]>([]);
-  const [loading, setLoading] = useState<boolean>(true);
+  const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<ErrorType | null>(null);
 
   useEffect(() => {
+    if (!roleId) return; // Skip fetch
+
     const fetchUsers = async () => {
       try {
         setLoading(true);
