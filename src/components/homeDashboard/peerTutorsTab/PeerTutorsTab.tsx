@@ -6,6 +6,7 @@ import { CiCirclePlus } from "react-icons/ci";
 import useRoles from "../../../hooks/roles/useRoles";
 import useUsers from "../../../hooks/users/useUsers";
 import UserCardGrid from "../../common/userCards/UserCardGrid";
+import type { UserType } from "../../../types/UserTypes";
 
 const PeerTutorsTab = () => {
   const [searchTerm, setSearchTerm] = useState<string>("");
@@ -14,11 +15,19 @@ const PeerTutorsTab = () => {
 
   const peerTutorRole = roles.find((role) => role.role_name === "Peer Tutor");
 
-  const { users: peerTutors, loading, error } = useUsers(peerTutorRole?.id ?? undefined);
+  const {
+    users: peerTutors,
+    loading,
+    error,
+  } = useUsers(peerTutorRole?.id ?? undefined);
 
   const handleCreatePeerTutor = () => {
     // TODO: Open a modal or navigate to a create peer tutor page
     console.log("Create new peer tutor clicked");
+  };
+
+  const handleClickPeerTutorCard = (user: UserType) => {
+    console.log(`Peer Tutor card clicked with user ID: ${user.id}`);
   };
 
   return (
@@ -44,6 +53,7 @@ const PeerTutorsTab = () => {
         users={peerTutors}
         loading={loading}
         error={error}
+        onCardClick={handleClickPeerTutorCard}
       />
     </Box>
   );

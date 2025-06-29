@@ -1,26 +1,18 @@
 import { Card, Avatar, Stack, Text, VStack } from "@chakra-ui/react";
 
 import profileDefaultIcon from "../../../assets/profile_default.png";
+import type { UserType } from "../../../types/UserTypes";
 
 interface UserCardProps {
-  firstName: string;
-  lastName: string;
-  roleName?: string;
-  profilePictureUrl?: string;
-  onClick?: () => void;
+  user: UserType;
+  onClick?: (user: UserType) => void;
 }
 
-const UserCard = ({
-  firstName,
-  lastName,
-  profilePictureUrl,
-  onClick,
-  roleName,
-}: UserCardProps) => {
+const UserCard = ({ user, onClick }: UserCardProps) => {
   return (
     <Card.Root
       width="320px"
-      onClick={onClick}
+      onClick={() => onClick?.(user)}
       cursor="pointer"
       boxShadow={"md"}
     >
@@ -28,8 +20,8 @@ const UserCard = ({
         <VStack my="3" gap="3">
           <Avatar.Root>
             <Avatar.Image
-              src={profilePictureUrl ? profilePictureUrl : profileDefaultIcon}
-              alt={`${firstName} ${lastName}`}
+              src={profileDefaultIcon}
+              alt={`${user.first_name} ${user.last_name}`}
               width="40px"
               height="40px"
               borderRadius="full"
@@ -37,10 +29,10 @@ const UserCard = ({
           </Avatar.Root>
           <Stack gap="0" align="center">
             <Text fontWeight="semibold" textStyle="md">
-              {firstName} {lastName}
+              {user.first_name} {user.last_name}
             </Text>
             <Text color="fg.muted" textStyle="md">
-              {roleName || "No Role Assigned"}
+              {user.roles?.[0] || "No Role Assigned"}
             </Text>
           </Stack>
         </VStack>

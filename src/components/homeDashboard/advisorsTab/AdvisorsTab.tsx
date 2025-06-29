@@ -6,19 +6,32 @@ import { CiCirclePlus } from "react-icons/ci";
 import UserCardGrid from "../../common/userCards/UserCardGrid";
 import useRoles from "../../../hooks/roles/useRoles";
 import useUsers from "../../../hooks/users/useUsers";
+import type { UserType } from "../../../types/UserTypes";
+import DisplayAdvisorDialog from "./DisplayAdvisorDialog";
 
 const AdvisorsTab = () => {
   const [searchTerm, setSearchTerm] = useState<string>("");
+  const [isDialogOpen, setIsDialogOpen] = useState<boolean>(false);
+  const [selectedUser, setSelectedUser] = useState<UserType | null>(null);
 
   const { roles } = useRoles();
 
   const advisorRole = roles.find((role) => role.role_name === "Advisor");
 
-  const { users: advisors, loading, error } = useUsers(advisorRole?.id ?? undefined);
+  const {
+    users: advisors,
+    loading,
+    error,
+  } = useUsers(advisorRole?.id ?? undefined);
 
   const handleCreateAdvisor = () => {
     // TODO: Open a modal or navigate to a create advisor page
     console.log("Create new advisor clicked");
+  };
+
+  const handleClickAdvisorCard = (user: UserType) => {
+    setSelectedUser(user);
+    setIsDialogOpen(true);
   };
 
   return (
@@ -44,7 +57,17 @@ const AdvisorsTab = () => {
         users={advisors}
         loading={loading}
         error={error}
+        onCardClick={handleClickAdvisorCard}
       />
+
+      {selectedUser && (
+        <DisplayAdvisorDialog
+          user={selectedUser}
+          open={isDialogOpen}
+          setOpen={setIsDialogOpen}
+        />
+        
+      )}
     </Box>
   );
 };

@@ -5,6 +5,8 @@ import type { ErrorType } from "../../../types/ErrorType";
 
 interface UserCardGridProps {
   searchTerm: string | null;
+  onCardClick: (user: UserType) => void;
+
   users?: UserType[];
   loading?: boolean;
   error?: ErrorType | null;
@@ -15,11 +17,8 @@ const UserCardGrid = ({
   users,
   loading,
   error,
+  onCardClick,
 }: UserCardGridProps) => {
-  const onUserClick = (user: UserType) => {
-    console.log("User clicked:", user);
-  };
-
   if (loading) {
     return (
       <Box textAlign="center" py={10}>
@@ -59,14 +58,7 @@ const UserCardGrid = ({
       mx="auto"
     >
       {filteredUsers.map((user) => (
-        <UserCard
-          key={user.id}
-          firstName={user.first_name}
-          lastName={user.last_name}
-          profilePictureUrl={undefined}
-          onClick={() => onUserClick?.(user)}
-          roleName={user.roles?.[0] || "No Role Assigned"}
-        />
+        <UserCard user={user} onClick={() => onCardClick(user)} />
       ))}
     </SimpleGrid>
   );
