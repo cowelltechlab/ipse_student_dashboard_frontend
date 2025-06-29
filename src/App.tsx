@@ -39,6 +39,9 @@ const App: React.FC = () => {
         element={<AssignmentDetails />}
       />
 
+      {/* Backup route */}
+      <Route path="*" element={<div>Page not found</div>} />
+
     </Routes>
   );
 };
