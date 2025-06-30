@@ -10,6 +10,17 @@ export const getUsers = async (
   return response.data;
 };
 
+
+export const postUserInvite = async (userData: {
+  schoolEmail: string;
+  googleEmail: string;
+  roles: string[];
+}): Promise<UserType> => {
+  const response = await apiClient.post("/users/invite", userData);
+  return response.data;
+};
+
+
 export const deleteUser = async (userId: number): Promise<void> => {
   const response = await apiClient.delete(`/users/${userId}`);
   return response.data;
