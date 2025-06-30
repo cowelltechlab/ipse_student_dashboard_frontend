@@ -3,36 +3,31 @@ import {
   Button,
   CloseButton,
   Dialog,
-  Flex,
+  Image,
   Portal,
-  HStack,
   VStack,
   Icon,
-  Separator,
+  Box,
+  Heading,
 } from "@chakra-ui/react";
 import type { UserType } from "../../../types/UserTypes";
-import { FaTrashCan } from "react-icons/fa6";
+
+import deleteProfileImage from "../../../assets/Create Profile.svg";
 import { useState } from "react";
+import { FaCheckCircle } from "react-icons/fa";
 
 interface DisplayAdvisorDialogProps {
   user: UserType;
   open: boolean;
   setOpen: (open: boolean) => void;
-  setOpenDeleteDialog: (open: boolean) => void;
 }
 
 const UserCardClickDialog = ({
   user,
   open,
   setOpen,
-  setOpenDeleteDialog,
 }: DisplayAdvisorDialogProps) => {
-  const [trashHover, setTrashHover] = useState(false);
-
-  const handleDeleteProfileClick = () => {
-    setOpenDeleteDialog(true);
-    setOpen(false);
-  };
+  const [deleteHover, setDeleteHover] = useState(false);
 
   return (
     <Dialog.Root
@@ -44,42 +39,32 @@ const UserCardClickDialog = ({
       <Portal>
         <Dialog.Backdrop />
         <Dialog.Positioner>
-          <Dialog.Content p={5} bg={"#eaeef4"}>
-            <Dialog.Header>
-              <Flex
-                mt={2}
-                bg={"#244D8A"}
-                p={2}
-                borderRadius="md"
-                w={"100%"}
-                align="center"
-                justify="center"
-              >
-                <Dialog.Title color={"white"} fontSize="3xl">
-                  {user.first_name} {user.last_name}
-                </Dialog.Title>
-              </Flex>
-            </Dialog.Header>
+          <Dialog.Content p={5} bg="#eaeef4">
             <Dialog.Body>
-              <HStack mb={2} justifyContent="space-between">
-                <Text fontSize="md" mb={2} color={"#6F6F6F"}>
-                  {user.roles?.[0] || "No Role Assigned"}
-                </Text>
+              <VStack justifyContent="space-between" spaceY={2}>
+                <Image src={deleteProfileImage} />
 
-                <Text fontSize="md" mb={2} color={"#6F6F6F"}>
-                  {user.email || "No Email Provided"}
+                <Text fontSize="md" >
+                  Are you sure you want to delete this profile?
                 </Text>
-              </HStack>
-              <Separator orientation="horizontal" mb={4} />
+                <Box bg={"#244D8A"} p={2} borderRadius="md" w={"100%"}>
+                  <Heading fontSize="md" color="white" textAlign="center">
+                    {user.first_name} {user.last_name} | {user.email}
+                  </Heading>
+                </Box>
 
-              <VStack m={2} align="center" mt={4}>
+                <Text fontSize="md" >
+                  This action cannot be undone.
+                </Text>
+              </VStack>
+
+              <VStack m={2} align="center" mt={6}>
                 <Dialog.ActionTrigger asChild>
                   <Button bg={"#BD4F23"} w={"50%"}>
-                    Back to Dashboard
+                    Cancel
                   </Button>
                 </Dialog.ActionTrigger>
                 <Button
-                  onClick={handleDeleteProfileClick}
                   variant="outline"
                   borderColor="#BD4F23"
                   color="#BD4F23"
@@ -89,14 +74,14 @@ const UserCardClickDialog = ({
                     borderColor: "#BD4F23",
                     color: "white",
                   }}
-                  onMouseEnter={() => setTrashHover(true)}
-                  onMouseLeave={() => setTrashHover(false)}
+                  onMouseEnter={() => setDeleteHover(true)}
+                  onMouseLeave={() => setDeleteHover(false)}
                 >
-                  Delete Profile
+                  I am sure, delete profile
                   <Icon
-                    as={FaTrashCan}
+                    as={FaCheckCircle}
                     ml={2}
-                    color={trashHover ? "white" : "#BD4F23"}
+                    color={deleteHover ? "white" : "#BD4F23"}
                     _hover={{ color: "white" }}
                   />
                 </Button>

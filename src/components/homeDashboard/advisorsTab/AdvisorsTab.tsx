@@ -8,10 +8,13 @@ import useRoles from "../../../hooks/roles/useRoles";
 import useUsers from "../../../hooks/users/useUsers";
 import type { UserType } from "../../../types/UserTypes";
 import DisplayAdvisorDialog from "./DisplayAdvisorDialog";
+import DeleteAdvisorDialog from "./DeleteAdvisorDialog";
 
 const AdvisorsTab = () => {
   const [searchTerm, setSearchTerm] = useState<string>("");
-  const [isDialogOpen, setIsDialogOpen] = useState<boolean>(false);
+  const [isProfileDialogOpen, setIsProfileDialogOpen] =
+    useState<boolean>(false);
+  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState<boolean>(false);
   const [selectedUser, setSelectedUser] = useState<UserType | null>(null);
 
   const { roles } = useRoles();
@@ -31,7 +34,7 @@ const AdvisorsTab = () => {
 
   const handleClickAdvisorCard = (user: UserType) => {
     setSelectedUser(user);
-    setIsDialogOpen(true);
+    setIsProfileDialogOpen(true);
   };
 
   return (
@@ -63,10 +66,18 @@ const AdvisorsTab = () => {
       {selectedUser && (
         <DisplayAdvisorDialog
           user={selectedUser}
-          open={isDialogOpen}
-          setOpen={setIsDialogOpen}
+          open={isProfileDialogOpen}
+          setOpen={setIsProfileDialogOpen}
+          setOpenDeleteDialog={setIsDeleteDialogOpen}
         />
-        
+      )}
+
+      {selectedUser && (
+        <DeleteAdvisorDialog
+          user={selectedUser}
+          open={isDeleteDialogOpen}
+          setOpen={setIsDeleteDialogOpen}
+        />
       )}
     </Box>
   );
