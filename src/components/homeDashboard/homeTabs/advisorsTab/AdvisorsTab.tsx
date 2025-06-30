@@ -1,15 +1,15 @@
 import { Box, HStack, Spacer } from "@chakra-ui/react";
-import SearchBar from "../../common/searchBar/SearchBar";
+import SearchBar from "../../../common/searchBar/SearchBar";
 import { useState } from "react";
-import TextButton from "../../common/universal/TextButton";
+import TextButton from "../../../common/universal/TextButton";
 import { CiCirclePlus } from "react-icons/ci";
-import UserCardGrid from "../../common/userCards/UserCardGrid";
-import useRoles from "../../../hooks/roles/useRoles";
-import useUsers from "../../../hooks/users/useUsers";
-import type { UserType } from "../../../types/UserTypes";
+import UserCardGrid from "../../../common/userCards/UserCardGrid";
+import useRoles from "../../../../hooks/roles/useRoles";
+import useUsers from "../../../../hooks/users/useUsers";
+import type { UserType } from "../../../../types/UserTypes";
 import DisplayAdvisorDialog from "./DisplayAdvisorDialog";
 import DeleteAdvisorDialog from "./DeleteAdvisorDialog";
-import CreateUserDialog from "../createUserDialog/CreateUserDialog";
+import CreateUserDialog from "../../createUserDialog/CreateUserDialog";
 
 const AdvisorsTab = () => {
   const [searchTerm, setSearchTerm] = useState<string>("");

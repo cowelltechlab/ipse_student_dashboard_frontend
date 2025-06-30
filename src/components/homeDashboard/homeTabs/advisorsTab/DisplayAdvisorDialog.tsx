@@ -10,7 +10,7 @@ import {
   Icon,
   Separator,
 } from "@chakra-ui/react";
-import type { UserType } from "../../../types/UserTypes";
+import type { UserType } from "../../../../types/UserTypes";
 import { FaTrashCan } from "react-icons/fa6";
 import { useState } from "react";
 

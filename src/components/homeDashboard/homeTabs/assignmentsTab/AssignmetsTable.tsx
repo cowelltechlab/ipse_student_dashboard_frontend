@@ -8,7 +8,7 @@ import {
   VStack,
   Heading,
 } from "@chakra-ui/react";
-import useAssignments from "../../../hooks/assignments/useAssignments";
+import useAssignments from "../../../../hooks/assignments/useAssignments";
 import { IoDocumentText } from "react-icons/io5";
 import { useState } from "react";
 import AssignmentsTableRowButtons from "./AssignmentsTableRowButtons";
@@ -91,7 +91,9 @@ const AssignmentsTable = ({
                   key={assignment.id}
                   cursor="pointer"
                   _hover={{ bg: "gray.100" }}
-                  onClick={() => onAssignmentClick?.(assignment.student_id, assignment.id)}
+                  onClick={() =>
+                    onAssignmentClick?.(assignment.student_id, assignment.id)
+                  }
                 >
                   <Table.Cell>
                     <HStack align="start" spaceX={3}>

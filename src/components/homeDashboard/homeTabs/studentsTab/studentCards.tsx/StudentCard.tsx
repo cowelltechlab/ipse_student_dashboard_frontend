@@ -6,7 +6,7 @@ import {
   VStack,
 } from "@chakra-ui/react";
 
-import profileDefaultIcon from "../../../../assets/profile_default.png";
+import profileDefaultIcon from "../../../../../assets/profile_default.png";
 
 interface StudentCardProps {
   firstName: string;

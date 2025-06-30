@@ -1,5 +1,5 @@
 import { SimpleGrid, Box, Spinner, Text } from "@chakra-ui/react";
-import useStudents from "../../../../hooks/students/useStudents";
+import useStudents from "../../../../../hooks/students/useStudents";
 import StudentCard from "./StudentCard";
 
 interface StudentCardGridProps {

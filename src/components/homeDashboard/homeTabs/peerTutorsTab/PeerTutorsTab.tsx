@@ -1,12 +1,12 @@
 import { Box, HStack, Spacer } from "@chakra-ui/react";
-import SearchBar from "../../common/searchBar/SearchBar";
+import SearchBar from "../../../common/searchBar/SearchBar";
 import { useState } from "react";
-import TextButton from "../../common/universal/TextButton";
+import TextButton from "../../../common/universal/TextButton";
 import { CiCirclePlus } from "react-icons/ci";
-import useRoles from "../../../hooks/roles/useRoles";
-import useUsers from "../../../hooks/users/useUsers";
-import UserCardGrid from "../../common/userCards/UserCardGrid";
-import type { UserType } from "../../../types/UserTypes";
+import useRoles from "../../../../hooks/roles/useRoles";
+import useUsers from "../../../../hooks/users/useUsers";
+import UserCardGrid from "../../../common/userCards/UserCardGrid";
+import type { UserType } from "../../../../types/UserTypes";
 
 const PeerTutorsTab = () => {
   const [searchTerm, setSearchTerm] = useState<string>("");

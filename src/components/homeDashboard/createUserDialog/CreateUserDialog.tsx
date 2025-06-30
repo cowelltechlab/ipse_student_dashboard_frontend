@@ -52,8 +52,8 @@ const CreateUserDialog = ({ open, setOpen }: DisplayCreateUserDialogProps) => {
       <Portal>
         <Dialog.Backdrop />
         <Dialog.Positioner>
-          <Dialog.Content bg={"#244d8a"} borderRadius={"md"}>
-            <Box bg={"white"} w={"100%"} mb={4}>
+          <Dialog.Content bg={"#244d8a"} borderRadius={"md"} pb={5}>
+            <Box bg={"white"} w={"100%"} mb={4} roundedTop={"md"}>
               <HStack justifyContent="center" alignItems="center" p={4}>
                 <Image
                   src={CreateUserImage}
@@ -69,7 +69,7 @@ const CreateUserDialog = ({ open, setOpen }: DisplayCreateUserDialogProps) => {
             <Dialog.Header>
               <Dialog.Title color={"white"}>Create New User</Dialog.Title>
             </Dialog.Header>
-            <Dialog.Body>
+            <Dialog.Body m={4}>
               <CreateUserDialogForm
                 newUserGoogleEmail={newUserGoogleEmail}
                 setNewUserGoogleEmail={setNewUserGoogleEmail}
@@ -80,11 +80,25 @@ const CreateUserDialog = ({ open, setOpen }: DisplayCreateUserDialogProps) => {
                 roles={roles}
               />
             </Dialog.Body>
-            <Dialog.Footer>
+            <Dialog.Footer m={4}>
               <Dialog.ActionTrigger asChild>
-                <Button variant="outline">Cancel</Button>
+                <Button
+                  variant="outline"
+                  borderColor="white"
+                  color="white"
+                  w={"50%"}
+                  _hover={{
+                    bg: "#BD4F23",
+                    borderColor: "#BD4F23",
+                    color: "white",
+                  }}
+                >
+                  Cancel
+                </Button>
               </Dialog.ActionTrigger>
-              <Button onClick={handleCreateUser}>Send Invite</Button>
+              <Button bg={"#BD4F23"} w={"50%"} onClick={handleCreateUser}>
+                Send Invite
+              </Button>
             </Dialog.Footer>
             <Dialog.CloseTrigger asChild>
               <CloseButton size="sm" />

@@ -1,7 +1,7 @@
-import StudentsTab from "./studentsTab/StudentsTab";
-import AssignmentsTab from "../homeDashboard/assignmentsTab/AssignmentsTab";
-import AdvisorsTab from "./advisorsTab/AdvisorsTab";
-import PeerTutorsTab from "./peerTutorsTab/PeerTutorsTab";
+import StudentsTab from "./homeTabs/studentsTab/StudentsTab";
+import AssignmentsTab from "./homeTabs/assignmentsTab/AssignmentsTab";
+import AdvisorsTab from "./homeTabs/advisorsTab/AdvisorsTab";
+import PeerTutorsTab from "./homeTabs/peerTutorsTab/PeerTutorsTab";
 
 import { MdOutlineHandshake } from "react-icons/md";
 import { Tabs } from "@chakra-ui/react";
@@ -29,7 +29,7 @@ const HomeContent = () => {
           Peer Tutors
         </Tabs.Trigger>
       </Tabs.List>
-      
+
       <Tabs.Content value="students">
         <StudentsTab />
       </Tabs.Content>

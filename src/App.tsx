@@ -6,6 +6,7 @@ import Home from "./pages/Home";
 import OAuthCallbackHandler from "./pages/Callback";
 import AssignmentDetails from "./pages/AssignmentDetails";
 import Student from "./pages/Student";
+import Register from "./pages/Register";
 
 const App: React.FC = () => {
   return (
@@ -32,6 +33,8 @@ const App: React.FC = () => {
         <Route path="/student/:student_id" element={<StudentDashboard />} />
       </Route> */}
 
+      <Route path="/complete-invite" element={<Register />} />
+
       <Route path="/student/:student_id" element={<Student />} />
 
       <Route
@@ -41,7 +44,6 @@ const App: React.FC = () => {
 
       {/* Backup route */}
       <Route path="*" element={<div>Page not found</div>} />
-
     </Routes>
   );
 };

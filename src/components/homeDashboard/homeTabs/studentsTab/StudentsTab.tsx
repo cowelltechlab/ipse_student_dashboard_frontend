@@ -1,11 +1,11 @@
 import { Box, HStack, Spacer } from "@chakra-ui/react";
-import SearchBar from "../../common/searchBar/SearchBar";
+import SearchBar from "../../../common/searchBar/SearchBar";
 import { useState } from "react";
 import StudentCardGrid from "./studentCards.tsx/StudentCardGrid";
-import TextButton from "../../common/universal/TextButton";
+import TextButton from "../../../common/universal/TextButton";
 import { CiCirclePlus } from "react-icons/ci";
 import { useNavigate } from "react-router-dom";
-import StudentYearButtons from "../../common/filterButtons/StudentYearButtons";
+import StudentYearButtons from "../../../common/filterButtons/StudentYearButtons";
 
 const StudentsTab = () => {
   const [searchTerm, setSearchTerm] = useState<string>("");
@@ -42,7 +42,9 @@ const StudentsTab = () => {
 
       <StudentYearButtons
         selectedYear={yearId}
-        onYearChange={(selectedYearId: number | null) => setYearId(selectedYearId)}
+        onYearChange={(selectedYearId: number | null) =>
+          setYearId(selectedYearId)
+        }
       />
 
       <StudentCardGrid
