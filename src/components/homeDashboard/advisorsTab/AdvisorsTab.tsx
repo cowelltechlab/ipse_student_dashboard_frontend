@@ -9,6 +9,7 @@ import useUsers from "../../../hooks/users/useUsers";
 import type { UserType } from "../../../types/UserTypes";
 import DisplayAdvisorDialog from "./DisplayAdvisorDialog";
 import DeleteAdvisorDialog from "./DeleteAdvisorDialog";
+import CreateUserDialog from "../createUserDialog/CreateUserDialog";
 
 const AdvisorsTab = () => {
   const [searchTerm, setSearchTerm] = useState<string>("");
@@ -16,6 +17,8 @@ const AdvisorsTab = () => {
     useState<boolean>(false);
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState<boolean>(false);
   const [selectedUser, setSelectedUser] = useState<UserType | null>(null);
+  const [isCreateAdvisorDialogOpen, setIsCreateAdvisorDialogOpen] =
+    useState<boolean>(false);
 
   const { roles } = useRoles();
 
@@ -28,8 +31,7 @@ const AdvisorsTab = () => {
   } = useUsers(advisorRole?.id ?? undefined);
 
   const handleCreateAdvisor = () => {
-    // TODO: Open a modal or navigate to a create advisor page
-    console.log("Create new advisor clicked");
+    setIsCreateAdvisorDialogOpen(true);
   };
 
   const handleClickAdvisorCard = (user: UserType) => {
@@ -77,6 +79,13 @@ const AdvisorsTab = () => {
           user={selectedUser}
           open={isDeleteDialogOpen}
           setOpen={setIsDeleteDialogOpen}
+        />
+      )}
+
+      {isCreateAdvisorDialogOpen && (
+        <CreateUserDialog
+          open={isCreateAdvisorDialogOpen}
+          setOpen={setIsCreateAdvisorDialogOpen}
         />
       )}
     </Box>
