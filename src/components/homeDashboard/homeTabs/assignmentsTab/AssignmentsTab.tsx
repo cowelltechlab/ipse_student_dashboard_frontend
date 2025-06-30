@@ -3,8 +3,8 @@
 import { Box, HStack, Spacer } from "@chakra-ui/react";
 import { useState } from "react";
 import { CiCirclePlus } from "react-icons/ci";
-import SearchBar from "../../common/searchBar/SearchBar";
-import TextButton from "../../common/universal/TextButton";
+import SearchBar from "../../../common/searchBar/SearchBar";
+import TextButton from "../../../common/universal/TextButton";
 import AssignmentsTable from "./AssignmetsTable";
 import AssignmentsFilterButtons from "./AssignmentsFilterButtons";
 import { useNavigate } from "react-router-dom";
@@ -25,8 +25,13 @@ const AssignmentsTab = () => {
     console.log("Create new assignment clicked");
   };
 
-  const handleNavigateAssignmentPage = (studentId: number, assignmentId: number) => {
-    console.log(`Navigate to assignment page with ID: ${assignmentId} for student ID: ${studentId}`);
+  const handleNavigateAssignmentPage = (
+    studentId: number,
+    assignmentId: number
+  ) => {
+    console.log(
+      `Navigate to assignment page with ID: ${assignmentId} for student ID: ${studentId}`
+    );
     navigate(`/student/${studentId}/assignment/${assignmentId}`);
   };
 

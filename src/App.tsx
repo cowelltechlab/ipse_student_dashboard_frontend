@@ -6,6 +6,7 @@ import Home from "./pages/Home";
 import OAuthCallbackHandler from "./pages/Callback";
 import AssignmentDetails from "./pages/AssignmentDetails";
 import Student from "./pages/Student";
+import Register from "./pages/Register";
 import CreateNewAssignment from "./pages/CreateNewAssignment";
 
 const App: React.FC = () => {
@@ -33,6 +34,8 @@ const App: React.FC = () => {
         <Route path="/student/:student_id" element={<StudentDashboard />} />
       </Route> */}
 
+      <Route path="/complete-invite" element={<Register />} />
+
       <Route path="/student/:student_id" element={<Student />} />
 
       <Route
@@ -40,6 +43,8 @@ const App: React.FC = () => {
         element={<AssignmentDetails />}
       />
 
+      {/* Backup route */}
+      <Route path="*" element={<div>Page not found</div>} />
       <Route
         path="/create-assignment"
         element={<CreateNewAssignment/>}

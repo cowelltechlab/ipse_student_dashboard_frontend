@@ -2,7 +2,7 @@ import { Button, Icon, HStack } from "@chakra-ui/react";
 import { BsStars } from "react-icons/bs";
 import { FaStar } from "react-icons/fa";
 import { IoCloudDownload } from "react-icons/io5";
-import { Tooltip } from "../../ui/tooltip";
+import { Tooltip } from "../../../ui/tooltip";
 
 const AssignmentsTableRowButtons = () => {
   return (

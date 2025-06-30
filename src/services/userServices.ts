@@ -1,0 +1,53 @@
+import type { UserType } from "../types/UserTypes";
+import apiClient from "./apiClient";
+
+export const getUsers = async (
+  role_id: number | null = null
+): Promise<UserType[]> => {
+  const response = await apiClient.get("/users", {
+    params: { role_id },
+  });
+  return response.data;
+};
+
+
+export const postUserInvite = async (userData: {
+  google_email: string;
+  school_email: string;
+  role_ids: string[];
+}): Promise<UserType> => {
+  const response = await apiClient.post("/users/invite", userData);
+  return response.data;
+};
+
+export const postCompleteUserRegistry = async (userData: {
+  token: string;
+  first_name: string;
+  last_name: string;
+  password: string;
+  profile_picture: File | null;
+}): Promise<UserType> => {
+  const formData = new FormData();
+  formData.append("token", userData.token);
+  formData.append("first_name", userData.first_name);
+  formData.append("last_name", userData.last_name);
+  formData.append("password", userData.password);
+  if (userData.profile_picture) {
+    formData.append("profile_picture", userData.profile_picture);
+  }
+
+  const response = await apiClient.post("/users/complete-invite", formData, {
+    headers: {
+      "Content-Type": "multipart/form-data",
+    },
+  });
+  return response.data;
+}
+
+
+export const deleteUser = async (userId: number): Promise<void> => {
+  const response = await apiClient.delete(`/users/${userId}`);
+  return response.data;
+};
+
+
