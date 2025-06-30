@@ -15,6 +15,7 @@ import type { UserType } from "../../../../types/UserTypes";
 import deleteProfileImage from "../../../../assets/Create Profile.svg";
 import { useState } from "react";
 import { FaCheckCircle } from "react-icons/fa";
+import useDeleteUser from "../../../../hooks/users/useDeleteUsers";
 
 interface DisplayAdvisorDialogProps {
   user: UserType;
@@ -28,6 +29,13 @@ const UserCardClickDialog = ({
   setOpen,
 }: DisplayAdvisorDialogProps) => {
   const [deleteHover, setDeleteHover] = useState(false);
+
+  const {handleDeleteUser} = useDeleteUser();
+
+  const handleDeleteProfile = () => {
+    handleDeleteUser(user.id);
+    setOpen(false);
+  }
 
   return (
     <Dialog.Root
@@ -63,6 +71,7 @@ const UserCardClickDialog = ({
                   </Button>
                 </Dialog.ActionTrigger>
                 <Button
+                onClick = {handleDeleteProfile}
                   variant="outline"
                   borderColor="#BD4F23"
                   color="#BD4F23"

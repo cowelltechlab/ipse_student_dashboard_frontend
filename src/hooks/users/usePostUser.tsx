@@ -6,16 +6,16 @@ const usePostUserInvite = () => {
   const [loading, setLoading] = useState<boolean>(false);
 
   const handlePostUserInvite = async (
-    schoolEmail: string,
-    googleEmail: string,
-    roles: string[],
+    google_email: string,
+    school_email: string,
+    role_ids: string[],
   ) => {
     try {
       setLoading(true);
       const response = await postUserInvite({
-        schoolEmail,
-        googleEmail,
-        roles,
+        google_email,
+        school_email,
+        role_ids,
       });
       return response;
     } catch (e) {

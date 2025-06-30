@@ -56,9 +56,10 @@ const UserCardGrid = ({
       p={4}
       maxW={"1500px"}
       mx="auto"
+      
     >
       {filteredUsers.map((user) => (
-        <UserCard user={user} onClick={() => onCardClick(user)} />
+        <UserCard user={user} onClick={() => onCardClick(user)} key={user.id} />
       ))}
     </SimpleGrid>
   );

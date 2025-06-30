@@ -1,20 +1,15 @@
-import {
-  Box,
-  Button,
-  Flex,
-  Heading,
-  Input,
-  Stack,
-} from "@chakra-ui/react";
-import { useState } from "react";
+import { Box, Button, Flex, Heading, Input, Stack } from "@chakra-ui/react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 import { PasswordInput } from "../ui/password-input";
 import TextButton from "../common/universal/TextButton";
 import ProfilePictureUpload from "../common/universal/ProfilePictureUpload";
-
+import useCompleteUserRegistry from "../../hooks/users/useCompleteUserRegistry";
 
 const RegisterForm = () => {
+  const [token, setToken] = useState<string>("");
+
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
 
@@ -25,6 +20,16 @@ const RegisterForm = () => {
 
   const navigate = useNavigate();
 
+  const { handleCompleteUserRegistry } = useCompleteUserRegistry();
+
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const urlToken = params.get("token");
+    if (urlToken) {
+      setToken(urlToken);
+    }
+  }, []);
+
   const onUserRegisterSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     console.log("Registering user with:", {
@@ -34,6 +39,19 @@ const RegisterForm = () => {
       passwordConfirm,
       profilePicture,
     });
+
+    const response = await handleCompleteUserRegistry(
+      token,
+      firstName,
+      lastName,
+      password,
+      profilePicture
+    );
+
+    if (response) {
+      // Handle successful registration
+      navigate("/login");
+    }
   };
 
   return (
@@ -45,7 +63,7 @@ const RegisterForm = () => {
         textAlign="center"
         mt={{ base: 4, lg: 20 }}
       >
-        Sign In
+        Create Your Account
       </Heading>
 
       <form onSubmit={onUserRegisterSubmit}>
@@ -57,7 +75,7 @@ const RegisterForm = () => {
           px={{ base: 0, lg: 4 }}
         >
           <Box maxW={{ base: "full", lg: "sm" }} w="lg">
-            <Stack spaceY={6} w="full">
+            <Stack spaceY={6} w="full" align="center">
               <Input
                 placeholder="Enter First Name"
                 _placeholder={{ color: "white" }}
@@ -112,7 +130,7 @@ const RegisterForm = () => {
               >
                 Create Account
               </Button>
-              <TextButton onClick={() => navigate("/login")}>
+              <TextButton onClick={() => navigate("/login")} color="white">
                 Already have an account? Log in
               </TextButton>
             </Stack>
