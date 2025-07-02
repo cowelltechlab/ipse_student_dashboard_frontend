@@ -8,10 +8,17 @@ import useUsers from "../../../../hooks/users/useUsers";
 import UserCardGrid from "../../../common/userCards/UserCardGrid";
 import type { UserType } from "../../../../types/UserTypes";
 import CreateUserDialog from "../../createUserDialog/CreateUserDialog";
+import DisplayTutorDialog from "./DisplayTutorDialog";
+import DeleteUserDialog from "../DeleteUserDialog";
 
 const PeerTutorsTab = () => {
   const [searchTerm, setSearchTerm] = useState<string>("");
   const [isCreateTutorDialogOpen, setIsCreateTutorDialogOpen] =
+    useState<boolean>(false);
+  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState<boolean>(false);
+
+  const [selectedUser, setSelectedUser] = useState<UserType | null>(null);
+  const [isProfileDialogOpen, setIsProfileDialogOpen] =
     useState<boolean>(false);
 
   const { roles } = useRoles();
@@ -29,7 +36,8 @@ const PeerTutorsTab = () => {
   };
 
   const handleClickPeerTutorCard = (user: UserType) => {
-    console.log(`Peer Tutor card clicked with user ID: ${user.id}`);
+    setSelectedUser(user);
+    setIsProfileDialogOpen(true);
   };
 
   return (
@@ -57,6 +65,23 @@ const PeerTutorsTab = () => {
         error={error}
         onCardClick={handleClickPeerTutorCard}
       />
+
+      {selectedUser && (
+        <DisplayTutorDialog
+          user={selectedUser}
+          open={isProfileDialogOpen}
+          setOpen={setIsProfileDialogOpen}
+          setOpenDeleteDialog={setIsDeleteDialogOpen}
+        />
+      )}
+
+      {selectedUser && (
+        <DeleteUserDialog
+          user={selectedUser}
+          open={isDeleteDialogOpen}
+          setOpen={setIsDeleteDialogOpen}
+        />
+      )}
 
       {isCreateTutorDialogOpen && (
         <CreateUserDialog

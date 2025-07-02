@@ -8,7 +8,7 @@ import useRoles from "../../../../hooks/roles/useRoles";
 import useUsers from "../../../../hooks/users/useUsers";
 import type { UserType } from "../../../../types/UserTypes";
 import DisplayAdvisorDialog from "./DisplayAdvisorDialog";
-import DeleteAdvisorDialog from "./DeleteAdvisorDialog";
+import DeleteAdvisorDialog from "../DeleteUserDialog";
 import CreateUserDialog from "../../createUserDialog/CreateUserDialog";
 
 const AdvisorsTab = () => {
