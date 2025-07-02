@@ -7,9 +7,12 @@ import useRoles from "../../../../hooks/roles/useRoles";
 import useUsers from "../../../../hooks/users/useUsers";
 import UserCardGrid from "../../../common/userCards/UserCardGrid";
 import type { UserType } from "../../../../types/UserTypes";
+import CreateUserDialog from "../../createUserDialog/CreateUserDialog";
 
 const PeerTutorsTab = () => {
   const [searchTerm, setSearchTerm] = useState<string>("");
+  const [isCreateTutorDialogOpen, setIsCreateTutorDialogOpen] =
+    useState<boolean>(false);
 
   const { roles } = useRoles();
 
@@ -22,8 +25,7 @@ const PeerTutorsTab = () => {
   } = useUsers(peerTutorRole?.id ?? undefined);
 
   const handleCreatePeerTutor = () => {
-    // TODO: Open a modal or navigate to a create peer tutor page
-    console.log("Create new peer tutor clicked");
+    setIsCreateTutorDialogOpen(true);
   };
 
   const handleClickPeerTutorCard = (user: UserType) => {
@@ -55,6 +57,13 @@ const PeerTutorsTab = () => {
         error={error}
         onCardClick={handleClickPeerTutorCard}
       />
+
+      {isCreateTutorDialogOpen && (
+        <CreateUserDialog
+          open={isCreateTutorDialogOpen}
+          setOpen={setIsCreateTutorDialogOpen}
+        />
+      )}
     </Box>
   );
 };

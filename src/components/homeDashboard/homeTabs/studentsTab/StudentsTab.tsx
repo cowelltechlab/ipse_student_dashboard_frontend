@@ -6,16 +6,18 @@ import TextButton from "../../../common/universal/TextButton";
 import { CiCirclePlus } from "react-icons/ci";
 import { useNavigate } from "react-router-dom";
 import StudentYearButtons from "../../../common/filterButtons/StudentYearButtons";
+import CreateUserDialog from "../../createUserDialog/CreateUserDialog";
 
 const StudentsTab = () => {
   const [searchTerm, setSearchTerm] = useState<string>("");
   const [yearId, setYearId] = useState<number | null>(null);
 
+  const [isCreateStudentDialogOpen, setIsCreateStudentDialogOpen] = useState<boolean>(false);
+
   const navigate = useNavigate();
 
   const handleCreateStudent = () => {
-    // TODO: Navigate to create student page.
-    console.log("Create new student clicked");
+    setIsCreateStudentDialogOpen(true); 
   };
 
   const handleNavigateStudentPage = (studentId: string) => {
@@ -52,6 +54,13 @@ const StudentsTab = () => {
         year_id={yearId}
         onStudentClick={handleNavigateStudentPage}
       />
+
+      {isCreateStudentDialogOpen && (
+        <CreateUserDialog
+          open={isCreateStudentDialogOpen}
+          setOpen={setIsCreateStudentDialogOpen}
+        />
+      )}
     </Box>
   );
 };
