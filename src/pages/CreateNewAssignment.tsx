@@ -17,7 +17,7 @@ import {
   // Select,
   // option
 } from "@chakra-ui/react";
-import { IoAddCircleSharp } from "react-icons/io5";
+// import { IoAddCircleSharp } from "react-icons/io5";
 import CreateNewAssignmentIcon from "../assets/Create New Assignment.svg"
 import PageHeader from "../components/common/pageHeader/PageHeader";
 import HeaderCard from "../components/common/pageHeader/HeaderCard";
@@ -52,7 +52,7 @@ const CreateNewAssignment = () => {
         mt={8}
       >
         <UploadAssignmentBox />
-        <VStack flex="1">
+        <VStack flex="1" align="stretch">
           <Fieldset.Root>
             <Fieldset.Content>
               <Field.Root>
@@ -65,14 +65,16 @@ const CreateNewAssignment = () => {
                   _hover={{
                     borderColor: "gray.300",
                   }}
-                  width="60%"
+                  width={{ base: "100%", md: "60%" }}
                   appearance="none"
                 />
               </Field.Root>
 
-              <Field.Root>
-                <Field.Label fontWeight="bold">Select Assignment Type</Field.Label>
-                <Box position="relative" width="60%">
+              <Field.Root mt={4}>
+                <Field.Label fontWeight="bold">
+                  Select Assignment Type
+                </Field.Label>
+                <Box position="relative" width={{ base: "100%", md: "60%" }}>
                   <NativeSelect.Root>
                     <NativeSelect.Field 
                       name="assignment-type"
@@ -87,7 +89,6 @@ const CreateNewAssignment = () => {
                       <option 
                         defaultValue="" 
                         disabled 
-                        // selected 
                         hidden
                       >
                         Select type
@@ -114,14 +115,19 @@ const CreateNewAssignment = () => {
                 </Box>
               </Field.Root>
               
-              <Field.Root>
-                <Flex align="center" gap={4} width="60%" justify="space-between">
+              <Field.Root mt={4}>
+                <Flex 
+                  align="center" 
+                  gap={4} 
+                  width={{ base: "100%", md: "60%" }}
+                  justify="space-between"
+                >
                   <Field.Label fontWeight="bold" mr={4}>
                     <Text>
                       Is this for an Inclusive class?<Text as="span" color="red">*</Text>
                     </Text>
                   </Field.Label>
-                  <RadioGroup.Root defaultValue="no">
+                  <RadioGroup.Root>
                     <Stack direction="row">
                       <RadioGroup.Item key="yes" value="yes">
                         <RadioGroup.ItemHiddenInput />
