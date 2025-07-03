@@ -16,16 +16,16 @@ const UploadAssignmentBox = () => {
             bg="#EAF2FF"
         >
             <Box>
-            <IoAddCircleSharp color="#BD4F23" size={44} />
+                <IoAddCircleSharp color="#BD4F23" size={44} />
             </Box>
             <Text fontSize="lg" fontWeight="bold" color="gray.800">
-            Upload Assignment
+                Upload Assignment
             </Text>
             <Text fontSize="sm" color="gray.600">
-            Upload documents to modify, e.g. assignments, tests, slides.
+                Upload documents to modify, e.g. assignments, tests, slides.
             </Text>
             <Text fontSize="sm" color="gray.500">
-            Accepted formats: Pdf, Word doc.
+                Accepted formats: Pdf, Word doc.
             </Text>
         </VStack>
     );

@@ -14,6 +14,26 @@ import {
 } from "@chakra-ui/react";
 import { FaChevronDown } from "react-icons/fa";
 
+interface RadioItemProps {
+    option: string;
+}
+
+const RadioItem = ({option}: RadioItemProps) => {
+    return (
+        <RadioGroup.Item key={option} value={option.toLowerCase()}>
+            <RadioGroup.ItemHiddenInput />
+            <RadioGroup.ItemIndicator 
+                borderRadius="2px" 
+                borderColor="gray.400"
+                _checked={{
+                bg: "blue.500",
+                borderColor: "blue.500",
+                }}
+            />
+            <RadioGroup.ItemText>{option}</RadioGroup.ItemText>
+        </RadioGroup.Item>
+    );
+};
 
 const DocumentForm = () => {
     // TODO: Add conditional for boxes being red if neither is selected
@@ -30,7 +50,9 @@ const DocumentForm = () => {
           <Fieldset.Root>
             <Fieldset.Content>
               <Field.Root>
-                <Field.Label fontWeight="bold">Document Name</Field.Label>
+                <Field.Label  fontWeight="bold" fontSize="lg">
+                    Document Name
+                </Field.Label>
                 <Input 
                   placeholder="Enter name for the document..." 
                   border="1px solid"
@@ -45,7 +67,7 @@ const DocumentForm = () => {
               </Field.Root>
 
               <Field.Root mt={4}>
-                <Field.Label fontWeight="bold">
+                <Field.Label fontWeight="bold" fontSize="lg">
                   Select Assignment Type
                 </Field.Label>
                 <Box position="relative" width={{ base: "100%", md: "60%" }}>
@@ -92,41 +114,19 @@ const DocumentForm = () => {
               <Field.Root mt={4}>
                 <Flex 
                   align="center" 
-                  gap={4} 
-                  width={{ base: "100%", md: "60%" }}
+                //   gap={4} 
+                  width={{ base: "100%", md: "80%" }}
                   justify="space-between"
                 >
-                  <Field.Label fontWeight="bold" mr={4}>
+                  <Field.Label fontWeight="bold" fontSize="lg" mr={2}>
                     <Text>
                       Is this for an Inclusive class?<Text as="span" color="red">*</Text>
                     </Text>
                   </Field.Label>
                   <RadioGroup.Root>
                     <Stack direction="row">
-                      <RadioGroup.Item key="yes" value="yes">
-                        <RadioGroup.ItemHiddenInput />
-                        <RadioGroup.ItemIndicator 
-                          borderRadius="2px" 
-                          borderColor="gray.400"
-                          _checked={{
-                            bg: "blue.500",
-                            borderColor: "blue.500",
-                          }}
-                        />
-                        <RadioGroup.ItemText>Yes</RadioGroup.ItemText>
-                      </RadioGroup.Item>
-                      <RadioGroup.Item key="no" value="no">
-                        <RadioGroup.ItemHiddenInput />
-                        <RadioGroup.ItemIndicator 
-                          borderRadius="2px" 
-                          borderColor="gray.400"
-                          _checked={{
-                            bg: "blue.500",
-                            borderColor: "blue.500",
-                          }}
-                        />
-                        <RadioGroup.ItemText>No</RadioGroup.ItemText>
-                      </RadioGroup.Item>
+                        <RadioItem option="Yes" />
+                        <RadioItem option="No" />
                     </Stack>
                   </RadioGroup.Root>
                 </Flex>

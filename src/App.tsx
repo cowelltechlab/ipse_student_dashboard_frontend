@@ -47,6 +47,8 @@ const App: React.FC = () => {
 
       {/* Backup route */}
       <Route path="*" element={<div>Page not found</div>} />
+
+      {/* TODO: Make protected for admins only */}
       <Route
         path="/create-assignment"
         element={<CreateNewAssignment/>}

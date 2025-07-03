@@ -24,6 +24,7 @@ import HeaderCard from "../components/common/pageHeader/HeaderCard";
 // import { FaChevronDown } from "react-icons/fa";
 import UploadAssignmentBox from "../components/createNewAssignmentPage/UploadAssignmentBox";
 import DocumentForm from "../components/createNewAssignmentPage/DocumentForm";
+import SelectStudentsSection from "../components/createNewAssignmentPage/SelectStudentsSection";
 // import HomeContent from "../components/homeDashboard/HomeContent";
 
 const CreateNewAssignment = () => {
@@ -31,7 +32,7 @@ const CreateNewAssignment = () => {
                      student's needs. Let's make learning accessible for all!`;
 
   return (
-    <Box>
+    <Box margin={"5%"}>
       <PageHeader />
       <HeaderCard 
         cardHeading="Create Assignment" 
@@ -39,7 +40,7 @@ const CreateNewAssignment = () => {
         cardImageUrl={CreateNewAssignmentIcon}
       />
 
-      <Separator variant="solid" />
+      <Separator variant="solid" mx={6}/>
 
       <Flex
         direction={{ base: "column", md: "row" }}
@@ -48,10 +49,16 @@ const CreateNewAssignment = () => {
         p={6}
         mx="auto"
         // maxWidth="1200px"
-        mt={8}
+        // mt={8}
       >
         <UploadAssignmentBox />
         <DocumentForm />
+        
+      </Flex>
+      <Flex
+        p={6}
+      >
+        <SelectStudentsSection />
       </Flex>
 
       {/* <HomeContent /> */}
