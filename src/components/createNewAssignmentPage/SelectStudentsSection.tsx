@@ -1,13 +1,16 @@
 import {
     Fieldset,
     Field,
-    Text,
-    HStack
+    VStack
 } from "@chakra-ui/react"
+import StudentYearButtons from "./selectStudents/StudentYearButtons";
+import { useState } from "react";
 
 const SelectStudentsSection = () => {
+    const [yearId, setYearId] = useState<number | null>(null);
+    
     return (
-        <HStack>
+        <VStack>
             <Fieldset.Root>
                 <Fieldset.Content>
                     <Field.Root>
@@ -15,9 +18,15 @@ const SelectStudentsSection = () => {
                             Select Students
                         </Field.Label>
                     </Field.Root>
+                     <StudentYearButtons
+                        selectedYear={yearId}
+                        onYearChange={(selectedYearId: number | null) =>
+                        setYearId(selectedYearId)
+                        }
+                    />
                 </Fieldset.Content>
             </Fieldset.Root>
-        </HStack>
+        </VStack>
     );
 }
 
