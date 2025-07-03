@@ -6,10 +6,10 @@ import {
 import CreateNewAssignmentIcon from "../assets/Create New Assignment.svg"
 import PageHeader from "../components/common/pageHeader/PageHeader";
 import HeaderCard from "../components/common/pageHeader/HeaderCard";
-import UploadAssignmentBox from "../components/createNewAssignmentPage/UploadAssignmentBox";
-import DocumentForm from "../components/createNewAssignmentPage/DocumentForm";
-import SelectStudentsSection from "../components/createNewAssignmentPage/SelectStudentsSection";
-import SubmitForm from "../components/createNewAssignmentPage/SubmitForm";
+import UploadAssignmentBox from "../components/createNewAssignment/UploadAssignmentBox";
+import DocumentForm from "../components/createNewAssignment/DocumentForm";
+import SelectStudentsSection from "../components/createNewAssignment/SelectStudentsSection";
+import SubmitForm from "../components/createNewAssignment/SubmitForm";
 
 const CreateNewAssignment = () => {
   const cardText = `Create an assignment that adapts and grows to support every
