@@ -1,31 +1,15 @@
 import {
   Box,
   Separator,
-  Flex,
-  // VStack,
-  // Text,
-  // Fieldset,
-  // Stack,
-  // Field,
-  // NativeSelect,
-  // Input,
-  // For,
-  // RadioGroup,
-  // Stack,
-  // Icon
-  // FormLabel,
-  // Select,
-  // option
+  Flex
 } from "@chakra-ui/react";
-// import { IoAddCircleSharp } from "react-icons/io5";
 import CreateNewAssignmentIcon from "../assets/Create New Assignment.svg"
 import PageHeader from "../components/common/pageHeader/PageHeader";
 import HeaderCard from "../components/common/pageHeader/HeaderCard";
-// import { FaChevronDown } from "react-icons/fa";
 import UploadAssignmentBox from "../components/createNewAssignmentPage/UploadAssignmentBox";
 import DocumentForm from "../components/createNewAssignmentPage/DocumentForm";
 import SelectStudentsSection from "../components/createNewAssignmentPage/SelectStudentsSection";
-// import HomeContent from "../components/homeDashboard/HomeContent";
+import SubmitForm from "../components/createNewAssignmentPage/SubmitForm";
 
 const CreateNewAssignment = () => {
   const cardText = `Create an assignment that adapts and grows to support every
@@ -59,6 +43,10 @@ const CreateNewAssignment = () => {
         p={6}
       >
         <SelectStudentsSection />
+      </Flex>
+
+      <Flex>
+        <SubmitForm />
       </Flex>
 
       {/* <HomeContent /> */}
