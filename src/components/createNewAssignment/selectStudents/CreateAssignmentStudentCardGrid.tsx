@@ -11,6 +11,7 @@ const StudentCardGrid = ({
   year_id,
   onStudentClick,
 }: StudentCardGridProps) => {
+  // TODO: break into chunks of 20-24
   const { students, loading, error } = useStudents("", year_id);
 
   if (loading) {
@@ -39,7 +40,7 @@ const StudentCardGrid = ({
 
   return (
     <SimpleGrid
-      minChildWidth="100px"
+      minChildWidth="120px"
       gap="20px"
       p={1}
       maxW="100%"
