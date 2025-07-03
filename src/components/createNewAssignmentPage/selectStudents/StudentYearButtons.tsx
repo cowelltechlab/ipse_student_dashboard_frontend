@@ -46,10 +46,12 @@ const StudentYearButtons = ({
       {years.map((year) => (
         <Button
           key={year.id}
-          onClick={() => onYearChange(year.id)}
+          onClick={() =>
+            onYearChange(selectedYear === year.id ? null : year.id)
+          }
           variant="outline"
           {...commonButtonStyles}
-          {...getButtonColorStyles(selectedYear === null)}
+          {...getButtonColorStyles(selectedYear === year.id)}
         >
           {year.name}
         </Button>
