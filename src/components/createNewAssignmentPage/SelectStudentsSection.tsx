@@ -5,13 +5,13 @@ import {
 } from "@chakra-ui/react"
 import StudentYearButtons from "./selectStudents/StudentYearButtons";
 import { useState } from "react";
-import StudentCardGrid from "../homeDashboard/homeTabs/studentsTab/studentCards.tsx/StudentCardGrid";
+import CreateAssignmentStudentCardGrid from "./selectStudents/CreateAssignmentStudentCardGrid";
 
 const SelectStudentsSection = () => {
     const [yearId, setYearId] = useState<number | null>(null);
     
     return (
-        <VStack>
+        <VStack flex="1">
             <Fieldset.Root>
                 <Fieldset.Content>
                     <Field.Root>
@@ -26,8 +26,7 @@ const SelectStudentsSection = () => {
                         }
                     />
                     <Field.Root>
-                        <StudentCardGrid
-                            searchTerm=""
+                        <CreateAssignmentStudentCardGrid
                             year_id={yearId}
                             onStudentClick={() => console.log(yearId)}
                         />
