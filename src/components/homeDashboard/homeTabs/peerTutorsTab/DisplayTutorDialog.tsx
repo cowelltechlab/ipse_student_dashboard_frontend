@@ -6,7 +6,6 @@ import {
   Flex,
   Portal,
   HStack,
-  VStack,
   Icon,
   Separator,
 } from "@chakra-ui/react";
@@ -75,7 +74,7 @@ const DisplayTutorDialog = ({
 
               <TutorDialogCurrentStudents tutorId={user.id} />
 
-              <VStack m={2} align="center" mt={4}>
+              <HStack m={2} align="center" mt={4}>
                 <Dialog.ActionTrigger asChild>
                   <Button bg={"#BD4F23"} w={"50%"}>
                     Back to Dashboard
@@ -103,7 +102,7 @@ const DisplayTutorDialog = ({
                     _hover={{ color: "white" }}
                   />
                 </Button>
-              </VStack>
+              </HStack>
             </Dialog.Body>
 
             <Dialog.CloseTrigger asChild>
