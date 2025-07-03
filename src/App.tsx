@@ -20,13 +20,15 @@ const App: React.FC = () => {
       />
 
       {/* Protected wrapper for roles */}
-      <Route
+      {/* <Route
         element={
           <ProtectedRoute requiredRoles={["Admin", "Advisor", "Peer Tutor"]} />
         }
       >
         <Route path="/dashboard" element={<Home />} />
-      </Route>
+      </Route> */}
+
+      <Route path="/dashboard" element={<Home />} />
 
       {/*  TODO: Update student routes so students cannot access other students' pages. */}
       {/* Protected wrapper for students
