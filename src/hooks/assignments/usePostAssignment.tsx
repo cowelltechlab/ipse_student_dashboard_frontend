@@ -6,7 +6,7 @@ const usePostAssignment = () => {
   const [loading, setLoading] = useState<boolean>(false);
 
   const handlePostAssignment = async (
-    student_id: number,
+    student_ids: number[],
     title: string,
     class_id: number,
     file: File
@@ -14,7 +14,7 @@ const usePostAssignment = () => {
     try {
       setLoading(true);
       const response = await postAssignment({
-        student_id,
+        student_ids,
         title,
         class_id,
         file,
