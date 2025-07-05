@@ -17,7 +17,7 @@ const ProfilePictureUpload = ({ onFileUpload }: ProfilePictureUploadProps) => {
         }}
       />
       <FileUpload.Trigger asChild>
-        <Button variant="outline" size="sm">
+        <Button w={"full"} bg={"#bd4f23"} color="white" _hover={{ bg: "#eaa98f" }}>
           <HiUpload /> Upload Profile Picture
         </Button>
       </FileUpload.Trigger>

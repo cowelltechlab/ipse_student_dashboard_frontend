@@ -1,4 +1,4 @@
-import { Box, Flex } from "@chakra-ui/react";
+import { Box, Flex, Spinner } from "@chakra-ui/react";
 import useDefaultProfilePictures from "../../hooks/users/useDefaultProfilePictures";
 
 interface DefaultProfilePictureGridProps {
@@ -15,8 +15,12 @@ const DefaultProfilePictureGrid = ({
 
   return (
     <Flex justifyContent="center" alignItems="center">
-      {loading && <Box>Loading...</Box>}
-      {error && <Box>Error loading profile pictures</Box>}
+      {loading && (
+        <Box>
+          <Spinner />
+        </Box>
+      )}
+      {error && <Box color={"white"}>Error loading profile pictures</Box>}
       {!loading && !error && (
         <Flex wrap="wrap" gap={4}>
           {defaultProfilePictures.map((picture) => (

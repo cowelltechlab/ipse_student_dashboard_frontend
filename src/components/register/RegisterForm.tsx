@@ -1,4 +1,12 @@
-import { Box, Button, Flex, Heading, Input, Stack } from "@chakra-ui/react";
+import {
+  Box,
+  Button,
+  Flex,
+  Heading,
+  Input,
+  Stack,
+  Image,
+} from "@chakra-ui/react";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
@@ -138,8 +146,23 @@ const RegisterForm = () => {
                 w="full"
               />
 
-              {/* <ProfilePictureUpload onFileUpload={setProfilePicture} /> */}
+              <Box>
+                {existingBlobUrl && (
+                  <Image
+                    height="100px"
+                    src={existingBlobUrl}
+                    alt="Existing Profile Picture"
+                  />
+                )}
 
+                {profilePicture && (
+                  <Image
+                    height="100px"
+                    src={URL.createObjectURL(profilePicture)}
+                    alt="Selected Profile Picture"
+                  />
+                )}
+              </Box>
               <ProfilePictureSelectionDialog
                 onSelectDefaultImage={(selectedImage) => {
                   setExistingBlobUrl(selectedImage);
