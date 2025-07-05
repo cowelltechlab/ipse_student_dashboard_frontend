@@ -10,8 +10,14 @@ import { IoIosNotifications } from "react-icons/io";
 
 import CreateNewDropdown from "./CreateNewDropdown";
 import TextButton from "../universal/TextButton";
+import useAuth from "../../../contexts/useAuth";
+
+import profileDefaultIcon from "../../../assets/default_profile_picture.jpg"
 
 const PageHeader = () => {
+
+  const { profilePictureUrl } = useAuth();
+
   const onHomeClick = () => {
     // Logic for navigating to home
     console.log("Home clicked");
@@ -28,7 +34,7 @@ const PageHeader = () => {
         <AvatarGroup>
           <Avatar.Root>
             <Avatar.Fallback />
-            <Avatar.Image />
+            <Avatar.Image src={profilePictureUrl ?? profileDefaultIcon} />
           </Avatar.Root>
         </AvatarGroup>
       </HStack>

@@ -6,4 +6,6 @@ export interface UserType {
     email: string;
     roles: string[];
     role_ids: number[];
+    profile_picture_url: string;
+    is_active: boolean;
 }

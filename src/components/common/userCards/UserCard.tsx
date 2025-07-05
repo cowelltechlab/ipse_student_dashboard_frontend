@@ -1,4 +1,4 @@
-import { Card, Avatar, Stack, Text, VStack } from "@chakra-ui/react";
+import { Card, Avatar, Stack, Text, VStack, Box } from "@chakra-ui/react";
 
 import profileDefaultIcon from "../../../assets/profile_default.png";
 import type { UserType } from "../../../types/UserTypes";
@@ -20,7 +20,7 @@ const UserCard = ({ user, onClick }: UserCardProps) => {
         <VStack my="3" gap="3">
           <Avatar.Root>
             <Avatar.Image
-              src={profileDefaultIcon}
+              src={user.profile_picture_url ?? profileDefaultIcon}
               alt={`${user.first_name} ${user.last_name}`}
               width="40px"
               height="40px"
@@ -34,6 +34,13 @@ const UserCard = ({ user, onClick }: UserCardProps) => {
             <Text color="fg.muted" textStyle="md">
               {user.roles?.[0] || "No Role Assigned"}
             </Text>
+            {!user.is_active && (
+              <Box bg={"#fbde8e"} px={3} py={2} borderRadius="full">
+                <Text color="black" textStyle="sm">
+                  Awaiting Activation
+                </Text>
+              </Box>
+            )}
           </Stack>
         </VStack>
       </Card.Body>
