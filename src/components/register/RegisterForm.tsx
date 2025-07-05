@@ -43,6 +43,14 @@ const RegisterForm = () => {
   const onUserRegisterSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
+    if (password !== passwordConfirm) {
+      toaster.create({
+        description: "Passwords do not match.",
+        type: "error",
+      });
+      return;
+    }
+
     if (!profilePicture && !existingBlobUrl) {
       toaster.create({
         description: "Please select or upload a profile picture.",
