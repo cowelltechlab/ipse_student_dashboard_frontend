@@ -21,9 +21,12 @@ interface DisplayUserDialogProps {
   user: UserType;
   open: boolean;
   setOpen: (open: boolean) => void;
+
+  refetchTrigger: number;
+  setRefetchTrigger: (trigger: number) => void;
 }
 
-const DeleteUserDialog = ({ user, open, setOpen }: DisplayUserDialogProps) => {
+const DeleteUserDialog = ({ user, open, setOpen, refetchTrigger, setRefetchTrigger }: DisplayUserDialogProps) => {
   const [deleteHover, setDeleteHover] = useState(false);
 
   const { handleDeleteUser } = useDeleteUser();
@@ -31,6 +34,7 @@ const DeleteUserDialog = ({ user, open, setOpen }: DisplayUserDialogProps) => {
   const handleDeleteProfile = () => {
     handleDeleteUser(user.id);
     setOpen(false);
+    setRefetchTrigger(refetchTrigger + 1);
   };
 
   return (

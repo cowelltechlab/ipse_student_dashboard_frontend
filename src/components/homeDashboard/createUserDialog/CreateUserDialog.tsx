@@ -19,9 +19,11 @@ import { toaster } from "../../ui/toaster";
 interface DisplayCreateUserDialogProps {
   open: boolean;
   setOpen: (open: boolean) => void;
+  refetchTrigger: number;
+  setRefetchTrigger: (trigger: number) => void;
 }
 
-const CreateUserDialog = ({ open, setOpen }: DisplayCreateUserDialogProps) => {
+const CreateUserDialog = ({ open, setOpen, refetchTrigger, setRefetchTrigger }: DisplayCreateUserDialogProps) => {
   const { roles } = useRoles();
   const { handlePostUserInvite } = usePostUserInvite();
 
@@ -40,7 +42,7 @@ const CreateUserDialog = ({ open, setOpen }: DisplayCreateUserDialogProps) => {
         description: `User invited successfully.`,
         type: "success",
       });
-
+      setRefetchTrigger(refetchTrigger + 1);
       setOpen(false);
       setNewUserGoogleEmail("");
       setNewUserGTEmail("");

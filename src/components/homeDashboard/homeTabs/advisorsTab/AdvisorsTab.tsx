@@ -8,11 +8,12 @@ import useRoles from "../../../../hooks/roles/useRoles";
 import useUsers from "../../../../hooks/users/useUsers";
 import type { UserType } from "../../../../types/UserTypes";
 import DisplayAdvisorDialog from "./DisplayAdvisorDialog";
-import DeleteAdvisorDialog from "../DeleteUserDialog";
+import DeleteUserDialog from "../DeleteUserDialog";
 import CreateUserDialog from "../../createUserDialog/CreateUserDialog";
 
 const AdvisorsTab = () => {
   const [searchTerm, setSearchTerm] = useState<string>("");
+  const [refetchTrigger, setRefetchTrigger] = useState<number>(0);
   const [isProfileDialogOpen, setIsProfileDialogOpen] =
     useState<boolean>(false);
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState<boolean>(false);
@@ -28,7 +29,7 @@ const AdvisorsTab = () => {
     users: advisors,
     loading,
     error,
-  } = useUsers(advisorRole?.id ?? undefined);
+  } = useUsers(refetchTrigger, advisorRole?.id ?? undefined);
 
   const handleCreateAdvisor = () => {
     setIsCreateAdvisorDialogOpen(true);
@@ -75,10 +76,12 @@ const AdvisorsTab = () => {
       )}
 
       {selectedUser && (
-        <DeleteAdvisorDialog
+        <DeleteUserDialog
           user={selectedUser}
           open={isDeleteDialogOpen}
           setOpen={setIsDeleteDialogOpen}
+          refetchTrigger={refetchTrigger}
+          setRefetchTrigger={setRefetchTrigger}
         />
       )}
 
@@ -86,6 +89,8 @@ const AdvisorsTab = () => {
         <CreateUserDialog
           open={isCreateAdvisorDialogOpen}
           setOpen={setIsCreateAdvisorDialogOpen}
+          refetchTrigger={refetchTrigger}
+          setRefetchTrigger={setRefetchTrigger}
         />
       )}
     </Box>

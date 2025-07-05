@@ -12,12 +12,15 @@ const StudentsTab = () => {
   const [searchTerm, setSearchTerm] = useState<string>("");
   const [yearId, setYearId] = useState<number | null>(null);
 
-  const [isCreateStudentDialogOpen, setIsCreateStudentDialogOpen] = useState<boolean>(false);
+  const [refetchTrigger, setRefetchTrigger] = useState<number>(0);
+
+  const [isCreateStudentDialogOpen, setIsCreateStudentDialogOpen] =
+    useState<boolean>(false);
 
   const navigate = useNavigate();
 
   const handleCreateStudent = () => {
-    setIsCreateStudentDialogOpen(true); 
+    setIsCreateStudentDialogOpen(true);
   };
 
   const handleNavigateStudentPage = (studentId: string) => {
@@ -59,6 +62,8 @@ const StudentsTab = () => {
         <CreateUserDialog
           open={isCreateStudentDialogOpen}
           setOpen={setIsCreateStudentDialogOpen}
+          refetchTrigger={refetchTrigger}
+          setRefetchTrigger={setRefetchTrigger}
         />
       )}
     </Box>

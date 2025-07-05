@@ -13,6 +13,9 @@ import DeleteUserDialog from "../DeleteUserDialog";
 
 const PeerTutorsTab = () => {
   const [searchTerm, setSearchTerm] = useState<string>("");
+
+  const [refetchTrigger, setRefetchTrigger] = useState<number>(0);
+
   const [isCreateTutorDialogOpen, setIsCreateTutorDialogOpen] =
     useState<boolean>(false);
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState<boolean>(false);
@@ -29,7 +32,7 @@ const PeerTutorsTab = () => {
     users: peerTutors,
     loading,
     error,
-  } = useUsers(peerTutorRole?.id ?? undefined);
+  } = useUsers(refetchTrigger, peerTutorRole?.id ?? undefined);
 
   const handleCreatePeerTutor = () => {
     setIsCreateTutorDialogOpen(true);
@@ -80,6 +83,8 @@ const PeerTutorsTab = () => {
           user={selectedUser}
           open={isDeleteDialogOpen}
           setOpen={setIsDeleteDialogOpen}
+          refetchTrigger={refetchTrigger}
+          setRefetchTrigger={setRefetchTrigger}
         />
       )}
 
@@ -87,6 +92,8 @@ const PeerTutorsTab = () => {
         <CreateUserDialog
           open={isCreateTutorDialogOpen}
           setOpen={setIsCreateTutorDialogOpen}
+          refetchTrigger={refetchTrigger}
+          setRefetchTrigger={setRefetchTrigger}
         />
       )}
     </Box>
