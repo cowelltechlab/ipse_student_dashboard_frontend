@@ -4,8 +4,9 @@ import { useNavigate } from "react-router-dom";
 
 import { PasswordInput } from "../ui/password-input";
 import TextButton from "../common/universal/TextButton";
-import ProfilePictureUpload from "../common/universal/ProfilePictureUpload";
 import useCompleteUserRegistry from "../../hooks/users/useCompleteUserRegistry";
+import ProfilePictureSelectionDialog from "./ProfilePictureSelectionDialog";
+import { toaster } from "../ui/toaster";
 
 const RegisterForm = () => {
   const [token, setToken] = useState<string>("");
@@ -17,10 +18,11 @@ const RegisterForm = () => {
   const [passwordConfirm, setPasswordConfirm] = useState("");
 
   const [profilePicture, setProfilePicture] = useState<File | null>(null);
+  const [existingBlobUrl, setExistingBlobUrl] = useState<string | null>(null);
 
   const navigate = useNavigate();
 
-  const { handleCompleteUserRegistry } = useCompleteUserRegistry();
+  const { handleCompleteUserRegistry, loading } = useCompleteUserRegistry();
 
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
@@ -32,25 +34,42 @@ const RegisterForm = () => {
 
   const onUserRegisterSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    console.log("Registering user with:", {
-      firstName,
-      lastName,
-      password,
-      passwordConfirm,
-      profilePicture,
-    });
 
-    const response = await handleCompleteUserRegistry(
-      token,
-      firstName,
-      lastName,
-      password,
-      profilePicture
-    );
+    if (!profilePicture && !existingBlobUrl) {
+      toaster.create({
+        description: "Please select or upload a profile picture.",
+        type: "error",
+      });
+      return;
+    }
 
-    if (response) {
-      // Handle successful registration
-      navigate("/login");
+    try {
+      const response = await handleCompleteUserRegistry(
+        token,
+        firstName,
+        lastName,
+        password,
+        profilePicture,
+        existingBlobUrl
+      );
+
+      if (response) {
+        toaster.create({
+          description: "Account created successfully.",
+          type: "success",
+        });
+        navigate("/login");
+      }
+    } catch (e) {
+      const error = e as {
+        message: string;
+        response?: { data: { message: string } };
+      };
+      const errorMessage = error.response?.data.message || error.message;
+      toaster.create({
+        description: `Error creating account: ${errorMessage}`,
+        type: "error",
+      });
     }
   };
 
@@ -119,17 +138,30 @@ const RegisterForm = () => {
                 w="full"
               />
 
-              <ProfilePictureUpload onFileUpload={setProfilePicture} />
+              {/* <ProfilePictureUpload onFileUpload={setProfilePicture} /> */}
+
+              <ProfilePictureSelectionDialog
+                onSelectDefaultImage={(selectedImage) => {
+                  setExistingBlobUrl(selectedImage);
+                  setProfilePicture(null);
+                }}
+                onUploadedImage={(uploadedImage) => {
+                  setProfilePicture(uploadedImage);
+                  setExistingBlobUrl(null);
+                }}
+              />
 
               <Button
                 type="submit"
                 w="full"
-                bg={"#bd4f23"}
+                bg="#bd4f23"
                 color="white"
+                loading={loading}
                 _hover={{ bg: "#a43e1c" }}
               >
                 Create Account
               </Button>
+
               <TextButton onClick={() => navigate("/login")} color="white">
                 Already have an account? Log in
               </TextButton>
