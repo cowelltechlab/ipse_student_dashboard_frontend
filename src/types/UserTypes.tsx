@@ -9,3 +9,9 @@ export interface UserType {
     profile_picture_url: string;
     is_active: boolean;
 }
+
+
+export interface ProfilePictureType {
+    id: number,
+    url: string
+}

@@ -1,4 +1,4 @@
-import type { UserType } from "../types/UserTypes";
+import type { ProfilePictureType, UserType } from "../types/UserTypes";
 import apiClient from "./apiClient";
 
 export const getUsers = async (
@@ -9,6 +9,11 @@ export const getUsers = async (
   });
   return response.data;
 };
+
+export const getDefaultProfilePictures = async (): Promise<ProfilePictureType[]> => {
+  const response = await apiClient.get("/users/profile-picture-defaults");
+  return response.data;
+}
 
 
 export const postUserInvite = async (userData: {
