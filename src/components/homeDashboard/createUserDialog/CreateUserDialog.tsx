@@ -14,6 +14,7 @@ import usePostUserInvite from "../../../hooks/users/usePostUser";
 import CreateUserDialogForm from "./CreateUserDialogForm";
 
 import CreateUserImage from "../../../assets/Login.svg";
+import { toaster } from "../../ui/toaster";
 
 interface DisplayCreateUserDialogProps {
   open: boolean;
@@ -28,17 +29,33 @@ const CreateUserDialog = ({ open, setOpen }: DisplayCreateUserDialogProps) => {
   const [newUserGoogleEmail, setNewUserGoogleEmail] = useState<string>("");
   const [newUserGTEmail, setNewUserGTEmail] = useState<string>("");
 
-  const handleCreateUser = () => {
-    handlePostUserInvite(newUserGoogleEmail, newUserGTEmail, newUserRoleIds)
-      .then(() => {
-        setOpen(false);
-        setNewUserGoogleEmail("");
-        setNewUserGTEmail("");
-        setNewUserRoleIds([]);
-      })
-      .catch((error) => {
-        console.error("Error creating user:", error);
+  const handleCreateUser = async () => {
+    try {
+      await handlePostUserInvite(
+        newUserGoogleEmail,
+        newUserGTEmail,
+        newUserRoleIds
+      );
+      toaster.create({
+        description: `User invited successfully.`,
+        type: "success",
       });
+
+      setOpen(false);
+      setNewUserGoogleEmail("");
+      setNewUserGTEmail("");
+      setNewUserRoleIds([]);
+    } catch (e) {
+      const error = e as {
+        message: string;
+        response?: { data: { message: string } };
+      };
+      const errorMessage = error.response?.data.message || error.message;
+      toaster.create({
+        description: `Error creating user: ${errorMessage}`,
+        type: "error",
+      });
+    }
   };
 
   return (
