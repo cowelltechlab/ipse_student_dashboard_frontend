@@ -2,7 +2,6 @@ import { Box, HStack, Spacer } from "@chakra-ui/react";
 import SearchBar from "../../../common/searchBar/SearchBar";
 import { useState } from "react";
 import TextButton from "../../../common/universal/TextButton";
-import { CiCirclePlus } from "react-icons/ci";
 import UserCardGrid from "../../../common/userCards/UserCardGrid";
 import useRoles from "../../../../hooks/roles/useRoles";
 import useUsers from "../../../../hooks/users/useUsers";
@@ -10,6 +9,7 @@ import type { UserType } from "../../../../types/UserTypes";
 import DisplayAdvisorDialog from "./DisplayAdvisorDialog";
 import DeleteUserDialog from "../DeleteUserDialog";
 import CreateUserDialog from "../../createUserDialog/CreateUserDialog";
+import { IoIosAddCircle } from "react-icons/io";
 
 const AdvisorsTab = () => {
   const [searchTerm, setSearchTerm] = useState<string>("");
@@ -50,9 +50,9 @@ const AdvisorsTab = () => {
         />
         <Spacer />
 
-        <TextButton onClick={handleCreateAdvisor}>
+        <TextButton color="#bd4f23" onClick={handleCreateAdvisor}>
           <HStack gap={1}>
-            <CiCirclePlus color="#bd4f23" />
+           <IoIosAddCircle  color="#bd4f23" />
             Create new Advisor
           </HStack>
         </TextButton>

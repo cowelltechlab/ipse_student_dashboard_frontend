@@ -2,7 +2,6 @@ import { Box, HStack, Spacer } from "@chakra-ui/react";
 import SearchBar from "../../../common/searchBar/SearchBar";
 import { useState } from "react";
 import TextButton from "../../../common/universal/TextButton";
-import { CiCirclePlus } from "react-icons/ci";
 import useRoles from "../../../../hooks/roles/useRoles";
 import useUsers from "../../../../hooks/users/useUsers";
 import UserCardGrid from "../../../common/userCards/UserCardGrid";
@@ -10,6 +9,7 @@ import type { UserType } from "../../../../types/UserTypes";
 import CreateUserDialog from "../../createUserDialog/CreateUserDialog";
 import DisplayTutorDialog from "./displayTutorDialog/DisplayTutorDialog";
 import DeleteUserDialog from "../DeleteUserDialog";
+import { IoIosAddCircle } from "react-icons/io";
 
 const PeerTutorsTab = () => {
   const [searchTerm, setSearchTerm] = useState<string>("");
@@ -53,9 +53,9 @@ const PeerTutorsTab = () => {
         />
         <Spacer />
 
-        <TextButton onClick={handleCreatePeerTutor}>
+        <TextButton color="#bd4f23" onClick={handleCreatePeerTutor}>
           <HStack gap={1}>
-            <CiCirclePlus color="#bd4f23" />
+            <IoIosAddCircle  color="#bd4f23" />
             Create new Peer Tutor
           </HStack>
         </TextButton>

@@ -3,12 +3,12 @@ import SearchBar from "../../../common/searchBar/SearchBar";
 import { useState } from "react";
 import StudentCardGrid from "./studentCards.tsx/StudentCardGrid";
 import TextButton from "../../../common/universal/TextButton";
-import { CiCirclePlus } from "react-icons/ci";
 import { useNavigate } from "react-router-dom";
 import StudentYearButtons from "../../../common/filterButtons/StudentYearButtons";
 import CreateUserDialog from "../../createUserDialog/CreateUserDialog";
 import useRoles from "../../../../hooks/roles/useRoles";
 import useUsers from "../../../../hooks/users/useUsers";
+import { IoIosAddCircle } from "react-icons/io";
 
 const StudentsTab = () => {
   const [searchTerm, setSearchTerm] = useState<string>("");
@@ -52,9 +52,9 @@ const StudentsTab = () => {
         />
         <Spacer />
 
-        <TextButton onClick={handleCreateStudent}>
+        <TextButton color="#bd4f23" onClick={handleCreateStudent}>
           <HStack gap={1}>
-            <CiCirclePlus color="#bd4f23" />
+            <IoIosAddCircle  color="#bd4f23" />
             Create new Student
           </HStack>
         </TextButton>

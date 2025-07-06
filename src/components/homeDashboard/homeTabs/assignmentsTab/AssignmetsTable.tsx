@@ -131,7 +131,7 @@ const AssignmentsTable = ({
         <Text
           onClick={handleLoadMore}
           alignSelf="center"
-          color="blue.500"
+          color="#bd4f23"
           cursor="pointer"
           style={{ textDecoration: "underline" }}
         >
