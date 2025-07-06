@@ -1,8 +1,8 @@
 import apiClient from "./apiClient";
 
 export const getStudents = async (
-  searchTerm: string | null,
-  year_id: number | null
+  searchTerm?: string | null,
+  year_id?: number | null
 ) => {
   const params = new URLSearchParams();
   if (searchTerm && searchTerm.trim() !== "") {

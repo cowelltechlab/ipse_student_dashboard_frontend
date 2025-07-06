@@ -8,7 +8,7 @@ import useUsers from "../../../../hooks/users/useUsers";
 import UserCardGrid from "../../../common/userCards/UserCardGrid";
 import type { UserType } from "../../../../types/UserTypes";
 import CreateUserDialog from "../../createUserDialog/CreateUserDialog";
-import DisplayTutorDialog from "./DisplayTutorDialog";
+import DisplayTutorDialog from "./displayTutorDialog/DisplayTutorDialog";
 import DeleteUserDialog from "../DeleteUserDialog";
 
 const PeerTutorsTab = () => {

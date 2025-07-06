@@ -7,14 +7,15 @@ import {
   Spinner,
   SimpleGrid,
 } from "@chakra-ui/react";
-import useTutorStudentsById from "../../../../hooks/tutorStudents/useTutorStudentsById";
-
+import useTutorStudentsById from "../../../../../hooks/tutorStudents/useTutorStudentsById";
 interface TutorDialogCurrentStudentsProps {
   tutorId: number;
+  handleOpenUpdateDialog: () => void;
 }
 
 const TutorDialogCurrentStudents = ({
   tutorId,
+  handleOpenUpdateDialog,
 }: TutorDialogCurrentStudentsProps) => {
   const { tutorStudents, loading } = useTutorStudentsById(tutorId);
 
@@ -61,7 +62,13 @@ const TutorDialogCurrentStudents = ({
         <Box color="gray.500">No students assigned.</Box>
       )}
 
-      <Button mt={6} bg={"#BD4F23"} color="white" w={"100%"}>
+      <Button
+        onClick={handleOpenUpdateDialog}
+        mt={6}
+        bg={"#BD4F23"}
+        color="white"
+        w={"100%"}
+      >
         Update Current Students
       </Button>
     </VStack>

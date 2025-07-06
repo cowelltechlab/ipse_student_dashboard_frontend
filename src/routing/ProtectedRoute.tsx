@@ -22,7 +22,7 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ requiredRoles }) => {
   }
 
   
-  if (!isAuthenticated && !loading) {
+  if (!isAuthenticated) {
     return <Navigate to="/login" replace state={{ from: location }} />;
   }
 
