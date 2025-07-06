@@ -3,7 +3,7 @@ import type { ErrorType } from "../../types/ErrorType";
 import type { TutorStudentsType } from "../../types/TutorStudents";
 import { getTutorStudentsById } from "../../services/tutorStudentServices";
 
-const useTutorStudentsById = (tutorId: number) => {
+const useTutorStudentsById = (tutorId: number , refetchTrigger?: number) => {
   const [tutorStudents, setTutorStudents] = useState<TutorStudentsType[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<ErrorType | null>(null);
@@ -24,7 +24,7 @@ const useTutorStudentsById = (tutorId: number) => {
     };
 
     fetchTutorStudentsById();
-  }, [tutorId]);
+  }, [tutorId, refetchTrigger]);
 
   return { tutorStudents, loading, error };
 };

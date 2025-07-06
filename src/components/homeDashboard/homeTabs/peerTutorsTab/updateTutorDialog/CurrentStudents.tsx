@@ -1,6 +1,15 @@
-import { Box, Heading, Text, VStack, SimpleGrid } from "@chakra-ui/react";
+import {
+  Box,
+  Heading,
+  HStack,
+  Text,
+  VStack,
+  Wrap,
+  WrapItem,
+} from "@chakra-ui/react";
 import type { StudentType } from "../../../../../types/StudentTypes";
 import TextButton from "../../../../common/universal/TextButton";
+import { IoMdRemoveCircle } from "react-icons/io";
 
 interface CurrentStudentsProps {
   tutorStudents: StudentType[];
@@ -18,18 +27,23 @@ const CurrentStudents = ({
       </Heading>
 
       {tutorStudents.length > 0 ? (
-        <SimpleGrid columns={3} gap={6}>
+        <Wrap justify="center" w="100%">
           {tutorStudents.map((student) => (
-            <Box>
+            <WrapItem
+              key={student.id}
+              flexDirection="column"
+              alignItems="center"
+              mt={6}
+            >
               <Box
-                key={student.id}
-                w="100%"
-                bg={"white"}
+                bg="white"
                 boxShadow="2px 2px 8px rgba(0, 0, 0, 0.55)"
                 borderRadius="md"
-                p={2}
+                p={4}
+                mx={2}
+                minW="220px"
+                maxW="250px"
                 h="100%"
-                minH="100px"
                 display="flex"
                 flexDirection="column"
                 justifyContent="center"
@@ -41,15 +55,19 @@ const CurrentStudents = ({
                 <Text>{student.year_name}</Text>
               </Box>
 
-              <TextButton
-                color="#bd4f23"
-                onClick={() => handleRemoveStudent(Number(student.id))}
-              >
-                Remove Student
-              </TextButton>
-            </Box>
+              <HStack mt={2}>
+                <IoMdRemoveCircle color="#bd4f23" />
+
+                <TextButton
+                  color="#bd4f23"
+                  onClick={() => handleRemoveStudent(Number(student.id))}
+                >
+                  Remove Student
+                </TextButton>
+              </HStack>
+            </WrapItem>
           ))}
-        </SimpleGrid>
+        </Wrap>
       ) : (
         <Box color="gray.500">No students assigned.</Box>
       )}

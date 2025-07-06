@@ -24,15 +24,15 @@ interface UpdateCurrentStudentsDialogProps {
   tutor: UserType;
   open: boolean;
   setOpen: (open: boolean) => void;
+  triggerRefetch: () => void;
 }
 
 const UpdateCurrentStudentsDialog = ({
   tutor,
   open,
   setOpen,
+  triggerRefetch,
 }: UpdateCurrentStudentsDialogProps) => {
-  const [addHover, setAddHover] = useState<boolean>(false);
-
   const { loading: loadingPostTutorStudents, handleSyncTutorStudents } =
     useSyncTutorStudents();
 
@@ -86,6 +86,7 @@ const UpdateCurrentStudentsDialog = ({
         type: "success",
       });
       setOpen(false);
+      triggerRefetch();
     } catch (e) {
       const error = e as {
         message: string;
@@ -110,8 +111,15 @@ const UpdateCurrentStudentsDialog = ({
   // To remove from the current student selection as shown at the top of the modal
   const handleRemoveFromCurrentStudents = (studentIdToRemove: number) => {
     console.log("Removing student...");
+
+    // Remove from the visible top section
     setCurrentStudentSelection((prevSelection) =>
       prevSelection.filter((s) => Number(s.id) !== studentIdToRemove)
+    );
+
+    // Remove from the selectedStudentIds list to sync with the backend
+    setSelectedStudentIds((prevIds) =>
+      prevIds.filter((id) => id !== studentIdToRemove)
     );
   };
 
@@ -139,6 +147,7 @@ const UpdateCurrentStudentsDialog = ({
       onOpenChange={(e) => setOpen(e.open)}
       placement={"center"}
       size={"cover"}
+      scrollBehavior={"inside"}
     >
       <Portal>
         <Dialog.Backdrop />
@@ -182,24 +191,6 @@ const UpdateCurrentStudentsDialog = ({
               />
 
               <HStack w={"100%"} justifyContent={"center"} mt={4}>
-                <Dialog.ActionTrigger asChild>
-                  <Button
-                    onClick={handleSaveUpdates}
-                    disabled={isSaveDisabled}
-                    loading={loadingPostTutorStudents}
-                    variant="outline"
-                    borderColor="#BD4F23"
-                    color="#BD4F23"
-                    w={"50%"}
-                    _hover={{
-                      bg: "#BD4F23",
-                      borderColor: "#BD4F23",
-                      color: "white",
-                    }}
-                  >
-                    Save Changes
-                  </Button>
-                </Dialog.ActionTrigger>
                 <Button
                   onClick={handleAddToCurrentStudents}
                   variant="outline"
@@ -211,17 +202,27 @@ const UpdateCurrentStudentsDialog = ({
                     borderColor: "#BD4F23",
                     color: "white",
                   }}
-                  onMouseEnter={() => setAddHover(true)}
-                  onMouseLeave={() => setAddHover(false)}
                 >
                   Add to Current Students
-                  <Icon
-                    as={FaCheckCircle}
-                    ml={2}
-                    color={addHover ? "white" : "#BD4F23"}
-                    _hover={{ color: "white" }}
-                  />
                 </Button>
+                <Dialog.ActionTrigger asChild>
+                  <Button
+                    onClick={handleSaveUpdates}
+                    disabled={isSaveDisabled}
+                    loading={loadingPostTutorStudents}
+                    bg="#BD4F23"
+                    color="white"
+                    w={"50%"}
+                    _hover={{
+                      bg: "#BD4F23",
+                      borderColor: "#BD4F23",
+                      color: "white",
+                    }}
+                  >
+                    Save Changes
+                    <Icon as={FaCheckCircle} ml={2} color={"white"} />
+                  </Button>
+                </Dialog.ActionTrigger>
               </HStack>
             </Dialog.Body>
 

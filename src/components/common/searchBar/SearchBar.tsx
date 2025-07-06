@@ -5,6 +5,7 @@ interface SearchBarProps {
   searchTerm: string;
   setSearchTerm: (term: string) => void;
   placeholder?: string;
+  width?: string
 }
 
 const SearchBar = ({
@@ -17,6 +18,7 @@ const SearchBar = ({
       border="1px solid"
       borderColor="gray.300"
       borderRadius="md"
+      bg={"white"}
       _focusWithin={{
         boxShadow: "0 0 0 2px #244D8A", // customize focus ring here
         borderColor: "blue.500",

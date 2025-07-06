@@ -11,13 +11,15 @@ import useTutorStudentsById from "../../../../../hooks/tutorStudents/useTutorStu
 interface TutorDialogCurrentStudentsProps {
   tutorId: number;
   handleOpenUpdateDialog: () => void;
+  refetchTrigger: number;
 }
 
 const TutorDialogCurrentStudents = ({
   tutorId,
   handleOpenUpdateDialog,
+  refetchTrigger,
 }: TutorDialogCurrentStudentsProps) => {
-  const { tutorStudents, loading } = useTutorStudentsById(tutorId);
+  const { tutorStudents, loading } = useTutorStudentsById(tutorId, refetchTrigger);
 
   if (loading) {
     return (

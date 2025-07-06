@@ -43,6 +43,7 @@ const DeleteUserDialog = ({ user, open, setOpen, refetchTrigger, setRefetchTrigg
       open={open}
       onOpenChange={(e) => setOpen(e.open)}
       placement={"center"}
+      size={"lg"}
     >
       <Portal>
         <Dialog.Backdrop />

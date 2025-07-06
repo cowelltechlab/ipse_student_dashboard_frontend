@@ -48,6 +48,7 @@ const StudentsTab = () => {
           searchTerm={searchTerm}
           setSearchTerm={setSearchTerm}
           placeholder="Search student..."
+          
         />
         <Spacer />
 

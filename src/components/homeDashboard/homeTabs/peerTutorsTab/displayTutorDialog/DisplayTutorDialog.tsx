@@ -30,6 +30,7 @@ const DisplayTutorDialog = ({
   setOpenDeleteDialog,
 }: DisplayTutorDialogProps) => {
   const [openUpdateDialog, setOpenUpdateDialog] = useState<boolean>(false);
+  const [refetchTrigger, setRefetchTrigger] = useState<number>(0);
   const [trashHover, setTrashHover] = useState(false);
 
   const handleDeleteProfileClick = () => {
@@ -82,6 +83,7 @@ const DisplayTutorDialog = ({
                     setOpenUpdateDialog(!openUpdateDialog)
                   }
                   tutorId={user.id}
+                  refetchTrigger={refetchTrigger}
                 />
 
                 <HStack w={"100%"} justifyContent={"center"} mt={4}>
@@ -138,6 +140,7 @@ const DisplayTutorDialog = ({
           tutor={user}
           open={openUpdateDialog}
           setOpen={setOpenUpdateDialog}
+          triggerRefetch={() => setRefetchTrigger(refetchTrigger + 1)}
         />
       )}
     </Box>
