@@ -1,15 +1,21 @@
-import { SimpleGrid, Box, Text, Spinner } from "@chakra-ui/react";
+import { useState } from "react";
+import {
+  Box,
+  Text,
+  Spinner,
+  Wrap,
+  VStack,
+} from "@chakra-ui/react";
 import StudentCard from "./StudentCard";
 import type { UserType } from "../../../../../types/UserTypes";
 import type { ErrorType } from "../../../../../types/ErrorType";
+import TextButton from "../../../../common/universal/TextButton";
 
 interface StudentCardGridProps {
   searchTerm: string | null;
   yearName: string | null;
-
   loading: boolean;
   error: ErrorType | null;
-
   students?: UserType[];
   onStudentClick?: (studentId: number | null) => void;
 }
@@ -22,6 +28,8 @@ const StudentCardGrid = ({
   onStudentClick,
   students,
 }: StudentCardGridProps) => {
+  const [visibleCount, setVisibleCount] = useState(15);
+
   if (loading) {
     return (
       <Box textAlign="center" py={10}>
@@ -46,39 +54,45 @@ const StudentCardGrid = ({
     );
   }
 
-  //   Filter users based on search term and year
   const filteredStudents = students.filter((student) => {
     const fullName = `${student.first_name} ${student.last_name}`.toLowerCase();
-
     const matchesSearch = fullName.includes(searchTerm?.toLowerCase() || "");
     const matchesYear = yearName
-      ? student.student_profile?.year_name == yearName
+      ? student.student_profile?.year_name === yearName
       : true;
     return matchesSearch && matchesYear;
   });
 
+  const studentsToShow = filteredStudents.slice(0, visibleCount);
+  const hasMore = visibleCount < filteredStudents.length;
+
   return (
-    <SimpleGrid
-      minChildWidth="320px"
-      gap="40px"
-      p={4}
-      maxW={"1500px"}
-      mx="auto"
-    >
-      {filteredStudents.map((student) => (
-        <StudentCard
-          key={student.id}
-          firstName={student.first_name}
-          lastName={student.last_name}
-          classYear={student.student_profile?.year_name || null}
-          profilePictureUrl={student.profile_picture_url}
-          profile_tag={student.profile_tag || null}
-          onClick={() =>
-            onStudentClick?.(student.student_profile?.student_id || null)
-          }
-        />
-      ))}
-    </SimpleGrid>
+    <VStack>
+      <Wrap gap="40px" p={4} maxW={"1800px"} mx="auto" justify="center">
+        {studentsToShow.map((student) => (
+          <StudentCard
+            key={student.id}
+            firstName={student.first_name}
+            lastName={student.last_name}
+            classYear={student.student_profile?.year_name || null}
+            profilePictureUrl={student.profile_picture_url}
+            profile_tag={student.profile_tag || null}
+            onClick={() =>
+              onStudentClick?.(student.student_profile?.student_id || null)
+            }
+          />
+        ))}
+      </Wrap>
+
+      {hasMore && (
+        <TextButton
+          color="#bd4f23"
+          onClick={() => setVisibleCount((prev) => prev + 10)}
+        >
+          View 10 More
+        </TextButton>
+      )}
+    </VStack>
   );
 };
 
