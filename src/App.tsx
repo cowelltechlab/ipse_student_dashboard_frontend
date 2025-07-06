@@ -43,7 +43,8 @@ const App: React.FC = () => {
       />
 
       {/* Backup route */}
-      <Route path="*" element={<div>Page not found</div>} />
+      {/* TODO: Update so student default is their own page */}
+      <Route path="*" element={<Home />} />
     </Routes>
   );
 };
