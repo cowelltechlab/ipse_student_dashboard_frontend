@@ -19,11 +19,16 @@ import { toaster } from "../../ui/toaster";
 interface DisplayCreateUserDialogProps {
   open: boolean;
   setOpen: (open: boolean) => void;
-  refetchTrigger: number;
-  setRefetchTrigger: (trigger: number) => void;
+  refetchTrigger?: number;
+  setRefetchTrigger?: (trigger: number) => void;
 }
 
-const CreateUserDialog = ({ open, setOpen, refetchTrigger, setRefetchTrigger }: DisplayCreateUserDialogProps) => {
+const CreateUserDialog = ({
+  open,
+  setOpen,
+  refetchTrigger = 0,
+  setRefetchTrigger= () =>  refetchTrigger + 1,
+}: DisplayCreateUserDialogProps) => {
   const { roles } = useRoles();
   const { handlePostUserInvite } = usePostUserInvite();
 

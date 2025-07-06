@@ -22,23 +22,6 @@ const StudentCardGrid = ({
   onStudentClick,
   students,
 }: StudentCardGridProps) => {
-  if (!students || students.length === 0) {
-    return (
-      <Box textAlign="center" py={10}>
-        <Text>No students found.</Text>
-      </Box>
-    );
-  }
-
-  //   Filter users based on search term and year
-  const filteredStudents = students.filter((student) => {
-    const fullName = `${student.first_name} ${student.last_name}`.toLowerCase();
-
-    const matchesSearch = fullName.includes(searchTerm?.toLowerCase() || "");
-    const matchesYear = yearName ? student.student_profile?.year_name == yearName : true;
-    return matchesSearch && matchesYear;
-  });
-
   if (loading) {
     return (
       <Box textAlign="center" py={10}>
@@ -55,6 +38,25 @@ const StudentCardGrid = ({
     );
   }
 
+  if (!students || students.length === 0) {
+    return (
+      <Box textAlign="center" py={10}>
+        <Text>No students found.</Text>
+      </Box>
+    );
+  }
+
+  //   Filter users based on search term and year
+  const filteredStudents = students.filter((student) => {
+    const fullName = `${student.first_name} ${student.last_name}`.toLowerCase();
+
+    const matchesSearch = fullName.includes(searchTerm?.toLowerCase() || "");
+    const matchesYear = yearName
+      ? student.student_profile?.year_name == yearName
+      : true;
+    return matchesSearch && matchesYear;
+  });
+
   return (
     <SimpleGrid
       minChildWidth="320px"
@@ -70,7 +72,7 @@ const StudentCardGrid = ({
           lastName={student.last_name}
           classYear={student.student_profile?.year_name || null}
           profilePictureUrl={student.profile_picture_url}
-          profile_tag = {student.profile_tag || null}
+          profile_tag={student.profile_tag || null}
           onClick={() =>
             onStudentClick?.(student.student_profile?.student_id || null)
           }
