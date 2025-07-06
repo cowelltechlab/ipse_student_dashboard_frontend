@@ -13,29 +13,40 @@ const SearchBar = ({
   placeholder = "Search...",
 }: SearchBarProps) => {
   return (
-    <Box>
-      <Group attached
-        
-      >
-        <Button
-          onClick={() => setSearchTerm("")}
-          variant="outline"
-          colorScheme="blue"
-          bg={"#bd4f23"}
-        >
-          <FaSearch color="white" />
-        </Button>
+    <Box
+      border="1px solid"
+      borderColor="gray.300"
+      borderRadius="md"
+      _focusWithin={{
+        boxShadow: "0 0 0 2px #244D8A", // customize focus ring here
+        borderColor: "blue.500",
+      }}
+      padding="0px"
+    >
+      <Group attached p={0} m={0}>
         <Input
+          flex="1"
           type="text"
           placeholder={placeholder}
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
-          width="100%"
-          borderRadius="md"
-          padding="8px"
+          border="none"
+          outline="none"
+          boxShadow="none"
+          _focus={{
+            boxShadow: "none",
+            outline: "none",
+          }}
           _placeholder={{ color: "gray.500" }}
-          _focus={{ borderColor: "none", boxShadow: "none" , border: "none" }}
         />
+        <Button
+          variant="outline"
+          colorScheme="blue"
+          bg={"#bd4f23"}
+          borderRadius="md"
+        >
+          <FaSearch color="white" />
+        </Button>
       </Group>
     </Box>
   );

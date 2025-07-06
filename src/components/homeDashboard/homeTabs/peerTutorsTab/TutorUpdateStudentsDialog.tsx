@@ -11,28 +11,27 @@ import {
 } from "@chakra-ui/react";
 import type { UserType } from "../../../../types/UserTypes";
 import { FaTrashCan } from "react-icons/fa6";
-import { useState } from "react";
 import TutorDialogCurrentStudents from "./TutorDialogCurrentStudents";
+import { useState } from "react";
 
 interface DisplayTutorDialogProps {
   user: UserType;
   open: boolean;
   setOpen: (open: boolean) => void;
-  setOpenDeleteDialog: (open: boolean) => void;
 }
 
 const DisplayTutorDialog = ({
   user,
   open,
   setOpen,
-  setOpenDeleteDialog,
 }: DisplayTutorDialogProps) => {
-  const [trashHover, setTrashHover] = useState(false);
 
-  const handleDeleteProfileClick = () => {
-    setOpenDeleteDialog(true);
-    setOpen(false);
-  };
+    const [addHover, setAddHover] = useState<boolean>(false)
+
+    const handleAddToCUrrentStudents = () => {
+        // TODO: this function should not post to API but should add the list to the header
+        console.log("Add to current students") 
+    }
 
   return (
     <Dialog.Root
@@ -40,7 +39,7 @@ const DisplayTutorDialog = ({
       open={open}
       onOpenChange={(e) => setOpen(e.open)}
       placement={"center"}
-      size={"lg"}
+      size={"cover"}
     >
       <Portal>
         <Dialog.Backdrop />
@@ -88,11 +87,11 @@ const DisplayTutorDialog = ({
                       color: "white",
                     }}
                   >
-                    Back to Dashboard
+                    Save Changes
                   </Button>
                 </Dialog.ActionTrigger>
                 <Button
-                  onClick={handleDeleteProfileClick}
+                  onClick={handleAddToCUrrentStudents}
                   variant="outline"
                   borderColor="#BD4F23"
                   color="#BD4F23"
@@ -102,14 +101,14 @@ const DisplayTutorDialog = ({
                     borderColor: "#BD4F23",
                     color: "white",
                   }}
-                  onMouseEnter={() => setTrashHover(true)}
-                  onMouseLeave={() => setTrashHover(false)}
+                  onMouseEnter={() => setAddHover(true)}
+                  onMouseLeave={() => setAddHover(false)}
                 >
-                  Delete Profile
+                  Add to Current Students
                   <Icon
                     as={FaTrashCan}
                     ml={2}
-                    color={trashHover ? "white" : "#BD4F23"}
+                    color={addHover ? "white" : "#BD4F23"}
                     _hover={{ color: "white" }}
                   />
                 </Button>

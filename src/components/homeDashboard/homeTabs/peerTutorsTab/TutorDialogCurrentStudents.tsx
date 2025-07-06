@@ -1,13 +1,11 @@
 import {
   Box,
   Button,
-  Flex,
   Heading,
   Text,
-  Spacer,
-  Spinner,
   VStack,
-  HStack,
+  Spinner,
+  SimpleGrid,
 } from "@chakra-ui/react";
 import useTutorStudentsById from "../../../../hooks/tutorStudents/useTutorStudentsById";
 
@@ -30,23 +28,43 @@ const TutorDialogCurrentStudents = ({
   }
 
   return (
-    <Flex direction="column" p={4} bg="white" borderRadius="md" w={"100%"} alignItems={"center"}>
-      <Heading mb={4} color={"#244d8a"} >Current Students</Heading>
+    <VStack borderRadius="md" w="100%" align="center">
+      <Heading mb={4} color="#244d8a">
+        Current Students
+      </Heading>
 
       {tutorStudents.length > 0 ? (
-        tutorStudents.map((student) => (
-          <HStack spaceY={2} key={student.id} mb={2} bg="gray.100" p={3} borderRadius="md" w={"100%"} alignItems="center">
-            <Heading size="md">{student.student_name}</Heading>
-            <Spacer />
-            <Text>{student.student_year}</Text>
-          </HStack>
-        ))
+        <SimpleGrid columns={3} gap={6}>
+          {tutorStudents.map((student) => (
+            <Box
+              key={student.id}
+              w="100%"
+              bg={"white"}
+              boxShadow="2px 2px 8px rgba(0, 0, 0, 0.55)"
+              borderRadius="md"
+              p={2}
+              h="100%"
+              minH="100px"
+              display="flex"
+              flexDirection="column"
+              justifyContent="center"
+              alignItems="center"
+            >
+              <Heading size="md" textAlign="center">
+                {student.student_name}
+              </Heading>
+              <Text>{student.student_year}</Text>
+            </Box>
+          ))}
+        </SimpleGrid>
       ) : (
         <Box color="gray.500">No students assigned.</Box>
       )}
 
-      <Button mt={4} bg={"#244d8a"} color={"white"}>Update Current Students</Button>
-    </Flex>
+      <Button mt={6} bg={"#BD4F23"} color="white" w={"100%"}>
+        Update Current Students
+      </Button>
+    </VStack>
   );
 };
 
