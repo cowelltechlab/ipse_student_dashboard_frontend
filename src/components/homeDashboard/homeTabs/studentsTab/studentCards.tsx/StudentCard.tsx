@@ -1,19 +1,15 @@
-import {
-  Card,
-  Avatar,
-  Stack,
-  Text,
-  VStack,
-} from "@chakra-ui/react";
+import { Card, Avatar, Stack, Text, VStack, Box } from "@chakra-ui/react";
 
 import profileDefaultIcon from "../../../../../assets/profile_default.png";
 
 interface StudentCardProps {
   firstName: string;
   lastName: string;
-  classYear: string;
+  classYear: string | null;
   profilePictureUrl?: string;
+  profile_tag?: string | null
   onClick?: () => void;
+
 }
 
 const StudentCard = ({
@@ -21,6 +17,7 @@ const StudentCard = ({
   lastName,
   classYear,
   profilePictureUrl,
+  profile_tag,
   onClick,
 }: StudentCardProps) => {
   return (
@@ -48,6 +45,14 @@ const StudentCard = ({
             <Text color="fg.muted" textStyle="md">
               {classYear}
             </Text>
+
+            {profile_tag && (
+              <Box bg={"#fbde8e"} px={3} py={2} borderRadius="full">
+                <Text color="black" textStyle="sm">
+                  {profile_tag}
+                </Text>
+              </Box>
+            )}
           </Stack>
         </VStack>
       </Card.Body>

@@ -7,10 +7,12 @@ import { CiCirclePlus } from "react-icons/ci";
 import { useNavigate } from "react-router-dom";
 import StudentYearButtons from "../../../common/filterButtons/StudentYearButtons";
 import CreateUserDialog from "../../createUserDialog/CreateUserDialog";
+import useRoles from "../../../../hooks/roles/useRoles";
+import useUsers from "../../../../hooks/users/useUsers";
 
 const StudentsTab = () => {
   const [searchTerm, setSearchTerm] = useState<string>("");
-  const [yearId, setYearId] = useState<number | null>(null);
+  const [yearName, setYearName] = useState<string | null>(null);
 
   const [refetchTrigger, setRefetchTrigger] = useState<number>(0);
 
@@ -19,12 +21,24 @@ const StudentsTab = () => {
 
   const navigate = useNavigate();
 
+  const { roles } = useRoles();
+
+  const studentRole = roles.find((role) => role.role_name === "Student");
+
+  const {
+    users: students,
+    loading,
+    error,
+  } = useUsers(refetchTrigger, studentRole?.id ?? undefined);
+
   const handleCreateStudent = () => {
     setIsCreateStudentDialogOpen(true);
   };
 
-  const handleNavigateStudentPage = (studentId: string) => {
-    navigate(`/student/${studentId}`);
+  const handleNavigateStudentPage = (studentId: number | null) => {
+    if (studentId) navigate(`/student/${studentId}`);
+
+    else console.log("Launch profile creation dialog")
   };
 
   return (
@@ -46,15 +60,20 @@ const StudentsTab = () => {
       </HStack>
 
       <StudentYearButtons
-        selectedYear={yearId}
-        onYearChange={(selectedYearId: number | null) =>
-          setYearId(selectedYearId)
+        selectedYear={yearName}
+        onYearChange={(selectedYearId: string | null) =>
+          setYearName(selectedYearId)
         }
       />
 
       <StudentCardGrid
+        students={students}
+        loading = {loading}
+        error = {error}
+
         searchTerm={searchTerm}
-        year_id={yearId}
+        yearName={yearName}
+
         onStudentClick={handleNavigateStudentPage}
       />
 

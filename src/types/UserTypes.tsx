@@ -1,3 +1,8 @@
+interface StudentProfileType {
+    year_name: string
+    student_id: number
+}
+
 export interface UserType {
     id: number;
     first_name: string;
@@ -8,6 +13,9 @@ export interface UserType {
     role_ids: number[];
     profile_picture_url: string;
     is_active: boolean;
+
+    profile_tag?: string;
+    student_profile?: StudentProfileType
 }
 
 

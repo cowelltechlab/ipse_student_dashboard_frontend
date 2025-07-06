@@ -34,10 +34,11 @@ const UserCard = ({ user, onClick }: UserCardProps) => {
             <Text color="fg.muted" textStyle="md">
               {user.roles?.[0] || "No Role Assigned"}
             </Text>
-            {!user.is_active && (
+            
+            {user.profile_tag && (
               <Box bg={"#fbde8e"} px={3} py={2} borderRadius="full">
                 <Text color="black" textStyle="sm">
-                  Awaiting Activation
+                  {user.profile_tag}
                 </Text>
               </Box>
             )}

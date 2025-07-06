@@ -20,7 +20,7 @@ export const getStudents = async (
     },
   });
 
-  // console.log("getStudents response:", response.data);
+  console.log("getStudents response:", response.data);
 
   return response.data;
 };
