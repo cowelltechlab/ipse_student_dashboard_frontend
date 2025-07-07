@@ -8,6 +8,7 @@ interface StudentCardProps {
   firstName: string;
   lastName: string;
   classYear: string; 
+  isSelected: boolean,
   onClick?: () => void;
 }
 
@@ -15,8 +16,10 @@ const CreateAssignmentStudentCard = ({
   firstName,
   lastName,
   classYear,
+  isSelected,
   onClick,
 }: StudentCardProps) => {
+
   return (
     <Card.Root
       // width="120px"
@@ -25,6 +28,7 @@ const CreateAssignmentStudentCard = ({
       cursor="pointer"
       // p={0}
       boxShadow={"md"}
+      backgroundColor={isSelected? "#f2c5b5" : "none"}
       // boxShadow={isSelected ? selectedShadow : defaultShadow}
     >
       <Card.Body px={2} py={1}>

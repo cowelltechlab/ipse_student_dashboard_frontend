@@ -4,14 +4,16 @@ import CreateAssignmentStudentCard from "./CreateAssignmentStudentCard";
 
 interface StudentCardGridProps {
   year_id: number | null;
+  selectedStudentIds: Set<number>;
   onStudentClick?: (studentId: string) => void;
 }
 
 const CreateAssignmentStudentCardGrid = ({
   year_id,
+  selectedStudentIds,
   onStudentClick,
 }: StudentCardGridProps) => {
-  // TODO: break into chunks of 20-24
+  // TODO: create selectedStudents set either as being passed in or here
   const { students, loading, error } = useStudents("", year_id);
 
   if (loading) {
@@ -52,6 +54,7 @@ const CreateAssignmentStudentCardGrid = ({
           firstName={student.first_name}
           lastName={student.last_name}
           classYear={student.year_name}
+          isSelected = {selectedStudentIds.has(Number(student.id))}
           onClick={() => onStudentClick?.(student.id)}
         />
       ))}

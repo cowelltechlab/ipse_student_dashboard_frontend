@@ -8,7 +8,7 @@ import type {
 } from "../../types/AssignmentTypes";
 
 interface SubmitFormProps {
-  studentIds: number[];
+  studentIds: Set<number>; //number[];
   title: string;
   classId: number | null;
   file: File;
@@ -33,7 +33,7 @@ const SubmitForm = ({ studentIds, title, classId, file, openSuccessDialog }: Sub
 
     //    TODO: Update the hook to handle multiple students
       const response = await handlePostAssignment(
-        studentIds,
+        Array.from(studentIds),
         title,
         classId,
         file

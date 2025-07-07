@@ -6,19 +6,21 @@ import UploadAssignmentBox from "../components/createNewAssignment/UploadAssignm
 import DocumentForm from "../components/createNewAssignment/DocumentForm";
 import SelectStudentsSection from "../components/createNewAssignment/SelectStudentsSection";
 import SubmitForm from "../components/createNewAssignment/SubmitForm";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 const CreateNewAssignment = () => {
   const cardText = `Create an assignment that adapts and grows to support every
                      student's needs. Let's make learning accessible for all!`;
 
-  const [studentIds, setStudentIds] = useState<number[]>([]);
+  const [studentIds, setStudentIds] = useState<Set<number>>(new Set<number>());
   const [title, setTitle] = useState<string>("");
   const [classId, setClassId] = useState<number | null>(null);
   const [assignmentTypeId, setAssignmentTypeId] = useState<number | null>(null);
   const [file, setFile] = useState<File | null>(null);
 
   const [openSuccessDialog, setOpenSuccessDialog] = useState<boolean>(false);
+
+  // useEffect(() => console.log(studentIds), [studentIds]);
 
   return (
     <Box margin={"2%"}>
