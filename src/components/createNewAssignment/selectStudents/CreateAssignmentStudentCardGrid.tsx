@@ -7,7 +7,7 @@ interface StudentCardGridProps {
   onStudentClick?: (studentId: string) => void;
 }
 
-const StudentCardGrid = ({
+const CreateAssignmentStudentCardGrid = ({
   year_id,
   onStudentClick,
 }: StudentCardGridProps) => {
@@ -59,4 +59,4 @@ const StudentCardGrid = ({
   );
 };
 
-export default StudentCardGrid;
+export default CreateAssignmentStudentCardGrid;

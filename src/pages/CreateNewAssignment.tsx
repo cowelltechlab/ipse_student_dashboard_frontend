@@ -21,7 +21,7 @@ const CreateNewAssignment = () => {
   const [openSuccessDialog, setOpenSuccessDialog] = useState<boolean>(false);
 
   return (
-    <Box margin={"5%"}>
+    <Box margin={"2%"}>
       <PageHeader />
       <HeaderCard
         cardHeading="Create Assignment"
