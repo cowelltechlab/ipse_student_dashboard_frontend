@@ -7,6 +7,7 @@ import OAuthCallbackHandler from "./pages/Callback";
 import AssignmentDetails from "./pages/AssignmentDetails";
 import Student from "./pages/Student";
 import Register from "./pages/Register";
+import StudentProfileCreation from "./pages/StudentProfileCreation";
 
 const App: React.FC = () => {
   return (
@@ -41,6 +42,13 @@ const App: React.FC = () => {
         path="/student/:student_id/assignment/:assignment_id"
         element={<AssignmentDetails />}
       />
+
+      <Route
+        path="/profile-creation/:user_id"
+        element={<StudentProfileCreation />}
+      />
+
+      
 
       {/* Backup route */}
       {/* TODO: Update so student default is their own page */}

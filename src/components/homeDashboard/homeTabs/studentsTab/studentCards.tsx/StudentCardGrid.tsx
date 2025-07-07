@@ -17,7 +17,7 @@ interface StudentCardGridProps {
   loading: boolean;
   error: ErrorType | null;
   students?: UserType[];
-  onStudentClick?: (studentId: number | null) => void;
+  onStudentClick?: (studentId: number | null, userId: number) => void;
 }
 
 const StudentCardGrid = ({
@@ -78,7 +78,7 @@ const StudentCardGrid = ({
             profilePictureUrl={student.profile_picture_url}
             profile_tag={student.profile_tag || null}
             onClick={() =>
-              onStudentClick?.(student.student_profile?.student_id || null)
+              onStudentClick?.(student.student_profile?.student_id || null, student.id)
             }
           />
         ))}
