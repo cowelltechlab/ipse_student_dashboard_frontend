@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import type { ErrorType } from "../../types/ErrorType";
-import { getRoles } from "../../services/roleServices";
 import type { ClassType } from "../../types/ClassTypes";
+import { getClasses } from "../../services/classServices";
 
 const useClasses = () => {
   const [classes, setClasses] = useState<ClassType[]>([]);
@@ -12,7 +12,7 @@ const useClasses = () => {
     const fetchClasses = async () => {
       try {
         setLoading(true);
-        const response = await getRoles();
+        const response = await getClasses();
         setClasses(response);
       } catch (e) {
         const error = e as ErrorType;
