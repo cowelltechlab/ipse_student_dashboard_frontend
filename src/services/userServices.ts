@@ -1,4 +1,4 @@
-import type { UserType } from "../types/UserTypes";
+import type { ProfilePictureType, UserType } from "../types/UserTypes";
 import apiClient from "./apiClient";
 
 export const getUsers = async (
@@ -9,6 +9,11 @@ export const getUsers = async (
   });
   return response.data;
 };
+
+export const getDefaultProfilePictures = async (): Promise<ProfilePictureType[]> => {
+  const response = await apiClient.get("/users/profile-picture-defaults");
+  return response.data;
+}
 
 
 export const postUserInvite = async (userData: {
@@ -26,6 +31,7 @@ export const postCompleteUserRegistry = async (userData: {
   last_name: string;
   password: string;
   profile_picture: File | null;
+  existingBlobUrl: string | null;
 }): Promise<UserType> => {
   const formData = new FormData();
   formData.append("token", userData.token);
@@ -34,6 +40,9 @@ export const postCompleteUserRegistry = async (userData: {
   formData.append("password", userData.password);
   if (userData.profile_picture) {
     formData.append("profile_picture", userData.profile_picture);
+  }
+  if (userData.existingBlobUrl) {
+    formData.append("existing_blob_url", userData.existingBlobUrl);
   }
 
   const response = await apiClient.post("/users/complete-invite", formData, {

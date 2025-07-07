@@ -11,6 +11,7 @@ const useCompleteUserRegistry = () => {
     last_name: string,
     password: string,
     profile_picture: File | null,
+    existingBlobUrl: string | null
   ) => {
     try {
       setLoading(true);
@@ -20,6 +21,7 @@ const useCompleteUserRegistry = () => {
         last_name,
         password,
         profile_picture,
+        existingBlobUrl,
       });
       return response;
     } catch (e) {

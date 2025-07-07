@@ -3,7 +3,7 @@ import type { ErrorType } from "../../types/ErrorType";
 import type { UserType } from "../../types/UserTypes";
 import { getUsers } from "../../services/userServices";
 
-const useUsers = (roleId?: number) => {
+const useUsers = (refetchTrigger: number, roleId?: number) => {
   const [users, setUsers] = useState<UserType[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<ErrorType | null>(null);
@@ -26,7 +26,7 @@ const useUsers = (roleId?: number) => {
     };
 
     fetchUsers();
-  }, [roleId]);
+  }, [roleId, refetchTrigger]);
 
   return { users, loading, error };
 };

@@ -54,6 +54,8 @@ const App: React.FC = () => {
         element={<CreateNewAssignment/>}
       />
 
+      {/* TODO: Update so student default is their own page */}
+      <Route path="*" element={<Home />} />
     </Routes>
   );
 };

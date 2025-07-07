@@ -2,14 +2,27 @@ import { Box, HStack, Spacer } from "@chakra-ui/react";
 import SearchBar from "../../../common/searchBar/SearchBar";
 import { useState } from "react";
 import TextButton from "../../../common/universal/TextButton";
-import { CiCirclePlus } from "react-icons/ci";
 import useRoles from "../../../../hooks/roles/useRoles";
 import useUsers from "../../../../hooks/users/useUsers";
 import UserCardGrid from "../../../common/userCards/UserCardGrid";
 import type { UserType } from "../../../../types/UserTypes";
+import CreateUserDialog from "../../createUserDialog/CreateUserDialog";
+import DisplayTutorDialog from "./displayTutorDialog/DisplayTutorDialog";
+import DeleteUserDialog from "../DeleteUserDialog";
+import { IoIosAddCircle } from "react-icons/io";
 
 const PeerTutorsTab = () => {
   const [searchTerm, setSearchTerm] = useState<string>("");
+
+  const [refetchTrigger, setRefetchTrigger] = useState<number>(0);
+
+  const [isCreateTutorDialogOpen, setIsCreateTutorDialogOpen] =
+    useState<boolean>(false);
+  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState<boolean>(false);
+
+  const [selectedUser, setSelectedUser] = useState<UserType | null>(null);
+  const [isProfileDialogOpen, setIsProfileDialogOpen] =
+    useState<boolean>(false);
 
   const { roles } = useRoles();
 
@@ -19,15 +32,15 @@ const PeerTutorsTab = () => {
     users: peerTutors,
     loading,
     error,
-  } = useUsers(peerTutorRole?.id ?? undefined);
+  } = useUsers(refetchTrigger, peerTutorRole?.id ?? undefined);
 
   const handleCreatePeerTutor = () => {
-    // TODO: Open a modal or navigate to a create peer tutor page
-    console.log("Create new peer tutor clicked");
+    setIsCreateTutorDialogOpen(true);
   };
 
   const handleClickPeerTutorCard = (user: UserType) => {
-    console.log(`Peer Tutor card clicked with user ID: ${user.id}`);
+    setSelectedUser(user);
+    setIsProfileDialogOpen(true);
   };
 
   return (
@@ -40,9 +53,9 @@ const PeerTutorsTab = () => {
         />
         <Spacer />
 
-        <TextButton onClick={handleCreatePeerTutor}>
+        <TextButton color="#bd4f23" onClick={handleCreatePeerTutor}>
           <HStack gap={1}>
-            <CiCirclePlus color="#bd4f23" />
+            <IoIosAddCircle  color="#bd4f23" />
             Create new Peer Tutor
           </HStack>
         </TextButton>
@@ -55,6 +68,34 @@ const PeerTutorsTab = () => {
         error={error}
         onCardClick={handleClickPeerTutorCard}
       />
+
+      {selectedUser && (
+        <DisplayTutorDialog
+          user={selectedUser}
+          open={isProfileDialogOpen}
+          setOpen={setIsProfileDialogOpen}
+          setOpenDeleteDialog={setIsDeleteDialogOpen}
+        />
+      )}
+
+      {selectedUser && (
+        <DeleteUserDialog
+          user={selectedUser}
+          open={isDeleteDialogOpen}
+          setOpen={setIsDeleteDialogOpen}
+          refetchTrigger={refetchTrigger}
+          setRefetchTrigger={setRefetchTrigger}
+        />
+      )}
+
+      {isCreateTutorDialogOpen && (
+        <CreateUserDialog
+          open={isCreateTutorDialogOpen}
+          setOpen={setIsCreateTutorDialogOpen}
+          refetchTrigger={refetchTrigger}
+          setRefetchTrigger={setRefetchTrigger}
+        />
+      )}
     </Box>
   );
 };

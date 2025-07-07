@@ -10,32 +10,32 @@ import {
   Box,
   Heading,
 } from "@chakra-ui/react";
-import type { UserType } from "../../../../types/UserTypes";
+import type { UserType } from "../../../types/UserTypes";
 
-import deleteProfileImage from "../../../../assets/Create Profile.svg";
+import deleteProfileImage from "../../../assets/Create Profile.svg";
 import { useState } from "react";
 import { FaCheckCircle } from "react-icons/fa";
-import useDeleteUser from "../../../../hooks/users/useDeleteUsers";
+import useDeleteUser from "../../../hooks/users/useDeleteUsers";
 
-interface DisplayAdvisorDialogProps {
+interface DisplayUserDialogProps {
   user: UserType;
   open: boolean;
   setOpen: (open: boolean) => void;
+
+  refetchTrigger: number;
+  setRefetchTrigger: (trigger: number) => void;
 }
 
-const UserCardClickDialog = ({
-  user,
-  open,
-  setOpen,
-}: DisplayAdvisorDialogProps) => {
+const DeleteUserDialog = ({ user, open, setOpen, refetchTrigger, setRefetchTrigger }: DisplayUserDialogProps) => {
   const [deleteHover, setDeleteHover] = useState(false);
 
-  const {handleDeleteUser} = useDeleteUser();
+  const { handleDeleteUser } = useDeleteUser();
 
   const handleDeleteProfile = () => {
     handleDeleteUser(user.id);
     setOpen(false);
-  }
+    setRefetchTrigger(refetchTrigger + 1);
+  };
 
   return (
     <Dialog.Root
@@ -43,6 +43,7 @@ const UserCardClickDialog = ({
       open={open}
       onOpenChange={(e) => setOpen(e.open)}
       placement={"center"}
+      size={"lg"}
     >
       <Portal>
         <Dialog.Backdrop />
@@ -71,7 +72,7 @@ const UserCardClickDialog = ({
                   </Button>
                 </Dialog.ActionTrigger>
                 <Button
-                onClick = {handleDeleteProfile}
+                  onClick={handleDeleteProfile}
                   variant="outline"
                   borderColor="#BD4F23"
                   color="#BD4F23"
@@ -105,4 +106,4 @@ const UserCardClickDialog = ({
   );
 };
 
-export default UserCardClickDialog;
+export default DeleteUserDialog;

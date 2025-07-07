@@ -1,8 +1,8 @@
 import apiClient from "./apiClient";
 
 export const getStudents = async (
-  searchTerm: string | null,
-  year_id: number | null
+  searchTerm?: string | null,
+  year_id?: number | null
 ) => {
   const params = new URLSearchParams();
   if (searchTerm && searchTerm.trim() !== "") {
@@ -20,7 +20,7 @@ export const getStudents = async (
     },
   });
 
-  // console.log("getStudents response:", response.data);
+  console.log("getStudents response:", response.data);
 
   return response.data;
 };

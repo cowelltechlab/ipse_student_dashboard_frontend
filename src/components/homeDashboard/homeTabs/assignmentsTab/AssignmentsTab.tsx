@@ -2,12 +2,12 @@
 
 import { Box, HStack, Spacer } from "@chakra-ui/react";
 import { useState } from "react";
-import { CiCirclePlus } from "react-icons/ci";
 import SearchBar from "../../../common/searchBar/SearchBar";
 import TextButton from "../../../common/universal/TextButton";
 import AssignmentsTable from "./AssignmetsTable";
 import AssignmentsFilterButtons from "./AssignmentsFilterButtons";
 import { useNavigate } from "react-router-dom";
+import { IoIosAddCircle } from "react-icons/io";
 
 const AssignmentsTab = () => {
   const [searchTerm, setSearchTerm] = useState("");
@@ -44,9 +44,9 @@ const AssignmentsTab = () => {
           placeholder="Search Assignments..."
         />
         <Spacer />
-        <TextButton onClick={handleCreateAssignment}>
+        <TextButton color="#bd4f23" onClick={handleCreateAssignment}>
           <HStack gap={1}>
-            <CiCirclePlus color="#bd4f23" />
+            <IoIosAddCircle  color="#bd4f23" />
             Create New Assignment
           </HStack>
         </TextButton>

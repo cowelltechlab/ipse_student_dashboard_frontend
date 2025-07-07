@@ -3,29 +3,22 @@ import AssignmentsTab from "./homeTabs/assignmentsTab/AssignmentsTab";
 import AdvisorsTab from "./homeTabs/advisorsTab/AdvisorsTab";
 import PeerTutorsTab from "./homeTabs/peerTutorsTab/PeerTutorsTab";
 
-import { MdOutlineHandshake } from "react-icons/md";
 import { Tabs } from "@chakra-ui/react";
-import { LuFolder, LuUser } from "react-icons/lu";
-import { PiChalkboardTeacher } from "react-icons/pi";
 
 const HomeContent = () => {
   return (
     <Tabs.Root defaultValue="students" variant={"line"}>
       <Tabs.List>
-        <Tabs.Trigger value="students">
-          <LuUser />
+        <Tabs.Trigger _selected={{ fontWeight: "bold" }} value="students">
           Students
         </Tabs.Trigger>
-        <Tabs.Trigger value="assignments">
-          <LuFolder />
+        <Tabs.Trigger _selected={{ fontWeight: "bold" }} value="assignments">
           Assignments
         </Tabs.Trigger>
-        <Tabs.Trigger value="advisors">
-          <MdOutlineHandshake />
+        <Tabs.Trigger _selected={{ fontWeight: "bold" }} value="advisors">
           Advisors
         </Tabs.Trigger>
-        <Tabs.Trigger value="peer-tutors">
-          <PiChalkboardTeacher />
+        <Tabs.Trigger _selected={{ fontWeight: "bold" }} value="peer-tutors">
           Peer Tutors
         </Tabs.Trigger>
       </Tabs.List>

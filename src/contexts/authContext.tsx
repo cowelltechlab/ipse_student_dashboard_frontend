@@ -8,6 +8,7 @@ interface AuthContextType {
   first_name: string | null;
   last_name: string | null;
   roles: string[];
+  profilePictureUrl: string | null;
   isAuthenticated: boolean;
   loading: boolean;
   loginWithGoogle: () => Promise<void>;
@@ -28,6 +29,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [firstName, setFirstName] = useState<string | null>(null);
   const [lastName, setLastName] = useState<string | null>(null);
   const [roles, setRoles] = useState<string[]>([]);
+  const [profilePictureUrl, setProfilePictureUrl] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
 
 
@@ -37,7 +39,8 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
     try {
       const userResponse = await apiClient.get("/auth/me");
-
+      
+      console.log("User response:", userResponse.data);
       
 
       if (userResponse.data.roles?.includes("Student")) {
@@ -58,6 +61,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       setLastName(userResponse.data.last_name);
       setRoles(userResponse.data.roles || []);
       setEmail(userResponse.data.email);
+      setProfilePictureUrl(userResponse.data.profile_picture_url || null);
     } catch (error) {
       console.error("Error retrieving user info:", error);
       localStorage.removeItem("authToken");
@@ -67,6 +71,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       setEmail(null);
       setRoles([]);
       setStudentId(null);
+      setProfilePictureUrl(null);
     }
   };
 
@@ -100,6 +105,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         setRoles(response.data.roles || []);
         setEmail(response.data.email);
         setUserId(response.data.id);
+        setProfilePictureUrl(response.data.profile_picture_url || null);
 
         if ((response.data.roles || []).includes("Student")) {
           try {
@@ -123,6 +129,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         setRoles([]);
         setUserId(null);
         setStudentId(null);
+        setProfilePictureUrl(null);
       })
       .finally(() => setLoading(false));
   }, []);
@@ -198,6 +205,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     setEmail(null);
     setRoles([]);
     setUserId(null);
+    setProfilePictureUrl(null);
     navigate("/login");
   };
 
@@ -210,6 +218,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         first_name: firstName,
         last_name: lastName,
         roles,
+        profilePictureUrl,
         isAuthenticated: !!email,
         loading,
         loginWithGoogle,

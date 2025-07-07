@@ -1,19 +1,34 @@
-import { SimpleGrid, Box, Spinner, Text } from "@chakra-ui/react";
-import useStudents from "../../../../../hooks/students/useStudents";
+import { useState } from "react";
+import {
+  Box,
+  Text,
+  Spinner,
+  Wrap,
+  VStack,
+} from "@chakra-ui/react";
 import StudentCard from "./StudentCard";
+import type { UserType } from "../../../../../types/UserTypes";
+import type { ErrorType } from "../../../../../types/ErrorType";
+import TextButton from "../../../../common/universal/TextButton";
 
 interface StudentCardGridProps {
   searchTerm: string | null;
-  year_id: number | null;
-  onStudentClick?: (studentId: string) => void;
+  yearName: string | null;
+  loading: boolean;
+  error: ErrorType | null;
+  students?: UserType[];
+  onStudentClick?: (studentId: number | null) => void;
 }
 
 const StudentCardGrid = ({
   searchTerm,
-  year_id,
+  loading,
+  error,
+  yearName,
   onStudentClick,
+  students,
 }: StudentCardGridProps) => {
-  const { students, loading, error } = useStudents(searchTerm, year_id);
+  const [visibleCount, setVisibleCount] = useState(15);
 
   if (loading) {
     return (
@@ -26,7 +41,7 @@ const StudentCardGrid = ({
   if (error) {
     return (
       <Box textAlign="center" py={10}>
-        <Text color="red.500">Failed to load students.</Text>
+        <Text color="red.500">Failed to load users.</Text>
       </Box>
     );
   }
@@ -39,25 +54,45 @@ const StudentCardGrid = ({
     );
   }
 
+  const filteredStudents = students.filter((student) => {
+    const fullName = `${student.first_name} ${student.last_name}`.toLowerCase();
+    const matchesSearch = fullName.includes(searchTerm?.toLowerCase() || "");
+    const matchesYear = yearName
+      ? student.student_profile?.year_name === yearName
+      : true;
+    return matchesSearch && matchesYear;
+  });
+
+  const studentsToShow = filteredStudents.slice(0, visibleCount);
+  const hasMore = visibleCount < filteredStudents.length;
+
   return (
-    <SimpleGrid
-      minChildWidth="320px"
-      gap="40px"
-      p={4}
-      maxW={"1500px"}
-      mx="auto"
-    >
-      {students.map((student) => (
-        <StudentCard
-          key={student.id}
-          firstName={student.first_name}
-          lastName={student.last_name}
-          classYear={student.year_name}
-          profilePictureUrl={student.profile_picture_url}
-          onClick={() => onStudentClick?.(student.id)}
-        />
-      ))}
-    </SimpleGrid>
+    <VStack>
+      <Wrap gap="40px" p={4} maxW={"1800px"} mx="auto" justify="center">
+        {studentsToShow.map((student) => (
+          <StudentCard
+            key={student.id}
+            firstName={student.first_name}
+            lastName={student.last_name}
+            classYear={student.student_profile?.year_name || null}
+            profilePictureUrl={student.profile_picture_url}
+            profile_tag={student.profile_tag || null}
+            onClick={() =>
+              onStudentClick?.(student.student_profile?.student_id || null)
+            }
+          />
+        ))}
+      </Wrap>
+
+      {hasMore && (
+        <TextButton
+          color="#bd4f23"
+          onClick={() => setVisibleCount((prev) => prev + 10)}
+        >
+          View 10 More
+        </TextButton>
+      )}
+    </VStack>
   );
 };
 

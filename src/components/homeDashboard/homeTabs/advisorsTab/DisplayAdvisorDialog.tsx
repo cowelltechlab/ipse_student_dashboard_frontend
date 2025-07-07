@@ -74,7 +74,7 @@ const UserCardClickDialog = ({
 
               <VStack m={2} align="center" mt={4}>
                 <Dialog.ActionTrigger asChild>
-                  <Button bg={"#BD4F23"} w={"50%"}>
+                  <Button bg={"#BD4F23"} color={"white"} w={"50%"}>
                     Back to Dashboard
                   </Button>
                 </Dialog.ActionTrigger>

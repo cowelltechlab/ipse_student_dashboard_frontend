@@ -15,6 +15,7 @@ const useGetStudentByUserId = (userId: number) => {
         const response = await getStudentByUserId(userId);
         setStudent(response);
       } catch (e) {
+        console.error("Error fetching student by user ID:", e);
         const error = e as ErrorType;
         setError(error);
         setStudent(null);
