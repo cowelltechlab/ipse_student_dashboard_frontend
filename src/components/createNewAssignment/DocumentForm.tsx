@@ -10,6 +10,7 @@ import {
 } from "@chakra-ui/react";
 import { FaChevronDown } from "react-icons/fa";
 import useClasses from "../../hooks/classes/useClasses";
+import useAssignmentTypes from "../../hooks/assignments/useAssignmentTypes";
 
 interface DocumentFormProps {
   title: string;
@@ -29,16 +30,19 @@ const DocumentForm = ({
   setClassId,
 }: DocumentFormProps) => {
   const { classes } = useClasses();
+  const { assignmentTypes } = useAssignmentTypes();
 
   // TODO: Add conditional for boxes being red if neither is selected
   // TODO: Do not hard code the assignment types, fetch from API
-  const assignmentTypes = [
-    "Individual project",
-    "Group project",
-    "Test",
-    "Essay",
-    "Other",
-  ];
+  // const assignmentTypes = [
+  //   "Individual project",
+  //   "Group project",
+  //   "Test",
+  //   "Essay",
+  //   "Other",
+  // ];
+
+  console.log(assignmentTypes)
 
   return (
     <VStack flex="1" align="stretch">
@@ -87,8 +91,8 @@ const DocumentForm = ({
 
                   <For each={assignmentTypes}>
                     {(item) => (
-                      <option key={item} value={item}>
-                        {item}
+                      <option key={item.type} value={item.type}>
+                        {item.type}
                       </option>
                     )}
                   </For>

@@ -35,3 +35,9 @@ export const postAssignment = async (assignmentData: {
 
   return response.data;
 }
+
+
+export const getAssignmentTypes = async () => {
+  const response = await apiClient.get("/assignments/types");
+  return response.data;
+};

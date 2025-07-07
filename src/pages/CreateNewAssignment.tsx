@@ -20,7 +20,7 @@ const CreateNewAssignment = () => {
 
   const [openSuccessDialog, setOpenSuccessDialog] = useState<boolean>(false);
 
-  // useEffect(() => console.log(studentIds), [studentIds]);
+  // useEffect(() => console.log(classId), [classId]);
 
   return (
     <Box margin={"2%"}>

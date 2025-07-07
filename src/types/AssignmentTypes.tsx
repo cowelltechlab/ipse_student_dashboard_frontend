@@ -30,3 +30,8 @@ export interface AssignmentDetailType extends AssignmentBase{
   first_name: string;
   last_name: string;
 }
+
+export interface AssignmentTypeListType {
+  id: number;
+  type: string;
+}
