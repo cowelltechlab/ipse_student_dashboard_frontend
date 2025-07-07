@@ -1,7 +1,8 @@
 export interface AssignmentType {
   id: number;
-  student_first_name: string;
-  student_last_name: string;
+  student_id: number;
+  first_name: string;
+  last_name: string;
   title: string;
   class: string;
   term: string;
@@ -9,7 +10,6 @@ export interface AssignmentType {
 
   // NoSQL fields
   finalized?: boolean; // Determined by whether one version of the assignment has finalized: 1
-  rating_status?: "Rated" | "Pending" | "Partially Rated"; // Rated if all versions are rated, Pending if none are rated, Partially Rated if some versions are rated
+  rating_status?: "Rated" | "Pending" | "partially rated"; // Rated if final version is rated, Pending if none are rated, Partially Rated if some versions (but not the final version) are rated
   date_modified?: string; // Date of the most recent modification
 }
- 

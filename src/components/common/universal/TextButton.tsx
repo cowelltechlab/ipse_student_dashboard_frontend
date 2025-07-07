@@ -1,21 +1,24 @@
-import { Text } from "@chakra-ui/react";
+import { Box } from "@chakra-ui/react";
 
 const TextButton = ({
   children,
   onClick,
+  color = "black",
 }: {
   children: React.ReactNode;
   onClick: () => void;
+  color?: string;
 }) => {
   return (
-    <Text
+    <Box
       onClick={onClick}
       fontWeight={"bold"}
+      color={color}
       cursor={"pointer"}
       _hover={{ textDecoration: "underline" }}
     >
       {children}
-    </Text>
+    </Box>
   );
 };
 export default TextButton;

@@ -1,20 +1,22 @@
-import {
-  Heading,
-  HStack,
-  Spacer,
-  AvatarGroup,
-  Avatar,
-} from "@chakra-ui/react";
+import { Heading, HStack, Spacer, AvatarGroup, Avatar } from "@chakra-ui/react";
 
 import { IoIosNotifications } from "react-icons/io";
 
 import CreateNewDropdown from "./CreateNewDropdown";
 import TextButton from "../universal/TextButton";
+import useAuth from "../../../contexts/useAuth";
+
+import profileDefaultIcon from "../../../assets/default_profile_picture.jpg";
+import { useNavigate } from "react-router-dom";
 
 const PageHeader = () => {
+  const { profilePictureUrl } = useAuth();
+
+  const navigate = useNavigate();
+
   const onHomeClick = () => {
-    // Logic for navigating to home
-    console.log("Home clicked");
+    // TODO: Update so student role is redirected to student home page instead
+    navigate("/dashboard");
   };
 
   return (
@@ -28,7 +30,7 @@ const PageHeader = () => {
         <AvatarGroup>
           <Avatar.Root>
             <Avatar.Fallback />
-            <Avatar.Image />
+            <Avatar.Image src={profilePictureUrl ?? profileDefaultIcon} />
           </Avatar.Root>
         </AvatarGroup>
       </HStack>
