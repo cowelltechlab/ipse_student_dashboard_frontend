@@ -1,24 +1,35 @@
 import { Fieldset, Field, VStack } from "@chakra-ui/react";
-// import StudentYearButtons from "./selectStudents/StudentYearButtons";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import CreateAssignmentStudentCardGrid from "./selectStudents/CreateAssignmentStudentCardGrid";
 import StudentYearButtons from "../common/filterButtons/StudentYearButtons";
+import useRoles from "../../hooks/roles/useRoles";
+import useUsers from "../../hooks/users/useUsers";
 
 interface SelectStudentsSectionProps {
-  studentIds: Set<number>; // number[];
-  setStudentIds: React.Dispatch<React.SetStateAction<Set<number>>> // (ids: Set<number>) => void; //(ids: number[]) => void;
+  selectedStudentIds: Set<number>; // number[];
+  setSelectedStudentIds: React.Dispatch<React.SetStateAction<Set<number>>> // (ids: Set<number>) => void; //(ids: number[]) => void;
 }
 
 const SelectStudentsSection = ({
-  studentIds,
-  setStudentIds,
+  selectedStudentIds,
+  setSelectedStudentIds,
 }: SelectStudentsSectionProps) => {
-  const [yearId, setYearId] = useState<number | null>(null);
+  const [yearName, setYearName] = useState<string | null>(null);
+  const [refetchTrigger, setRefetchTrigger] = useState<number>(0);
 
-  const handleOnStudentClick = (clickedStudentId: string) => {
-    // console.log("Selected student ID:", clickedStudentId);
+  const { roles } = useRoles();
+  const studentRole = roles.find((role) => role.role_name === "Student");
 
-    setStudentIds((prevSelectedIds: Set<number>) => {
+  const {
+    users: students,
+    loading,
+    error,
+  } = useUsers(refetchTrigger, studentRole?.id ?? undefined);
+
+  const handleOnStudentClick = (clickedStudentId: number | null) => {
+    console.log("Selected student ID:", clickedStudentId);
+
+    setSelectedStudentIds((prevSelectedIds: Set<number>) => {
       const newSet = new Set(prevSelectedIds); 
       const studentId = Number(clickedStudentId);
 
@@ -42,22 +53,20 @@ const SelectStudentsSection = ({
               Select Students
             </Field.Label>
           </Field.Root>
-          {/* <StudentYearButtons
-            selectedYear={yearId}
-            onYearChange={(selectedYearId: number | null) =>
-              setYearId(selectedYearId)
-            }
-          /> */}
-          {/* <StudentYearButtons 
-            selectedYear={yearId}
+
+          <StudentYearButtons 
+            selectedYear={yearName}
             onYearChange={
-              (selectedYearId: number | null) => setYearId(selectedYearId)
+              (selectedYearName: string | null) => setYearName(selectedYearName)
             }
-          /> */}
+          />
           <Field.Root>
             <CreateAssignmentStudentCardGrid
-              year_id={yearId}
-              selectedStudentIds={studentIds}
+              yearName={yearName}
+              loading={loading}
+              error={error}
+              selectedStudentIds={selectedStudentIds}
+              students={students}
               onStudentClick={handleOnStudentClick}
             />
           </Field.Root>

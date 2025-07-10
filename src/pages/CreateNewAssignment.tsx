@@ -20,7 +20,7 @@ const CreateNewAssignment = () => {
 
   const [openSuccessDialog, setOpenSuccessDialog] = useState<boolean>(false);
 
-  // useEffect(() => console.log(classId), [classId]);
+  // useEffect(() => console.log(studentIds), [studentIds]);
 
   return (
     <Box margin={"2%"}>
@@ -58,8 +58,8 @@ const CreateNewAssignment = () => {
       </Flex>
       <Flex p={6}>
         <SelectStudentsSection
-          studentIds={studentIds}
-          setStudentIds={setStudentIds}
+          selectedStudentIds={studentIds}
+          setSelectedStudentIds={setStudentIds}
         />
       </Flex>
 
@@ -77,7 +77,6 @@ const CreateNewAssignment = () => {
         <AssignmentSubmitSuccess />
       )} */}
 
-      {/* <HomeContent /> */}
     </Box>
   );
 };
