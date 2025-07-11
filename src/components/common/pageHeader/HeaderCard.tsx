@@ -43,7 +43,7 @@ const HeaderCard = ({ cardHeading, cardText, cardImageUrl }: HeaderCardProps) =>
           align={{ base: "flex-end", md: "center" }}
           justify="space-between"
         >
-          <Box flex="1" pr={{ md: 4 }}>
+          <Box flex="1" pr={{ md: 4 }} pt={10}>
             <Heading color="white" fontSize="2xl" mb={2}>
                 {cardHeading}
             </Heading>
