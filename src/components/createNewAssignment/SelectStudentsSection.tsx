@@ -7,7 +7,7 @@ import useUsers from "../../hooks/users/useUsers";
 
 interface SelectStudentsSectionProps {
   selectedStudentIds: Set<number>; // number[];
-  setSelectedStudentIds: React.Dispatch<React.SetStateAction<Set<number>>> // (ids: Set<number>) => void; //(ids: number[]) => void;
+  setSelectedStudentIds: React.Dispatch<React.SetStateAction<Set<number>>> 
 }
 
 const SelectStudentsSection = ({
