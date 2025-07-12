@@ -20,13 +20,13 @@ const App: React.FC = () => {
       />
 
       {/* Protected wrapper for roles */}
-      {/* <Route
+      <Route
         element={
           <ProtectedRoute requiredRoles={["Admin", "Advisor", "Peer Tutor"]} />
         }
       >
         <Route path="/dashboard" element={<Home />} />
-      </Route> */}
+      </Route>
 
       <Route path="/dashboard" element={<Home />} />
 
@@ -48,11 +48,16 @@ const App: React.FC = () => {
       {/* Backup route */}
       <Route path="*" element={<div>Page not found</div>} />
 
-      {/* TODO: Make protected for admins only */}
       <Route
-        path="/create-assignment"
-        element={<CreateNewAssignment/>}
-      />
+        element={
+          <ProtectedRoute requiredRoles={["Admin", "Advisor"]} />
+        }
+      >
+        <Route
+          path="/create-assignment"
+          element={<CreateNewAssignment/>}
+        />
+      </Route>
 
       {/* TODO: Update so student default is their own page */}
       <Route path="*" element={<Home />} />
