@@ -34,7 +34,6 @@ const SubmitForm = ({
 
   const handleAssignmentCreateClick = async () => {
     try {
-      // Todo: make it so submit is not allowed without a classId (without throwing an error)
       if (studentIds.size === 0) {
         throw new Error("Student selection is required");
       }
@@ -43,7 +42,7 @@ const SubmitForm = ({
         throw new Error("Document name (title) is required");
       }
 
-      if (classId === null || classId === undefined || typeof classId !== 'number') {
+      if (Number.isNaN(classId) || classId === null || classId === undefined || typeof classId !== 'number') {
         throw new Error("Class is required");
       }
 
@@ -51,7 +50,7 @@ const SubmitForm = ({
         throw new Error("File is required");
       }
 
-      if (assignmentTypeId === null || assignmentTypeId === undefined || typeof assignmentTypeId !== 'number') {
+      if (Number.isNaN(classId) || assignmentTypeId === null || assignmentTypeId === undefined || typeof assignmentTypeId !== 'number') {
         throw new Error("Assignment Type is required");
       }
 
@@ -62,19 +61,14 @@ const SubmitForm = ({
         file,
         assignmentTypeId
       );
-      console.log("HANDLE POST ASSIGNMENT RESPONSE:", response);
 
-      // const responseDict = response.data as AssignmentDetailType;
-      // toaster.create({
-      //   description: `Assignment "${responseDict.title}" created successfully!`,
-      //   type: "success",
-      // });
       toaster.create({
         description: `Assignment "${response[0].title}" created successfully!`,
         type: "success",
       });
 
       openSuccessDialog();
+      console.log(`Assignment "${response[0].title}" created successfully!`);
     } catch (e) {
       const error = e as ErrorType;
       toaster.create({

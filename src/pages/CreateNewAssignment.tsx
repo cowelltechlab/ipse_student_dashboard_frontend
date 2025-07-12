@@ -73,7 +73,7 @@ const CreateNewAssignment = () => {
       </Flex>
 
       {/* {openSuccessDialog && (
-        <AssignmentSubmitSuccess />
+        <SubmitModal />
       )} */}
 
     </Box>

@@ -3,7 +3,6 @@ import {
   Fieldset,
   Field,
   Input,
-  Box,
   NativeSelect,
   For,
   Icon,

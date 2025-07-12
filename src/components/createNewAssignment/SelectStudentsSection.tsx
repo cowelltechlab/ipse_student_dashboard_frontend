@@ -27,14 +27,12 @@ const SelectStudentsSection = ({
   } = useUsers(refetchTrigger, studentRole?.id ?? undefined);
 
   const handleOnStudentClick = (clickedStudentId: number | null) => {
-    console.log("Selected student ID:", clickedStudentId);
 
     setSelectedStudentIds((prevSelectedIds: Set<number>) => {
       const newSet = new Set(prevSelectedIds); 
       const studentId = Number(clickedStudentId);
 
       if (newSet.has(studentId)) {
-        // console.log("Deselected");
         newSet.delete(studentId); 
       } else {
         newSet.add(studentId);   
