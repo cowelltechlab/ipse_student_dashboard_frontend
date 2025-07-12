@@ -8,15 +8,23 @@ import type {
 } from "../../types/AssignmentTypes";
 
 interface SubmitFormProps {
-  studentIds: Set<number>; //number[];
+  studentIds: Set<number>;
   title: string;
   classId: number | null;
-  file: File;
+  file: File | null;
+  assignmentTypeId: number | null;
 
   openSuccessDialog: () => void;
 }
 
-const SubmitForm = ({ studentIds, title, classId, file, openSuccessDialog }: SubmitFormProps) => {
+const SubmitForm = ({ 
+  studentIds, 
+  title, 
+  classId, 
+  file, 
+  assignmentTypeId, 
+  openSuccessDialog 
+}: SubmitFormProps) => {
   const commonButtonStyles = {
     borderRadius: 8,
     borderColor: "#BD4F23",
@@ -26,21 +34,43 @@ const SubmitForm = ({ studentIds, title, classId, file, openSuccessDialog }: Sub
 
   const handleAssignmentCreateClick = async () => {
     try {
-        // Todo: make it so submit is not allowed without a classId (without throwing an error)
-      if (!classId) {
-        throw new Error("Class ID is required");
+      // Todo: make it so submit is not allowed without a classId (without throwing an error)
+      if (studentIds.size === 0) {
+        throw new Error("Student selection is required");
       }
 
-    //    TODO: Update the hook to handle multiple students
-      const response = await handlePostAssignment(
+      if (!title) {
+        throw new Error("Document name (title) is required");
+      }
+
+      if (classId === null || classId === undefined || typeof classId !== 'number') {
+        throw new Error("Class is required");
+      }
+
+      if (!file) {
+        throw new Error("File is required");
+      }
+
+      if (assignmentTypeId === null || assignmentTypeId === undefined || typeof assignmentTypeId !== 'number') {
+        throw new Error("Assignment Type is required");
+      }
+
+      const response: AssignmentDetailType[] = await handlePostAssignment(
         Array.from(studentIds),
         title,
         classId,
-        file
+        file,
+        assignmentTypeId
       );
-      const responseDict = response.data as AssignmentDetailType;
+      console.log("HANDLE POST ASSIGNMENT RESPONSE:", response);
+
+      // const responseDict = response.data as AssignmentDetailType;
+      // toaster.create({
+      //   description: `Assignment "${responseDict.title}" created successfully!`,
+      //   type: "success",
+      // });
       toaster.create({
-        description: `Assignment "${responseDict.title}" created successfully!`,
+        description: `Assignment "${response[0].title}" created successfully!`,
         type: "success",
       });
 

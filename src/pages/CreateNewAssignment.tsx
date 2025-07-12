@@ -6,7 +6,7 @@ import UploadAssignmentBox from "../components/createNewAssignment/UploadAssignm
 import DocumentForm from "../components/createNewAssignment/DocumentForm";
 import SelectStudentsSection from "../components/createNewAssignment/SelectStudentsSection";
 import SubmitForm from "../components/createNewAssignment/SubmitForm";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 
 const CreateNewAssignment = () => {
   const cardText = `Create an assignment that adapts and grows to support every
@@ -19,8 +19,6 @@ const CreateNewAssignment = () => {
   const [file, setFile] = useState<File | null>(null);
 
   const [openSuccessDialog, setOpenSuccessDialog] = useState<boolean>(false);
-
-  // useEffect(() => console.log(studentIds), [studentIds]);
 
   return (
     <Box margin={"2%"}>
@@ -69,6 +67,7 @@ const CreateNewAssignment = () => {
           title={title}
           classId={classId}
           file={file || new File([], "")}
+          assignmentTypeId={assignmentTypeId}
           openSuccessDialog={() => setOpenSuccessDialog(true)}
         />
       </Flex>

@@ -11,6 +11,7 @@ import {
 import { FaChevronDown } from "react-icons/fa";
 import useClasses from "../../hooks/classes/useClasses";
 import useAssignmentTypes from "../../hooks/assignments/useAssignmentTypes";
+import { useEffect } from "react";
 
 interface DocumentFormProps {
   title: string;
@@ -19,6 +20,11 @@ interface DocumentFormProps {
   setAssignmentTypeId: (id: number | null) => void;
   classId: number | null;
   setClassId: (id: number) => void;
+}
+
+interface AssignmentTypeItem {
+  id: number;
+  type: string;
 }
 
 const DocumentForm = ({
@@ -30,19 +36,20 @@ const DocumentForm = ({
   setClassId,
 }: DocumentFormProps) => {
   const { classes } = useClasses();
-  const { assignmentTypes } = useAssignmentTypes();
+  const { assignmentTypes } = useAssignmentTypes() as { assignmentTypes: AssignmentTypeItem[] };
 
   // TODO: Add conditional for boxes being red if neither is selected
-  // TODO: Do not hard code the assignment types, fetch from API
-  // const assignmentTypes = [
-  //   "Individual project",
-  //   "Group project",
-  //   "Test",
-  //   "Essay",
-  //   "Other",
-  // ];
+  useEffect(() => {
+    if (assignmentTypes.length > 0 && assignmentTypeId === null) {
+      setAssignmentTypeId(assignmentTypes[0].id);
+    }
+  }, [assignmentTypes, assignmentTypeId, setAssignmentTypeId]);
 
-  console.log(assignmentTypes)
+  useEffect(() => {
+    if (classes.length > 0 && classId === null) {
+      setClassId(classes[0].id);
+    }
+  }, [classes, classId, setClassId]);
 
   return (
     <VStack flex="1" align="stretch">
@@ -62,7 +69,7 @@ const DocumentForm = ({
               _hover={{
                 borderColor: "gray.300",
               }}
-              width={{ base: "100%", md: "60%" }}
+              width="100%" // {{ base: "100%", md: "60%" }}
               appearance="none"
             />
           </Field.Root>
@@ -71,43 +78,41 @@ const DocumentForm = ({
             <Field.Label fontWeight="bold" fontSize="lg">
               Select Assignment Type
             </Field.Label>
-            <Box position="relative" width={{ base: "100%", md: "60%" }}>
-              <NativeSelect.Root>
-                <NativeSelect.Field
-                  value={assignmentTypeId ?? ""}
-                  onChange={(e) => setAssignmentTypeId(Number(e.target.value))}
-                  name="assignment-type"
-                  border="1px solid"
-                  borderColor="gray.200"
-                  borderRadius="md"
-                  _hover={{
-                    borderColor: "gray.300",
-                  }}
-                  appearance="none"
-                >
-                  <option defaultValue="" disabled hidden>
-                    Select type
-                  </option>
+            <NativeSelect.Root>
+              <NativeSelect.Field
+                value={assignmentTypeId ?? ""}
+                onChange={(e) => setAssignmentTypeId(Number(e.target.value))}
+                name="assignment-type"
+                border="1px solid"
+                borderColor="gray.200"
+                borderRadius="md"
+                _hover={{
+                  borderColor: "gray.300",
+                }}
+                appearance="none"
+              >
+                <option defaultValue="" disabled hidden>
+                  Select type
+                </option>
 
-                  <For each={assignmentTypes}>
-                    {(item) => (
-                      <option key={item.type} value={item.type}>
-                        {item.type}
-                      </option>
-                    )}
-                  </For>
-                </NativeSelect.Field>
-              </NativeSelect.Root>
+                <For each={assignmentTypes}>
+                  {(item) => (
+                    <option key={item.id} value={item.id}>
+                      {item.type}
+                    </option>
+                  )}
+                </For>
+              </NativeSelect.Field>
               <Icon
-                as={FaChevronDown}
-                position="absolute"
-                right="3"
-                top="30%"
-                pointerEvents="none"
-                color="gray.500"
-                boxSize="4"
-              />
-            </Box>
+              as={FaChevronDown}
+              position="absolute"
+              right="3"
+              top="30%"
+              pointerEvents="none"
+              color="gray.500"
+              boxSize="4"
+            />
+            </NativeSelect.Root>  
           </Field.Root>
 
           <Field.Root mt={4}>

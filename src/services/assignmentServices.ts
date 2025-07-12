@@ -1,3 +1,4 @@
+import type { AssignmentDetailType } from "../types/AssignmentTypes";
 import apiClient from "./apiClient";
 
 export const getAssignments = async () => {
@@ -20,12 +21,18 @@ export const postAssignment = async (assignmentData: {
   title: string;
   class_id: number;
   file: File;
-}): Promise<void> => {
+  assignment_type_id: number;
+}): Promise<AssignmentDetailType[]> => {
   const formData = new FormData();
-  formData.append("student_ids", JSON.stringify(assignmentData.student_ids));
+
+  assignmentData.student_ids.forEach(id => {
+    formData.append("student_ids", id.toString()); // Append each ID individually as a string
+  });
+
   formData.append("title", assignmentData.title);
   formData.append("class_id", assignmentData.class_id.toString());
   formData.append("file", assignmentData.file);
+  formData.append("assignment_type_id", assignmentData.assignment_type_id.toString());
 
   const response = await apiClient.post("/assignments/upload", formData, {
     headers: {
