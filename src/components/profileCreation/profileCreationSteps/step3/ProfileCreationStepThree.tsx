@@ -4,7 +4,7 @@ import YearSelect from "./YearSelect";
 import { useEffect } from "react";
 
 interface ProfileCreationStepThreeProps {
-  completeStep: () => void;
+  setStepComplete: (isComplete: boolean) => void;
 
   shortTermGoals: string;
   setShortTermGoals: (goals: string) => void;
@@ -17,7 +17,7 @@ interface ProfileCreationStepThreeProps {
 }
 
 const ProfileCreationStepThree = ({
-  completeStep,
+  setStepComplete,
 
   shortTermGoals,
   setShortTermGoals,
@@ -29,19 +29,19 @@ const ProfileCreationStepThree = ({
   setWritingLevel,
 }: ProfileCreationStepThreeProps) => {
   useEffect(() => {
-    if (
+    const isComplete =
       shortTermGoals !== "" &&
       bestWaysToHelp !== "" &&
       readingLevel.length > 0 &&
-      writingLevel.length > 0
-    )
-      completeStep();
+      writingLevel.length > 0;
+
+    setStepComplete(isComplete);
   }, [
     shortTermGoals,
     bestWaysToHelp,
     readingLevel,
     writingLevel,
-    completeStep,
+    setStepComplete,
   ]);
 
   return (

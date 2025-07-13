@@ -16,7 +16,7 @@ import type { ClassSelectionType } from "../../../../types/ClassTypes";
 import StudentClassSelection from "./ClassSelection";
 
 interface ProfileCreationStepOneProps {
-  completeStep: () => void;
+  setStepComplete: (isComplete: boolean) => void;
 
   firstName: string;
   setFirstName: (firstName: string) => void;
@@ -33,7 +33,7 @@ interface ProfileCreationStepOneProps {
 }
 
 const ProfileCreationStepOne = ({
-  completeStep,
+  setStepComplete,
 
   firstName,
   setFirstName,
@@ -56,23 +56,23 @@ const ProfileCreationStepOne = ({
       (cls) => cls.classGoal.trim() !== ""
     );
 
-    if (
+    const isComplete =
       firstName.trim() !== "" &&
       lastName.trim() !== "" &&
-      selectedYearId &&
+      selectedYearId !== null &&
+      selectedYearId !== undefined &&
       selectedClasses.length > 0 &&
       allGoalsFilled &&
-      longTermGoals.trim() !== ""
-    ) {
-      completeStep();
-    }
+      longTermGoals.trim() !== "";
+
+    setStepComplete(isComplete);
   }, [
     firstName,
     lastName,
     selectedYearId,
     selectedClasses,
     longTermGoals,
-    completeStep,
+    setStepComplete,
   ]);
 
   return (

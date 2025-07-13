@@ -8,8 +8,6 @@ import { useState } from "react";
 import { FaArrowAltCircleLeft, FaArrowAltCircleRight } from "react-icons/fa";
 import type { ClassSelectionType } from "../../types/ClassTypes";
 
-import { Tooltip } from "../ui/tooltip";
-
 const ProfileCreationContent = () => {
   const { user_id } = useParams<{ user_id: string }>();
   const { user } = useUser(Number(user_id));
@@ -56,7 +54,7 @@ const ProfileCreationContent = () => {
       title: "",
       description: (
         <ProfileCreationStepOne
-          completeStep={() => setIsStep1Complete(true)}
+          setStepComplete={(isComplete: boolean) => setIsStep1Complete(isComplete)}
           firstName={firstName}
           lastName={lastName}
           setFirstName={setFirstName}
@@ -74,7 +72,7 @@ const ProfileCreationContent = () => {
       title: "",
       description: (
         <ProfileCreationStepTwo
-          completeStep={() => setIsStep2Complete(true)}
+          setStepComplete={(isComplete: boolean) => setIsStep2Complete(isComplete)}
           strengths={strengths}
           setStrengths={setStrengths}
           weaknesses={weaknesses}
@@ -88,7 +86,7 @@ const ProfileCreationContent = () => {
       title: "",
       description: (
         <ProfileCreationStepThree
-          completeStep={() => setIsStep3Complete(true)}
+          setStepComplete={(isComplete: boolean) => setIsStep3Complete(isComplete)}
           shortTermGoals={shortTermGoals}
           setShortTermGoals={setShortTermGoals}
           bestWaysToHelp={bestWaysToHelp}
@@ -147,36 +145,26 @@ const ProfileCreationContent = () => {
             </Steps.PrevTrigger>
             {currentStep < steps.length - 1 ? (
               <Steps.NextTrigger asChild>
-                <Tooltip
-                  positioning={{ placement: "top" }}
-                  content={"Complete the form above to continue"}
-                >
-                  <Button
-                    borderRadius="xl"
-                    color="white"
-                    bg="#BD4F23"
-                    disabled={!isStepComplete()}
-                  >
-                    Next
-                    <FaArrowAltCircleRight />
-                  </Button>
-                </Tooltip>
-              </Steps.NextTrigger>
-            ) : (
-              <Tooltip
-                positioning={{ placement: "top" }}
-                content={"Complete the form above to continue"}
-              >
                 <Button
                   borderRadius="xl"
                   color="white"
                   bg="#BD4F23"
-                  onClick={handleSubmit}
                   disabled={!isStepComplete()}
                 >
-                  Submit Profile
+                  Next
+                  <FaArrowAltCircleRight />
                 </Button>
-              </Tooltip>
+              </Steps.NextTrigger>
+            ) : (
+              <Button
+                borderRadius="xl"
+                color="white"
+                bg="#BD4F23"
+                onClick={handleSubmit}
+                disabled={!isStepComplete()}
+              >
+                Submit Profile
+              </Button>
             )}
           </ButtonGroup>
         </Box>

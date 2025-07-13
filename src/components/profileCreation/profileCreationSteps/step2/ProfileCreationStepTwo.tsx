@@ -3,7 +3,7 @@ import AttributeInputGroup from "./AttributeInputGroup";
 import { useEffect } from "react";
 
 interface ProfileCreationStepTwoProps {
-  completeStep: () => void;
+  setStepComplete: (isComplete: boolean) => void;
 
   strengths: string[];
   setStrengths: (strengths: string[]) => void;
@@ -14,7 +14,7 @@ interface ProfileCreationStepTwoProps {
 }
 
 const ProfileCreationStepTwo = ({
-  completeStep,
+  setStepComplete,
 
   strengths,
   setStrengths,
@@ -25,9 +25,19 @@ const ProfileCreationStepTwo = ({
   hobbies,
   setHobbies,
 }: ProfileCreationStepTwoProps) => {
-  useEffect(() => {
-    if (strengths.length > 0 && weaknesses.length > 0) completeStep();
-  }, [strengths, weaknesses, completeStep]);
+
+useEffect(() => {
+  const allStrengthsFilled = strengths.every((s) => s.trim() !== "");
+  const allWeaknessesFilled = weaknesses.every((w) => w.trim() !== "");
+
+  const isComplete =
+    strengths.length > 2 &&
+    weaknesses.length > 2 &&
+    allStrengthsFilled &&
+    allWeaknessesFilled;
+
+  setStepComplete(isComplete);
+}, [strengths, weaknesses, setStepComplete]);
 
   return (
     <VStack maxW={"1200px"} w={"100%"}>
