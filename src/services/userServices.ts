@@ -10,6 +10,13 @@ export const getUsers = async (
   return response.data;
 };
 
+export const getUser = async (
+  user_id: number
+): Promise<UserType> => {
+  const response = await apiClient.get(`/user/${user_id}`)
+  return response.data
+}
+
 export const getDefaultProfilePictures = async (): Promise<ProfilePictureType[]> => {
   const response = await apiClient.get("/users/profile-picture-defaults");
   return response.data;

@@ -9,6 +9,7 @@ import CreateUserDialog from "../../createUserDialog/CreateUserDialog";
 import useRoles from "../../../../hooks/roles/useRoles";
 import useUsers from "../../../../hooks/users/useUsers";
 import { IoIosAddCircle } from "react-icons/io";
+import ProfileCreationDialog from "../../../profileCreation/ProfileCreationDialog";
 
 const StudentsTab = () => {
   const [searchTerm, setSearchTerm] = useState<string>("");
@@ -18,6 +19,12 @@ const StudentsTab = () => {
 
   const [isCreateStudentDialogOpen, setIsCreateStudentDialogOpen] =
     useState<boolean>(false);
+
+  const [isCreateProfileDialogOpen, setIsCreateProfileDialogOpen] =
+    useState<boolean>(false);
+  const [profileCreateUserId, setProfileCreateUserId] = useState<number | null>(
+    null
+  );
 
   const navigate = useNavigate();
 
@@ -35,10 +42,15 @@ const StudentsTab = () => {
     setIsCreateStudentDialogOpen(true);
   };
 
-  const handleNavigateStudentPage = (studentId: number | null) => {
+  const handleNavigateStudentPage = (
+    studentId: number | null,
+    userId: number
+  ) => {
     if (studentId) navigate(`/student/${studentId}`);
-
-    else console.log("Launch profile creation dialog")
+    else {
+      setProfileCreateUserId(userId);
+      setIsCreateProfileDialogOpen(true);
+    }
   };
 
   return (
@@ -48,13 +60,12 @@ const StudentsTab = () => {
           searchTerm={searchTerm}
           setSearchTerm={setSearchTerm}
           placeholder="Search student..."
-          
         />
         <Spacer />
 
         <TextButton color="#bd4f23" onClick={handleCreateStudent}>
           <HStack gap={1}>
-            <IoIosAddCircle  color="#bd4f23" />
+            <IoIosAddCircle color="#bd4f23" />
             Create new Student
           </HStack>
         </TextButton>
@@ -69,12 +80,10 @@ const StudentsTab = () => {
 
       <StudentCardGrid
         students={students}
-        loading = {loading}
-        error = {error}
-
+        loading={loading}
+        error={error}
         searchTerm={searchTerm}
         yearName={yearName}
-
         onStudentClick={handleNavigateStudentPage}
       />
 
@@ -84,6 +93,14 @@ const StudentsTab = () => {
           setOpen={setIsCreateStudentDialogOpen}
           refetchTrigger={refetchTrigger}
           setRefetchTrigger={setRefetchTrigger}
+        />
+      )}
+
+      {isCreateProfileDialogOpen && profileCreateUserId && (
+        <ProfileCreationDialog
+          open={isCreateProfileDialogOpen}
+          setOpen={setIsCreateProfileDialogOpen}
+          userId={profileCreateUserId}
         />
       )}
     </Box>
