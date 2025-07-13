@@ -1,4 +1,11 @@
-import { Box, Heading, Input, SimpleGrid, Text } from "@chakra-ui/react";
+import {
+  Box,
+  Heading,
+  Input,
+  SimpleGrid,
+  Text,
+  VStack,
+} from "@chakra-ui/react";
 
 interface AttributeInputGroupProps {
   attributeName: string;
@@ -22,14 +29,16 @@ const AttributeInputGroup = ({
   };
 
   return (
-    <Box mt={10}>
-      <Heading fontSize="md">{header}</Heading>
-      <Text fontSize={"sm"} color="#BD4F23" mt={1} fontWeight={"bold"}>
-        {subheader}
-      </Text>
+    <Box mt={10} w={"100%"}>
+      <VStack>
+        <Heading fontSize="md">{header}</Heading>
+        <Text fontSize={"sm"} color="gray.500" mt={1}>
+          {subheader}
+        </Text>
+      </VStack>
 
       <SimpleGrid
-        minChildWidth="200px"
+        minChildWidth="400px"
         // columns={{ base: 1, sm: 2 }}
         gap="20px"
         mt={4}

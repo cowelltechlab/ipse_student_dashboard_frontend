@@ -1,9 +1,9 @@
 import { Box, Button, ButtonGroup, Steps } from "@chakra-ui/react";
 import { useParams } from "react-router-dom";
 import useUser from "../../hooks/users/useUser";
-import ProfileCreationStepOne from "./profileCreationSteps/stepOne/ProfileCreationStepOne";
-import ProfileCreationStepTwo from "./profileCreationSteps/ProfileCreationStepTwo";
-import ProfileCreationStepThree from "./profileCreationSteps/ProfileCreationStepThree";
+import ProfileCreationStepOne from "./profileCreationSteps/step1/ProfileCreationStepOne";
+import ProfileCreationStepTwo from "./profileCreationSteps/step2/ProfileCreationStepTwo";
+import ProfileCreationStepThree from "./profileCreationSteps/step3/ProfileCreationStepThree";
 import { useState } from "react";
 import { FaArrowAltCircleLeft, FaArrowAltCircleRight } from "react-icons/fa";
 import type { ClassSelectionType } from "../../types/ClassTypes";
@@ -25,6 +25,12 @@ const ProfileCreationContent = () => {
   const [strengths, setStrengths] = useState<string[]>([]);
   const [weaknesses, setWeaknesses] = useState<string[]>([]);
   const [hobbies, setHobbies] = useState<string>("");
+
+  // Step 3 Props
+  const [shortTermGoals, setShortTermGoals] = useState<string>("");
+  const [bestWaysToHelp, setBestWaysToHelp] = useState<string>("");
+  const [readingLevel, setReadingLevel] = useState<string[]>([]);
+  const [writingLevel, setWritingLevel] = useState<string[]>([]);
 
   const steps = [
     {
@@ -59,13 +65,24 @@ const ProfileCreationContent = () => {
     },
     {
       title: "",
-      description: <ProfileCreationStepThree />,
+      description: (
+        <ProfileCreationStepThree
+          shortTermGoals={shortTermGoals}
+          setShortTermGoals={setShortTermGoals}
+          bestWaysToHelp={bestWaysToHelp}
+          setBestWaysToHelp={setBestWaysToHelp}
+          readingLevel={readingLevel}
+          setReadingLevel={setReadingLevel}
+          writingLevel={writingLevel}
+          setWritingLevel={setWritingLevel}
+        />
+      ),
     },
   ];
 
   return (
     <Box px={12}>
-      <Steps.Root defaultStep={0} count={steps.length}>
+      <Steps.Root defaultStep={0} count={steps.length} colorPalette={"orange"}>
         <Box w={"100%"} justifyItems={"center"}>
           <Steps.List p={10} w={"500px"}>
             {steps.map((step, index) => (
@@ -82,29 +99,33 @@ const ProfileCreationContent = () => {
 
         {steps.map((step, index) => (
           <Steps.Content key={index} index={index}>
-            {step.description}
+            <Box w="100%" display="flex" justifyContent="center">
+              {step.description}
+            </Box>
           </Steps.Content>
         ))}
         <Steps.CompletedContent>All steps are complete!</Steps.CompletedContent>
 
-        <ButtonGroup size="sm" variant="outline">
-          <Steps.PrevTrigger asChild>
-            <Button
-              borderRadius={"xl"}
-              color={"#BD4F23"}
-              borderColor={"#BD4F23"}
-            >
-              <FaArrowAltCircleLeft />
-              Prev
-            </Button>
-          </Steps.PrevTrigger>
-          <Steps.NextTrigger asChild>
-            <Button borderRadius={"xl"} color={"white"} bg={"#BD4F23"}>
-              Next
-              <FaArrowAltCircleRight />
-            </Button>
-          </Steps.NextTrigger>
-        </ButtonGroup>
+        <Box display="flex" justifyContent="center" mt={6}>
+          <ButtonGroup size="sm" variant="outline">
+            <Steps.PrevTrigger asChild>
+              <Button
+                borderRadius={"xl"}
+                color={"#BD4F23"}
+                borderColor={"#BD4F23"}
+              >
+                <FaArrowAltCircleLeft />
+                Prev
+              </Button>
+            </Steps.PrevTrigger>
+            <Steps.NextTrigger asChild>
+              <Button borderRadius={"xl"} color={"white"} bg={"#BD4F23"}>
+                Next
+                <FaArrowAltCircleRight />
+              </Button>
+            </Steps.NextTrigger>
+          </ButtonGroup>
+        </Box>
       </Steps.Root>
     </Box>
   );

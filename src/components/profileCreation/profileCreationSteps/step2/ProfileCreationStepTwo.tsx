@@ -1,5 +1,5 @@
-import { Box, Heading, Text, Textarea, VStack } from "@chakra-ui/react";
-import AttributeInputGroup from "./stepTwo/AttributeInputGroup";
+import { Heading, Text, Textarea, VStack } from "@chakra-ui/react";
+import AttributeInputGroup from "./AttributeInputGroup";
 
 interface ProfileCreationStepTwoProps {
   strengths: string[];
@@ -21,7 +21,7 @@ const ProfileCreationStepTwo = ({
   setHobbies,
 }: ProfileCreationStepTwoProps) => {
   return (
-    <Box  maxW={"1200px"}>
+    <VStack maxW={"1200px"} w={"100%"}>
       <AttributeInputGroup
         attributeName="Strength"
         attributes={strengths}
@@ -33,7 +33,7 @@ const ProfileCreationStepTwo = ({
       />
 
       <AttributeInputGroup
-        attributeName="Difficulty"
+        attributeName="Challenge"
         attributes={weaknesses}
         setAttributes={setWeaknesses}
         header={"What are some things that are hard for you in school?"}
@@ -47,7 +47,7 @@ const ProfileCreationStepTwo = ({
       <Heading fontSize={"md"} mt={10}>
         What are some things you do for fun or enjoy? (optional)
       </Heading>
-      <Text fontSize={"sm"} color="#BD4F23" mt={1} fontWeight={"bold"}>
+      <Text fontSize={"sm"} color="gray.500" mt={1}>
         For example: Favorite teams or hobbies
       </Text>
       <Textarea
@@ -55,7 +55,7 @@ const ProfileCreationStepTwo = ({
         onChange={(e) => setHobbies(e.target.value)}
         placeholder="Enter long term goals..."
       />
-    </Box>
+    </VStack>
   );
 };
 
