@@ -22,7 +22,7 @@ import { FaCheckCircle } from "react-icons/fa";
 import useCreateClass from "../../../hooks/classes/useCreateClass";
 import { toaster } from "../../ui/toaster";
 
-import addClassImage from "../../../../assets/Student Profile_Document_No change summary.svg";
+import addClassImage from "../../../assets/Student Profile_Document_No change summary.svg";
 
 interface ClassSelectionDialogProps {
   open: boolean;
