@@ -29,9 +29,9 @@ const AttributeInputGroup = ({
   };
 
   return (
-    <Box mt={10} w={"100%"}>
+    <Box w={"100%"}>
       <VStack>
-        <Heading fontSize="md">{header}</Heading>
+        <Heading >{header}</Heading>
         <Text fontSize={"sm"} color="gray.500" mt={1}>
           {subheader}
         </Text>

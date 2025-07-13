@@ -8,11 +8,23 @@ import { useState } from "react";
 import { FaArrowAltCircleLeft, FaArrowAltCircleRight } from "react-icons/fa";
 import type { ClassSelectionType } from "../../types/ClassTypes";
 
+import { Tooltip } from "../ui/tooltip";
+
 const ProfileCreationContent = () => {
   const { user_id } = useParams<{ user_id: string }>();
   const { user } = useUser(Number(user_id));
 
+  const [currentStep, setCurrentStep] = useState<number>(0);
+
+  const handleSubmit = () => {
+    console.log("submitted");
+  };
+
   //  Step 1 Props
+  const [isStep1Complete, setIsStep1Complete] = useState<boolean>(false);
+  const [isStep2Complete, setIsStep2Complete] = useState<boolean>(false);
+  const [isStep3Complete, setIsStep3Complete] = useState<boolean>(false);
+
   const [firstName, setFirstName] = useState<string>(user?.first_name || "");
   const [lastName, setLastName] = useState<string>(user?.last_name || "");
   const [selectedYearId, setSelectedYearId] = useState<number | null>(null);
@@ -32,11 +44,19 @@ const ProfileCreationContent = () => {
   const [readingLevel, setReadingLevel] = useState<string[]>([]);
   const [writingLevel, setWritingLevel] = useState<string[]>([]);
 
+  const isStepComplete = () => {
+    if (currentStep === 0) return isStep1Complete;
+    if (currentStep === 1) return isStep2Complete;
+    if (currentStep === 2) return isStep3Complete;
+    return false;
+  };
+
   const steps = [
     {
       title: "",
       description: (
         <ProfileCreationStepOne
+          completeStep={() => setIsStep1Complete(true)}
           firstName={firstName}
           lastName={lastName}
           setFirstName={setFirstName}
@@ -54,6 +74,7 @@ const ProfileCreationContent = () => {
       title: "",
       description: (
         <ProfileCreationStepTwo
+          completeStep={() => setIsStep2Complete(true)}
           strengths={strengths}
           setStrengths={setStrengths}
           weaknesses={weaknesses}
@@ -67,6 +88,7 @@ const ProfileCreationContent = () => {
       title: "",
       description: (
         <ProfileCreationStepThree
+          completeStep={() => setIsStep3Complete(true)}
           shortTermGoals={shortTermGoals}
           setShortTermGoals={setShortTermGoals}
           bestWaysToHelp={bestWaysToHelp}
@@ -81,8 +103,13 @@ const ProfileCreationContent = () => {
   ];
 
   return (
-    <Box px={12}>
-      <Steps.Root defaultStep={0} count={steps.length} colorPalette={"orange"}>
+    <Box px={12} mb={10}>
+      <Steps.Root
+        step={currentStep}
+        onStepChange={(details) => setCurrentStep(details.step)}
+        count={steps.length}
+        colorPalette="orange"
+      >
         <Box w={"100%"} justifyItems={"center"}>
           <Steps.List p={10} w={"500px"}>
             {steps.map((step, index) => (
@@ -118,12 +145,39 @@ const ProfileCreationContent = () => {
                 Prev
               </Button>
             </Steps.PrevTrigger>
-            <Steps.NextTrigger asChild>
-              <Button borderRadius={"xl"} color={"white"} bg={"#BD4F23"}>
-                Next
-                <FaArrowAltCircleRight />
-              </Button>
-            </Steps.NextTrigger>
+            {currentStep < steps.length - 1 ? (
+              <Steps.NextTrigger asChild>
+                <Tooltip
+                  positioning={{ placement: "top" }}
+                  content={"Complete the form above to continue"}
+                >
+                  <Button
+                    borderRadius="xl"
+                    color="white"
+                    bg="#BD4F23"
+                    disabled={!isStepComplete()}
+                  >
+                    Next
+                    <FaArrowAltCircleRight />
+                  </Button>
+                </Tooltip>
+              </Steps.NextTrigger>
+            ) : (
+              <Tooltip
+                positioning={{ placement: "top" }}
+                content={"Complete the form above to continue"}
+              >
+                <Button
+                  borderRadius="xl"
+                  color="white"
+                  bg="#BD4F23"
+                  onClick={handleSubmit}
+                  disabled={!isStepComplete()}
+                >
+                  Submit Profile
+                </Button>
+              </Tooltip>
+            )}
           </ButtonGroup>
         </Box>
       </Steps.Root>

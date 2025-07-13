@@ -1,8 +1,11 @@
 import { Heading, HStack, Text, Textarea, VStack } from "@chakra-ui/react";
 import BestWaysToHelpSuggestions from "./BestWaysToHelpSuggestions";
 import YearSelect from "./YearSelect";
+import { useEffect } from "react";
 
 interface ProfileCreationStepThreeProps {
+  completeStep: () => void;
+
   shortTermGoals: string;
   setShortTermGoals: (goals: string) => void;
   bestWaysToHelp: string;
@@ -14,6 +17,8 @@ interface ProfileCreationStepThreeProps {
 }
 
 const ProfileCreationStepThree = ({
+  completeStep,
+
   shortTermGoals,
   setShortTermGoals,
   bestWaysToHelp,
@@ -23,11 +28,25 @@ const ProfileCreationStepThree = ({
   writingLevel,
   setWritingLevel,
 }: ProfileCreationStepThreeProps) => {
+  useEffect(() => {
+    if (
+      shortTermGoals !== "" &&
+      bestWaysToHelp !== "" &&
+      readingLevel.length > 0 &&
+      writingLevel.length > 0
+    )
+      completeStep();
+  }, [
+    shortTermGoals,
+    bestWaysToHelp,
+    readingLevel,
+    writingLevel,
+    completeStep,
+  ]);
+
   return (
     <VStack maxW={"1200px"} w={"100%"}>
-      <Heading fontSize={"md"}>
-        What do you want to work on this semester?
-      </Heading>
+      <Heading>What do you want to work on this semester?</Heading>
       <Text fontSize={"sm"} color="gray.500" mt={1}>
         For example: Improve time management, Build my writing skills, Be more
         independent in completing assignments
@@ -39,9 +58,7 @@ const ProfileCreationStepThree = ({
       />
       <VStack spaceY={2}>
         <VStack>
-          <Heading fontSize={"md"} mt={10}>
-            Best Ways to help me in class
-          </Heading>
+          <Heading mt={10}>Best Ways to help me in class</Heading>
           <Text fontSize={"sm"} color="gray.500" mt={1}>
             Add your own ideas (separated by commas), or select from popular
             strategies

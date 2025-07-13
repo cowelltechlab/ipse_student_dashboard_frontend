@@ -27,7 +27,7 @@ const CreateNewDropdown = () => {
           <Box>
             <TextButton onClick={() => {}}>
               <HStack gap={0}>
-                Create New <RiArrowDropDownLine size={"30"} />
+                Create <RiArrowDropDownLine size={"30"} />
               </HStack>
             </TextButton>
           </Box>

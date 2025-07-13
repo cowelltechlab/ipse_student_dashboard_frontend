@@ -9,13 +9,15 @@ import {
   VStack,
 } from "@chakra-ui/react";
 import YearSelect from "../../../common/universal/YearSelect";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import ClassSelectionDialog from "../../../common/classDropdown/ClassSelectionDialog";
 import { floatingStyles } from "../../../../themes/themes";
 import type { ClassSelectionType } from "../../../../types/ClassTypes";
 import StudentClassSelection from "./ClassSelection";
 
 interface ProfileCreationStepOneProps {
+  completeStep: () => void;
+
   firstName: string;
   setFirstName: (firstName: string) => void;
   lastName: string;
@@ -31,6 +33,8 @@ interface ProfileCreationStepOneProps {
 }
 
 const ProfileCreationStepOne = ({
+  completeStep,
+
   firstName,
   setFirstName,
   lastName,
@@ -46,6 +50,30 @@ const ProfileCreationStepOne = ({
 }: ProfileCreationStepOneProps) => {
   const [addClassModalOpen, setAddClassModalOpen] = useState<boolean>(false);
   const [classRefetch, setClassRefetch] = useState<number>(0);
+
+  useEffect(() => {
+    const allGoalsFilled = selectedClasses.every(
+      (cls) => cls.classGoal.trim() !== ""
+    );
+
+    if (
+      firstName.trim() !== "" &&
+      lastName.trim() !== "" &&
+      selectedYearId &&
+      selectedClasses.length > 0 &&
+      allGoalsFilled &&
+      longTermGoals.trim() !== ""
+    ) {
+      completeStep();
+    }
+  }, [
+    firstName,
+    lastName,
+    selectedYearId,
+    selectedClasses,
+    longTermGoals,
+    completeStep,
+  ]);
 
   return (
     <VStack maxW={"1200px"} w={"100%"}>
@@ -81,9 +109,7 @@ const ProfileCreationStepOne = ({
         />
       </HStack>
 
-      <Heading fontSize={"md"} mt={10}>
-        What are your class(es) this semester?
-      </Heading>
+      <Heading mt={10}>What are your class(es) this semester?</Heading>
 
       <StudentClassSelection
         selectedClasses={selectedClasses}
@@ -92,9 +118,7 @@ const ProfileCreationStepOne = ({
         classRefetch={classRefetch}
       />
 
-      <Heading fontSize={"md"} mt={10}>
-        What are your goals for after college?{" "}
-      </Heading>
+      <Heading mt={10}>What are your goals for after college? </Heading>
       <Text fontSize={"sm"} color="gray.500">
         For example: Live independently, Own a Business
       </Text>

@@ -20,7 +20,7 @@ const YearSelect = ({ selectLabel, value, setValue }: YearSelectProps) => {
     >
       <Select.HiddenSelect />
       <Select.Label>
-        <Heading fontSize={"md"}>{selectLabel}</Heading>
+        <Heading>{selectLabel}</Heading>
       </Select.Label>
       <Select.Control>
         <Select.Trigger>

@@ -1,7 +1,10 @@
-import { Heading, Text, Textarea, VStack } from "@chakra-ui/react";
+import { Box, Heading, Text, Textarea, VStack } from "@chakra-ui/react";
 import AttributeInputGroup from "./AttributeInputGroup";
+import { useEffect } from "react";
 
 interface ProfileCreationStepTwoProps {
+  completeStep: () => void;
+
   strengths: string[];
   setStrengths: (strengths: string[]) => void;
   weaknesses: string[];
@@ -11,6 +14,8 @@ interface ProfileCreationStepTwoProps {
 }
 
 const ProfileCreationStepTwo = ({
+  completeStep,
+
   strengths,
   setStrengths,
 
@@ -20,6 +25,10 @@ const ProfileCreationStepTwo = ({
   hobbies,
   setHobbies,
 }: ProfileCreationStepTwoProps) => {
+  useEffect(() => {
+    if (strengths.length > 0 && weaknesses.length > 0) completeStep();
+  }, [strengths, weaknesses, completeStep]);
+
   return (
     <VStack maxW={"1200px"} w={"100%"}>
       <AttributeInputGroup
@@ -32,19 +41,22 @@ const ProfileCreationStepTwo = ({
         }
       />
 
-      <AttributeInputGroup
-        attributeName="Challenge"
-        attributes={weaknesses}
-        setAttributes={setWeaknesses}
-        header={"What are some things that are hard for you in school?"}
-        subheader={
-          "Try to think of at least three! For example: Hard to focus, Writing, Time Management"
-        }
-      />
+      <Box mt={10} w={"100%"}>
+        {" "}
+        <AttributeInputGroup
+          attributeName="Challenge"
+          attributes={weaknesses}
+          setAttributes={setWeaknesses}
+          header={"What are some things that are hard for you in school?"}
+          subheader={
+            "Try to think of at least three! For example: Hard to focus, Writing, Time Management"
+          }
+        />
+      </Box>
 
       <VStack align="start" spaceY={4} mt={4}></VStack>
 
-      <Heading fontSize={"md"} mt={10}>
+      <Heading mt={10}>
         What are some things you do for fun or enjoy? (optional)
       </Heading>
       <Text fontSize={"sm"} color="gray.500" mt={1}>
