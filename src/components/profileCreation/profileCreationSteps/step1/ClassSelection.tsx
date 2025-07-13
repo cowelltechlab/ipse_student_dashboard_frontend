@@ -38,7 +38,7 @@ const StudentClassSelection = ({
     const updated = [...selectedClasses];
     updated[index] = {
       ...updated[index],
-      classId: newId ?? -1,
+      class_id: newId ?? -1,
     };
     setSelectedClasses(updated);
   };
@@ -47,13 +47,13 @@ const StudentClassSelection = ({
     const updated = [...selectedClasses];
     updated[index] = {
       ...updated[index],
-      classGoal: newGoal,
+      class_goal: newGoal,
     };
     setSelectedClasses(updated);
   };
 
   const addNewClassDropdown = () => {
-    setSelectedClasses([...selectedClasses, { classId: -1, classGoal: "" }]);
+    setSelectedClasses([...selectedClasses, { class_id: -1, class_goal: "" }]);
   };
 
   const removeClass = (indexToRemove: number) => {
@@ -73,7 +73,7 @@ const StudentClassSelection = ({
           mb={4}
         >
           <ClassDropdown
-            selectedClassId={classObj.classId}
+            selectedClassId={classObj.class_id}
             setSelectedClassId={(id) => handleClassChange(index, id)}
             openClassAddModal={() => setAddClassModalOpen(true)}
             classes={classes}
@@ -84,7 +84,7 @@ const StudentClassSelection = ({
               <Input
                 className="peer"
                 placeholder=""
-                value={classObj.classGoal}
+                value={classObj.class_goal}
                 onChange={(e) => handleClassGoalChange(index, e.target.value)}
               />
               <Field.Label css={floatingStyles}>

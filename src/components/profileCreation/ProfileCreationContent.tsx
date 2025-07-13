@@ -7,12 +7,15 @@ import ProfileCreationStepThree from "./profileCreationSteps/step3/ProfileCreati
 import { useState } from "react";
 import { FaArrowAltCircleLeft, FaArrowAltCircleRight } from "react-icons/fa";
 import type { ClassSelectionType } from "../../types/ClassTypes";
+import SubmissionCompletedModal from "./SubmissionCompleteModal";
 
 const ProfileCreationContent = () => {
   const { user_id } = useParams<{ user_id: string }>();
   const { user } = useUser(Number(user_id));
 
   const [currentStep, setCurrentStep] = useState<number>(0);
+
+  const [submittedModalOpen, setSubmittedModalOpen] = useState<boolean>(false);
 
   const handleSubmit = () => {
     console.log("submitted");
@@ -27,7 +30,7 @@ const ProfileCreationContent = () => {
   const [lastName, setLastName] = useState<string>(user?.last_name || "");
   const [selectedYearId, setSelectedYearId] = useState<number | null>(null);
   const [selectedClasses, setSelectedClasses] = useState<ClassSelectionType[]>([
-    { classId: -1, classGoal: "" },
+    { class_id: -1, class_goal: "" },
   ]);
   const [longTermGoals, setLongTermGoals] = useState<string>("");
 
@@ -54,7 +57,9 @@ const ProfileCreationContent = () => {
       title: "",
       description: (
         <ProfileCreationStepOne
-          setStepComplete={(isComplete: boolean) => setIsStep1Complete(isComplete)}
+          setStepComplete={(isComplete: boolean) =>
+            setIsStep1Complete(isComplete)
+          }
           firstName={firstName}
           lastName={lastName}
           setFirstName={setFirstName}
@@ -72,7 +77,9 @@ const ProfileCreationContent = () => {
       title: "",
       description: (
         <ProfileCreationStepTwo
-          setStepComplete={(isComplete: boolean) => setIsStep2Complete(isComplete)}
+          setStepComplete={(isComplete: boolean) =>
+            setIsStep2Complete(isComplete)
+          }
           strengths={strengths}
           setStrengths={setStrengths}
           weaknesses={weaknesses}
@@ -86,7 +93,9 @@ const ProfileCreationContent = () => {
       title: "",
       description: (
         <ProfileCreationStepThree
-          setStepComplete={(isComplete: boolean) => setIsStep3Complete(isComplete)}
+          setStepComplete={(isComplete: boolean) =>
+            setIsStep3Complete(isComplete)
+          }
           shortTermGoals={shortTermGoals}
           setShortTermGoals={setShortTermGoals}
           bestWaysToHelp={bestWaysToHelp}
@@ -169,6 +178,13 @@ const ProfileCreationContent = () => {
           </ButtonGroup>
         </Box>
       </Steps.Root>
+
+      {submittedModalOpen && (
+        <SubmissionCompletedModal
+          open={submittedModalOpen}
+          setOpen={setSubmittedModalOpen}
+        />
+      )}
     </Box>
   );
 };

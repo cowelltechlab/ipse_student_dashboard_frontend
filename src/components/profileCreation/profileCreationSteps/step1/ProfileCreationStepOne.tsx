@@ -53,7 +53,7 @@ const ProfileCreationStepOne = ({
 
   useEffect(() => {
     const allGoalsFilled = selectedClasses.every(
-      (cls) => cls.classGoal.trim() !== ""
+      (cls) => cls.class_goal.trim() !== ""
     );
 
     const isComplete =

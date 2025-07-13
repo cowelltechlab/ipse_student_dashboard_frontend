@@ -9,6 +9,6 @@ export interface ClassType extends ClassesBase {
 }
 
 export interface ClassSelectionType {
-  classId: number,
-  classGoal: string
+  class_id: number,
+  class_goal: string
 }
