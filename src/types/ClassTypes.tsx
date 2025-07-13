@@ -7,3 +7,8 @@ export interface ClassesBase {
 export interface ClassType extends ClassesBase {
     term: string;
 }
+
+export interface ClassSelectionType {
+  classId: number,
+  classGoal: string
+}

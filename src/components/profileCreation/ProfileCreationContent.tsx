@@ -6,6 +6,7 @@ import ProfileCreationStepTwo from "./profileCreationSteps/ProfileCreationStepTw
 import ProfileCreationStepThree from "./profileCreationSteps/ProfileCreationStepThree";
 import { useState } from "react";
 import { FaArrowAltCircleLeft, FaArrowAltCircleRight } from "react-icons/fa";
+import type { ClassSelectionType } from "../../types/ClassTypes";
 
 const ProfileCreationContent = () => {
   const { user_id } = useParams<{ user_id: string }>();
@@ -15,8 +16,15 @@ const ProfileCreationContent = () => {
   const [firstName, setFirstName] = useState<string>(user?.first_name || "");
   const [lastName, setLastName] = useState<string>(user?.last_name || "");
   const [selectedYearId, setSelectedYearId] = useState<number | null>(null);
-  const [selectedClassIds, setSelectedClassIds] = useState<number[]>([]);
+  const [selectedClasses, setSelectedClasses] = useState<ClassSelectionType[]>([
+    { classId: -1, classGoal: "" },
+  ]);
   const [longTermGoals, setLongTermGoals] = useState<string>("");
+
+  // Step 2 Props
+  const [strengths, setStrengths] = useState<string[]>([]);
+  const [weaknesses, setWeaknesses] = useState<string[]>([]);
+  const [hobbies, setHobbies] = useState<string>("");
 
   const steps = [
     {
@@ -29,8 +37,8 @@ const ProfileCreationContent = () => {
           setLastName={setLastName}
           selectedYearId={selectedYearId}
           setSelectedYearId={setSelectedYearId}
-          selectedClassIds={selectedClassIds}
-          setSelectedClassIds={setSelectedClassIds}
+          selectedClasses={selectedClasses}
+          setSelectedClasses={setSelectedClasses}
           longTermGoals={longTermGoals}
           setLongTermGoals={setLongTermGoals}
         />
@@ -38,7 +46,16 @@ const ProfileCreationContent = () => {
     },
     {
       title: "",
-      description: <ProfileCreationStepTwo />,
+      description: (
+        <ProfileCreationStepTwo
+          strengths={strengths}
+          setStrengths={setStrengths}
+          weaknesses={weaknesses}
+          setWeaknesses={setWeaknesses}
+          hobbies={hobbies}
+          setHobbies={setHobbies}
+        />
+      ),
     },
     {
       title: "",
@@ -72,7 +89,11 @@ const ProfileCreationContent = () => {
 
         <ButtonGroup size="sm" variant="outline">
           <Steps.PrevTrigger asChild>
-            <Button borderRadius={"xl"} color={"#BD4F23"} borderColor={"#BD4F23"}>
+            <Button
+              borderRadius={"xl"}
+              color={"#BD4F23"}
+              borderColor={"#BD4F23"}
+            >
               <FaArrowAltCircleLeft />
               Prev
             </Button>
