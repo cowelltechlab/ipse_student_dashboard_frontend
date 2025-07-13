@@ -11,6 +11,7 @@ import { FaChevronDown } from "react-icons/fa";
 import useClasses from "../../hooks/classes/useClasses";
 import useAssignmentTypes from "../../hooks/assignments/useAssignmentTypes";
 import { useEffect } from "react";
+import type { AssignmentTypeListType } from "../../types/AssignmentTypes";
 
 interface DocumentFormProps {
   title: string;
@@ -19,11 +20,6 @@ interface DocumentFormProps {
   setAssignmentTypeId: (id: number | null) => void;
   classId: number | null;
   setClassId: (id: number) => void;
-}
-
-interface AssignmentTypeItem {
-  id: number;
-  type: string;
 }
 
 const DocumentForm = ({
@@ -35,7 +31,7 @@ const DocumentForm = ({
   setClassId,
 }: DocumentFormProps) => {
   const { classes } = useClasses();
-  const { assignmentTypes } = useAssignmentTypes() as { assignmentTypes: AssignmentTypeItem[] };
+  const { assignmentTypes } = useAssignmentTypes() as { assignmentTypes: AssignmentTypeListType[] };
 
   // TODO: Add conditional for boxes being red if neither is selected
   useEffect(() => {

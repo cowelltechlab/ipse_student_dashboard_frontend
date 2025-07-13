@@ -1,22 +1,22 @@
 import { useState } from "react";
 import type { ErrorType } from "../../types/ErrorType";
-import { postAssignment } from "../../services/assignmentServices";
+import { postManyAssignments } from "../../services/assignmentServices";
 import type { AssignmentDetailType } from "../../types/AssignmentTypes";
 
-const usePostAssignment = () => {
+const usePostManyAssignments = () => {
   const [loading, setLoading] = useState<boolean>(false);
 
-  const handlePostAssignment = async (
-    student_id: number,
+  const handlePostManyAssignments = async (
+    student_ids: number[],
     title: string,
     class_id: number,
     file: File,
     assignment_type_id: number
-  ): Promise<AssignmentDetailType> => {
+  ): Promise<AssignmentDetailType[]> => {
     try {
       setLoading(true);
-      const response = await postAssignment({
-        student_id,
+      const response = await postManyAssignments({
+        student_ids,
         title,
         class_id,
         file,
@@ -30,7 +30,7 @@ const usePostAssignment = () => {
     }
   };
 
-  return { loading, handlePostAssignment };
+  return { loading, handlePostManyAssignments };
 };
 
-export default usePostAssignment;
+export default usePostManyAssignments;

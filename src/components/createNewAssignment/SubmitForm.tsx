@@ -1,6 +1,6 @@
 import { Button, HStack, Text, Box } from "@chakra-ui/react";
 import { FaCheckCircle } from "react-icons/fa";
-import usePostAssignment from "../../hooks/assignments/usePostAssignment";
+import usePostManyAssignments from "../../hooks/assignments/usePostManyAssignments";
 import type { ErrorType } from "../../types/ErrorType";
 import { toaster } from "../ui/toaster";
 import type {
@@ -30,7 +30,7 @@ const SubmitForm = ({
     borderColor: "#BD4F23",
   };
 
-  const { handlePostAssignment } = usePostAssignment();
+  const { handlePostManyAssignments } = usePostManyAssignments();
 
   const handleAssignmentCreateClick = async () => {
     try {
@@ -54,7 +54,7 @@ const SubmitForm = ({
         throw new Error("Assignment Type is required");
       }
 
-      const response: AssignmentDetailType[] = await handlePostAssignment(
+      const response: AssignmentDetailType[] = await handlePostManyAssignments(
         Array.from(studentIds),
         title,
         classId,
