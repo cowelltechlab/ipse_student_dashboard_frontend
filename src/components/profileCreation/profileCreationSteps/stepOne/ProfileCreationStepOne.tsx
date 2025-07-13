@@ -1,6 +1,5 @@
 import {
   Box,
-  Button,
   Heading,
   HStack,
   Input,
@@ -13,6 +12,7 @@ import ClassSelectionDialog from "./ClassSelectionDialog";
 import { useState } from "react";
 import useClasses from "../../../../hooks/classes/useClasses";
 import ClassDropdown from "./ClassDropdown";
+import TextButton from "../../../common/universal/TextButton";
 
 interface ProfileCreationStepOneProps {
   firstName: string;
@@ -64,7 +64,9 @@ const ProfileCreationStepOne = ({
   };
 
   return (
-    <Box>
+    <Box
+      
+    >
       <Heading>About Me</Heading>
       <HStack mt={4}>
         <Input
@@ -99,9 +101,9 @@ const ProfileCreationStepOne = ({
             classes={classes}
           />
         ))}
-        <Button size="sm" onClick={addNewClassDropdown}>
+        <TextButton color={"#BD4F23"} onClick={addNewClassDropdown}>
           + Add another class
-        </Button>
+        </TextButton>
       </VStack>
 
       <Heading fontSize={"md"} mt={10}>

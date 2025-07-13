@@ -5,6 +5,7 @@ import ProfileCreationStepOne from "./profileCreationSteps/stepOne/ProfileCreati
 import ProfileCreationStepTwo from "./profileCreationSteps/ProfileCreationStepTwo";
 import ProfileCreationStepThree from "./profileCreationSteps/ProfileCreationStepThree";
 import { useState } from "react";
+import { FaArrowAltCircleLeft, FaArrowAltCircleRight } from "react-icons/fa";
 
 const ProfileCreationContent = () => {
   const { user_id } = useParams<{ user_id: string }>();
@@ -71,10 +72,16 @@ const ProfileCreationContent = () => {
 
         <ButtonGroup size="sm" variant="outline">
           <Steps.PrevTrigger asChild>
-            <Button>Prev</Button>
+            <Button borderRadius={"xl"} color={"#BD4F23"} borderColor={"#BD4F23"}>
+              <FaArrowAltCircleLeft />
+              Prev
+            </Button>
           </Steps.PrevTrigger>
           <Steps.NextTrigger asChild>
-            <Button>Next</Button>
+            <Button borderRadius={"xl"} color={"white"} bg={"#BD4F23"}>
+              Next
+              <FaArrowAltCircleRight />
+            </Button>
           </Steps.NextTrigger>
         </ButtonGroup>
       </Steps.Root>
