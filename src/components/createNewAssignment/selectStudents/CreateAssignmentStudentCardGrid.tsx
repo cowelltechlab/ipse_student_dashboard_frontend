@@ -1,4 +1,12 @@
-import { Wrap, Box, Spinner, Text, WrapItem, Heading } from "@chakra-ui/react";
+import {
+  Wrap,
+  Box,
+  Spinner,
+  Text,
+  WrapItem,
+  Heading,
+  VStack,
+} from "@chakra-ui/react";
 import { useState } from "react";
 import type { UserType } from "../../../types/UserTypes";
 import type { ErrorType } from "../../../types/ErrorType";
@@ -35,17 +43,17 @@ const CreateAssignmentStudentCardGrid = ({
 
   if (loading) {
     return (
-      <Box textAlign="center" py={10}>
+      <VStack textAlign="center" py={10} w={"100%"}>
         <Spinner size="xl" />
-      </Box>
+      </VStack>
     );
   }
 
   if (error) {
     return (
-      <Box textAlign="center" py={10}>
+      <VStack textAlign="center" py={10}>
         <Text color="red.500">Failed to load students.</Text>
-      </Box>
+      </VStack>
     );
   }
 
@@ -58,39 +66,41 @@ const CreateAssignmentStudentCardGrid = ({
   }
 
   return (
-    <Box
-      px={6}
-    >
-      {filteredStudents.length > 0 ? <Wrap my={10}>
-        {studentsToShow.map((student) => (
-          <WrapItem key={student.id}>
-            <Box
-              onClick={() => onStudentClick(Number(student.id))}
-              bg={
-                selectedStudentIds.has(Number(student.id))
-                  ? "#f2c5b5"
-                  : "white"
-              }
-              boxShadow="2px 2px 8px rgba(0, 0, 0, 0.55)"
-              borderRadius="md"
-              p={4}
-              m ={3}
-              minW="220px"
-              maxW="250px"
-              cursor="pointer"
-              display="flex"
-              flexDirection="column"
-              justifyContent="center"
-              alignItems="center"
-            >
-              <Heading size="md" textAlign="center" color="black">
-                {student.first_name} {student.last_name}
-              </Heading>
-              <Text color="black">{student.student_profile?.year_name || null}</Text>
-            </Box>
-          </WrapItem>
-        ))}
-      </Wrap> : (
+    <VStack w={"100%"}>
+      {filteredStudents.length > 0 ? (
+        <Wrap  p={4} mx="auto" justify="center">
+          {studentsToShow.map((student) => (
+            <WrapItem key={student.id}>
+              <Box
+                onClick={() => onStudentClick(Number(student.id))}
+                bg={
+                  selectedStudentIds.has(Number(student.id))
+                    ? "#f2c5b5"
+                    : "white"
+                }
+                boxShadow="2px 2px 8px rgba(0, 0, 0, 0.55)"
+                borderRadius="md"
+                p={4}
+                m={3}
+                minW="220px"
+                maxW="250px"
+                cursor="pointer"
+                display="flex"
+                flexDirection="column"
+                justifyContent="center"
+                alignItems="center"
+              >
+                <Heading size="md" textAlign="center" color="black">
+                  {student.first_name} {student.last_name}
+                </Heading>
+                <Text color="black">
+                  {student.student_profile?.year_name || null}
+                </Text>
+              </Box>
+            </WrapItem>
+          ))}
+        </Wrap>
+      ) : (
         <Box color="gray.500">No students found.</Box>
       )}
 
@@ -102,8 +112,7 @@ const CreateAssignmentStudentCardGrid = ({
           View 10 More
         </TextButton>
       )}
-      
-    </Box>
+    </VStack>
   );
 };
 
