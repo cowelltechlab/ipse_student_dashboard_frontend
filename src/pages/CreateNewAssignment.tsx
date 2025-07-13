@@ -23,11 +23,13 @@ const CreateNewAssignment = () => {
   return (
     <Box>
       <PageHeader />
-      <HeaderCard
-        cardHeading="Create Assignment"
-        cardText={cardText}
-        cardImageUrl={CreateNewAssignmentIcon}
-      />
+      <Box>
+        <HeaderCard
+          cardHeading="Create Assignment"
+          cardText={cardText}
+          cardImageUrl={CreateNewAssignmentIcon}
+        />
+      </Box>
 
       <Separator variant="solid" mx={6} />
 
@@ -40,11 +42,7 @@ const CreateNewAssignment = () => {
         // maxWidth="1200px"
         // mt={8}
       >
-        <UploadAssignmentBox
-          file={file}
-          setFile={setFile}
-    
-        />
+        <UploadAssignmentBox file={file} setFile={setFile} />
         <DocumentForm
           title={title}
           setTitle={setTitle}
@@ -75,7 +73,6 @@ const CreateNewAssignment = () => {
       {/* {openSuccessDialog && (
         <SubmitModal />
       )} */}
-
     </Box>
   );
 };
