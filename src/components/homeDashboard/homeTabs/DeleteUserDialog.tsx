@@ -26,7 +26,13 @@ interface DisplayUserDialogProps {
   setRefetchTrigger: (trigger: number) => void;
 }
 
-const DeleteUserDialog = ({ user, open, setOpen, refetchTrigger, setRefetchTrigger }: DisplayUserDialogProps) => {
+const DeleteUserDialog = ({
+  user,
+  open,
+  setOpen,
+  refetchTrigger,
+  setRefetchTrigger,
+}: DisplayUserDialogProps) => {
   const [deleteHover, setDeleteHover] = useState(false);
 
   const { handleDeleteUser } = useDeleteUser();
@@ -44,6 +50,8 @@ const DeleteUserDialog = ({ user, open, setOpen, refetchTrigger, setRefetchTrigg
       onOpenChange={(e) => setOpen(e.open)}
       placement={"center"}
       size={"lg"}
+      closeOnInteractOutside={false}
+      closeOnEscape={false}
     >
       <Portal>
         <Dialog.Backdrop />

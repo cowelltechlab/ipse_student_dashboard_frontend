@@ -4,7 +4,7 @@ import useUser from "../../hooks/users/useUser";
 import ProfileCreationStepOne from "./profileCreationSteps/step1/ProfileCreationStepOne";
 import ProfileCreationStepTwo from "./profileCreationSteps/step2/ProfileCreationStepTwo";
 import ProfileCreationStepThree from "./profileCreationSteps/step3/ProfileCreationStepThree";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { FaArrowAltCircleLeft, FaArrowAltCircleRight } from "react-icons/fa";
 import type { ClassSelectionType } from "../../types/ClassTypes";
 import SubmissionCompletedModal from "./SubmissionCompleteModal";
@@ -31,14 +31,13 @@ const ProfileCreationContent = () => {
       return;
     }
 
-      if (!selectedYearId) {
-        toaster.create({
-          description: "Please select a school year before submitting.",
-          type: "error",
-        });
-        return;
-      }
-    
+    if (!selectedYearId) {
+      toaster.create({
+        description: "Please select a school year before submitting.",
+        type: "error",
+      });
+      return;
+    }
 
     try {
       await handlePostStudentProfile(
@@ -71,6 +70,11 @@ const ProfileCreationContent = () => {
       });
     }
   };
+
+  useEffect(() => {
+    if (user?.first_name) setFirstName(user.first_name);
+    if (user?.last_name) setLastName(user.last_name);
+  }, [user]);
 
   //  Step 1 Props
   const [isStep1Complete, setIsStep1Complete] = useState<boolean>(false);
@@ -231,10 +235,11 @@ const ProfileCreationContent = () => {
         </Box>
       </Steps.Root>
 
-      {submittedModalOpen && (
+      {submittedModalOpen && user_id && (
         <SubmissionCompletedModal
           open={submittedModalOpen}
           setOpen={setSubmittedModalOpen}
+          userId={Number(user_id)}
         />
       )}
     </Box>

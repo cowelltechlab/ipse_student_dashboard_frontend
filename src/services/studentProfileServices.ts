@@ -2,9 +2,9 @@ import type { ClassSelectionType } from "../types/ClassTypes";
 import apiClient from "./apiClient";
 
 export const getStudentProfile = async (student_id: string) => {
-  const response = await apiClient.get(`/profile/${student_id}`)
-  return response.data
-}
+  const response = await apiClient.get(`/profile/${student_id}`);
+  return response.data;
+};
 
 export const postStudentProfile = async (
   user_id: string,
@@ -21,7 +21,7 @@ export const postStudentProfile = async (
   likes_and_hobbies: string,
   short_term_goals: string,
 
-  best_ways_to_help: string,
+  best_ways_to_help_string: string,
 
   reading_level_list: string[],
   writing_level_list: string[]
@@ -29,8 +29,29 @@ export const postStudentProfile = async (
   const reading_level = reading_level_list[0];
   const writing_level = writing_level_list[0];
 
-  const response = await apiClient.post(`/students/profile/${user_id}`, {
+  const best_ways_to_help: string[] = best_ways_to_help_string
+    .split(",")
+    .map((item) => item.trim())
+    .filter((item) => item.length > 0);
+
+  console.log({
     user_id,
+    year_id,
+    first_name,
+    last_name,
+    classes,
+    long_term_goals,
+    strengths,
+    challenges,
+    likes_and_hobbies,
+    short_term_goals,
+    best_ways_to_help,
+    reading_level,
+    writing_level,
+  });
+
+  const response = await apiClient.post(`/profile/${user_id}`, {
+    user_id: Number(user_id),
     year_id,
     first_name,
     last_name,
