@@ -1,7 +1,7 @@
 import { useState } from "react";
 import type { ErrorType } from "../../types/ErrorType";
-import { postStudentProfile } from "../../services/studentServices";
 import type { ClassSelectionType } from "../../types/ClassTypes";
+import { postStudentProfile } from "../../services/studentProfileServices";
 
 const usePostStudentProfile = () => {
   const [loading, setLoading] = useState<boolean>(false);
@@ -11,6 +11,7 @@ const usePostStudentProfile = () => {
 
     first_name: string,
     last_name: string,
+    year_id: string,
     classes: ClassSelectionType[],
 
     long_term_goal: string,
@@ -31,6 +32,7 @@ const usePostStudentProfile = () => {
         user_id,
         first_name,
         last_name,
+        year_id,
         classes,
         long_term_goal,
         strengths,
