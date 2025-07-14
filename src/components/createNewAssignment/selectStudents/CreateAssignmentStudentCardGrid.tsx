@@ -13,6 +13,7 @@ import type { ErrorType } from "../../../types/ErrorType";
 import TextButton from "../../common/universal/TextButton";
 
 interface StudentCardGridProps {
+  searchTerm: string | null;
   yearName: string | null;
   loading: boolean;
   error: ErrorType | null;
@@ -22,6 +23,7 @@ interface StudentCardGridProps {
 }
 
 const CreateAssignmentStudentCardGrid = ({
+  searchTerm,
   yearName,
   loading,
   error,
@@ -31,11 +33,20 @@ const CreateAssignmentStudentCardGrid = ({
 }: StudentCardGridProps) => {
   const [visibleCount, setVisibleCount] = useState(15);
 
+  // const filteredStudents = students.filter((student) => {
+  //   const matchesYear = yearName
+  //     ? student.student_profile?.year_name === yearName
+  //     : true;
+  //   return matchesYear;
+  // });
+
   const filteredStudents = students.filter((student) => {
+    const fullName = `${student.first_name} ${student.last_name}`.toLowerCase();
+    const matchesSearch = fullName.includes(searchTerm?.toLowerCase() || "");
     const matchesYear = yearName
       ? student.student_profile?.year_name === yearName
       : true;
-    return matchesYear;
+    return matchesSearch && matchesYear;
   });
 
   const studentsToShow = filteredStudents.slice(0, visibleCount);

@@ -1,9 +1,10 @@
-import { Fieldset, Field, VStack } from "@chakra-ui/react";
+import { Fieldset, Field, VStack, HStack } from "@chakra-ui/react";
 import { useState } from "react";
 import CreateAssignmentStudentCardGrid from "./selectStudents/CreateAssignmentStudentCardGrid";
 import StudentYearButtons from "../common/filterButtons/StudentYearButtons";
 import useRoles from "../../hooks/roles/useRoles";
 import useUsers from "../../hooks/users/useUsers";
+import SearchBar from "../common/searchBar/SearchBar";
 
 interface SelectStudentsSectionProps {
   selectedStudentIds: Set<number>; // number[];
@@ -15,6 +16,7 @@ const SelectStudentsSection = ({
   setSelectedStudentIds,
 }: SelectStudentsSectionProps) => {
   const [yearName, setYearName] = useState<string | null>(null);
+  const [searchTerm, setSearchTerm] = useState<string>("");
   const { roles } = useRoles();
   
   const studentRole = roles.find((role) => role.role_name === "Student");
@@ -51,14 +53,23 @@ const SelectStudentsSection = ({
             </Field.Label>
           </Field.Root>
 
-          <StudentYearButtons 
+          <HStack justifyContent="space-between">
+            <StudentYearButtons 
             selectedYear={yearName}
             onYearChange={
               (selectedYearName: string | null) => setYearName(selectedYearName)
             }
           />
+          <SearchBar
+            searchTerm={searchTerm}
+            setSearchTerm={setSearchTerm}
+            placeholder="Search student..."
+          />
+          </HStack>
+          
           <Field.Root>
             <CreateAssignmentStudentCardGrid
+              searchTerm={searchTerm}
               yearName={yearName}
               loading={loading}
               error={error}
