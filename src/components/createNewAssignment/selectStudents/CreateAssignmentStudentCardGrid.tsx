@@ -70,11 +70,11 @@ const CreateAssignmentStudentCardGrid = ({
       {filteredStudents.length > 0 ? (
         <Wrap  p={4} mx="auto" justify="center">
           {studentsToShow.map((student) => (
-            <WrapItem key={student.id}>
+            <WrapItem key={student.student_profile?.student_id}>
               <Box
-                onClick={() => onStudentClick(Number(student.id))}
+                onClick={() => onStudentClick(Number(student.student_profile?.student_id))}
                 bg={
-                  selectedStudentIds.has(Number(student.id))
+                  selectedStudentIds.has(Number(student.student_profile?.student_id))
                     ? "#f2c5b5"
                     : "white"
                 }
