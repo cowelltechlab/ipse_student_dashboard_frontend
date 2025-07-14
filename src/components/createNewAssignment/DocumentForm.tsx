@@ -10,8 +10,9 @@ import {
 import { FaChevronDown } from "react-icons/fa";
 import useClasses from "../../hooks/classes/useClasses";
 import useAssignmentTypes from "../../hooks/assignments/useAssignmentTypes";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import type { AssignmentTypeListType } from "../../types/AssignmentTypes";
+import ClassDropdown from "../common/classDropdown/ClassDropdown";
 
 interface DocumentFormProps {
   title: string;
@@ -19,7 +20,10 @@ interface DocumentFormProps {
   assignmentTypeId: number | null;
   setAssignmentTypeId: (id: number | null) => void;
   classId: number | null;
-  setClassId: (id: number) => void;
+  setClassId: (selection: number | null) => void; //(id: number) => void;
+  classRefetch: number;
+  // setClassRefetch: (value: number) => void;
+  setAddClassModalOpen: (setValue: boolean) => void;
 }
 
 const DocumentForm = ({
@@ -29,22 +33,21 @@ const DocumentForm = ({
   setAssignmentTypeId,
   classId,
   setClassId,
+  classRefetch,
+  // setClassRefetch,
+  setAddClassModalOpen
 }: DocumentFormProps) => {
-  const { classes } = useClasses();
+  // const [classRefetch, setClassRefetch] = useState<number>(0);
+  // const [addClassModalOpen, setAddClassModalOpen] = useState<boolean>(false);
+  const { classes } = useClasses(classRefetch);
   const { assignmentTypes } = useAssignmentTypes() as { assignmentTypes: AssignmentTypeListType[] };
 
   // TODO: Add conditional for boxes being red if neither is selected
-  useEffect(() => {
-    if (assignmentTypes.length > 0 && assignmentTypeId === null) {
-      setAssignmentTypeId(assignmentTypes[0].id);
-    }
-  }, [assignmentTypes, assignmentTypeId, setAssignmentTypeId]);
-
-  useEffect(() => {
-    if (classes.length > 0 && classId === null) {
-      setClassId(classes[0].id);
-    }
-  }, [classes, classId, setClassId]);
+  // useEffect(() => {
+  //   if (assignmentTypes.length > 0 && assignmentTypeId === null) {
+  //     setAssignmentTypeId(assignmentTypes[0].id);
+  //   }
+  // }, [assignmentTypes, assignmentTypeId, setAssignmentTypeId]);
 
   return (
     <VStack flex="1" align="stretch">
@@ -86,7 +89,7 @@ const DocumentForm = ({
                 }}
                 appearance="none"
               >
-                <option defaultValue="" disabled hidden>
+                <option defaultValue="">
                   Select type
                 </option>
 
@@ -114,7 +117,13 @@ const DocumentForm = ({
             <Field.Label fontWeight="bold" fontSize="lg">
               Select Class
             </Field.Label>
-            <NativeSelect.Root>
+            <ClassDropdown 
+              selectedClassId={classId}
+              setSelectedClassId={setClassId}
+              openClassAddModal={() => setAddClassModalOpen(true)}
+              classes={classes}
+            />
+            {/* <NativeSelect.Root>
               <NativeSelect.Field
                 value={classId ?? ""}
                 onChange={(e) => setClassId(Number(e.target.value))}
@@ -147,7 +156,7 @@ const DocumentForm = ({
                 color="gray.500"
                 boxSize="4"
               />
-            </NativeSelect.Root>
+            </NativeSelect.Root> */}
           </Field.Root>
         </Fieldset.Content>
       </Fieldset.Root>

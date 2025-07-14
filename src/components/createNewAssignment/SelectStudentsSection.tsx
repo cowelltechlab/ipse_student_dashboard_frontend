@@ -15,18 +15,15 @@ const SelectStudentsSection = ({
   setSelectedStudentIds,
 }: SelectStudentsSectionProps) => {
   const [yearName, setYearName] = useState<string | null>(null);
-  // TODO, Rani: You likely will not need the refetch trigger for students since you are not adding students in this page
-  // ! I use refetchTriggers to refresh pages whenever a post or delete adds or removes something that should be seen on that page
-  const [refetchTrigger, setRefetchTrigger] = useState<number>(0);
-
   const { roles } = useRoles();
+  
   const studentRole = roles.find((role) => role.role_name === "Student");
 
   const {
     users: students,
     loading,
     error,
-  } = useUsers(refetchTrigger, studentRole?.id ?? undefined);
+  } = useUsers(0, studentRole?.id ?? undefined);
 
   const handleOnStudentClick = (clickedStudentId: number | null) => {
 
