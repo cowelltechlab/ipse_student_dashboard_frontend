@@ -8,6 +8,8 @@ import { useState } from "react";
 import { FaArrowAltCircleLeft, FaArrowAltCircleRight } from "react-icons/fa";
 import type { ClassSelectionType } from "../../types/ClassTypes";
 import SubmissionCompletedModal from "./SubmissionCompleteModal";
+import usePostStudentProfile from "../../hooks/studentProfiles/usePostStudentProfile";
+import { toaster } from "../ui/toaster";
 
 const ProfileCreationContent = () => {
   const { user_id } = useParams<{ user_id: string }>();
@@ -17,8 +19,57 @@ const ProfileCreationContent = () => {
 
   const [submittedModalOpen, setSubmittedModalOpen] = useState<boolean>(false);
 
-  const handleSubmit = () => {
-    console.log("submitted");
+  const { handlePostStudentProfile, loading } = usePostStudentProfile();
+
+  const handleSubmit = async () => {
+    if (!user_id) {
+      toaster.create({
+        description: "Cannot submit – student ID is missing.",
+        type: "error",
+      });
+
+      return;
+    }
+
+      if (!selectedYearId) {
+        toaster.create({
+          description: "Please select a school year before submitting.",
+          type: "error",
+        });
+        return;
+      }
+    
+
+    try {
+      await handlePostStudentProfile(
+        user_id,
+        firstName,
+        lastName,
+        selectedYearId,
+        selectedClasses,
+        longTermGoals,
+        strengths,
+        weaknesses,
+        hobbies,
+        shortTermGoals,
+        bestWaysToHelp,
+        readingLevel,
+        writingLevel
+      );
+
+      setSubmittedModalOpen(true);
+    } catch (e) {
+      console.error(e);
+      const error = e as {
+        message: string;
+        response?: { data: { message: string } };
+      };
+      const errorMessage = error.response?.data.message || error.message;
+      toaster.create({
+        description: `Error creating student profile: ${errorMessage}`,
+        type: "error",
+      });
+    }
   };
 
   //  Step 1 Props
@@ -171,6 +222,7 @@ const ProfileCreationContent = () => {
                 bg="#BD4F23"
                 onClick={handleSubmit}
                 disabled={!isStepComplete()}
+                loading={loading}
               >
                 Submit Profile
               </Button>

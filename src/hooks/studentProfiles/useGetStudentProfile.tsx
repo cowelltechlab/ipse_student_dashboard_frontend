@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
-import type { StudentProfileType } from "../../types/StudentTypes";
 import type { ErrorType } from "../../types/ErrorType";
 import { getStudentProfile } from "../../services/studentProfileServices";
+import type { StudentProfileType } from "../../types/StudentProfileTypes";
 
 const useGetStudentProfile = (student_id: string) => {
   const [studentProfile, setStudentProfile] = useState<StudentProfileType | null>(null);

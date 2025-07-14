@@ -7,11 +7,11 @@ const usePostStudentProfile = () => {
   const [loading, setLoading] = useState<boolean>(false);
 
   const handlePostStudentProfile = async (
-    user_id: number,
+    user_id: string,
 
     first_name: string,
     last_name: string,
-    year_id: string,
+    year_id: number,
     classes: ClassSelectionType[],
 
     long_term_goal: string,
@@ -27,6 +27,8 @@ const usePostStudentProfile = () => {
     writing_level_list: string[]
   ) => {
     try {
+
+
       setLoading(true);
       const response = await postStudentProfile(
         user_id,

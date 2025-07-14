@@ -7,11 +7,11 @@ export const getStudentProfile = async (student_id: string) => {
 }
 
 export const postStudentProfile = async (
-  user_id: number,
+  user_id: string,
 
   first_name: string,
   last_name: string,
-  year_id: string,
+  year_id: number,
   classes: ClassSelectionType[],
 
   long_term_goals: string,
