@@ -8,6 +8,7 @@ import SelectStudentsSection from "../components/createNewAssignment/SelectStude
 import SubmitForm from "../components/createNewAssignment/SubmitForm";
 import { useState } from "react";
 import ClassSelectionDialog from "../components/common/classDropdown/ClassSelectionDialog";
+import SubmitModal from "../components/createNewAssignment/SubmitModal";
 
 const CreateNewAssignment = () => {
   const cardText = `Create an assignment that adapts and grows to support every
@@ -81,9 +82,10 @@ const CreateNewAssignment = () => {
         />
       )}
 
-      {/* {openSuccessDialog && (
-        <SubmitModal />
-      )} */}
+      <SubmitModal 
+        isOpen={openSuccessDialog}
+        setIsOpen={setOpenSuccessDialog}
+      />
     </Box>
   );
 };
