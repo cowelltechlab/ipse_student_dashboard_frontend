@@ -7,6 +7,7 @@ import type {
   AssignmentDetailType,
 } from "../../types/AssignmentTypes";
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 interface SubmitFormProps {
   studentIds: Set<number>;
@@ -28,6 +29,7 @@ const SubmitForm = ({
 }: SubmitFormProps) => {
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
   const { handlePostManyAssignments } = usePostManyAssignments();
+  const navigate = useNavigate();
 
   const commonButtonStyles = {
     borderRadius: 8,
@@ -85,6 +87,11 @@ const SubmitForm = ({
     }
   };
 
+  const handleReturnToHomeClick = () => {
+    console.log("Return to home page.");
+    navigate("/");
+  };
+
   return (
     <HStack justifyContent="center" width="100%" my={6}>
       <Button 
@@ -92,8 +99,9 @@ const SubmitForm = ({
         backgroundColor="white" 
         {...commonButtonStyles}
         disabled={isSubmitting}
+        onClick={handleReturnToHomeClick}
       >
-        <Text>Cancel Upload</Text>
+        <Text fontWeight="bold">Return to Home</Text>
       </Button>
       <Button
         onClick={handleAssignmentCreateClick}
@@ -105,7 +113,7 @@ const SubmitForm = ({
         spinnerPlacement="end"
         disabled={isSubmitting}
       >
-        <Text>Finish Upload</Text>
+        <Text fontWeight="bold">Finish Upload</Text>
         {!isSubmitting && ( // Only show the icon when not submitting
             <Box ml={2}>
                 <FaCheckCircle color="white" />

@@ -5,10 +5,13 @@ import {
   Button,
   Dialog,
   Portal,
-  CloseButton
+  CloseButton,
+  HStack,
+  VStack
 } from '@chakra-ui/react'
 import CreateNewAssignmentFinalModalIcon from "../../assets/Create New Assignment_FinalModal.svg";
 import { FaArrowCircleRight } from 'react-icons/fa';
+import { useNavigate } from 'react-router-dom';
 
 
 interface SubmitModalProps {
@@ -18,10 +21,16 @@ interface SubmitModalProps {
 
 
 const SubmitModal = ({isOpen, setIsOpen}: SubmitModalProps) => {
+    const navigate = useNavigate();
     const commonButtonStyles = {
         borderRadius: 8,
         borderColor: "#BD4F23",
         fontWeight: "bold"
+    };
+
+    const handleReturnToHomeClick = () => {
+        console.log("Return to home page.");
+        navigate("/");
     };
 
     return (
@@ -59,26 +68,38 @@ const SubmitModal = ({isOpen, setIsOpen}: SubmitModalProps) => {
                         </Text>
                     </Dialog.Body>
                     <Dialog.Footer justifyContent="center">
-                        <Dialog.ActionTrigger asChild>
+                        <VStack>
+                            <HStack>
+                                <Dialog.ActionTrigger asChild>
+                                    <Button 
+                                        variant="outline" 
+                                        color="#BD4F23" 
+                                        backgroundColor="white" 
+                                        {...commonButtonStyles}
+                                    >
+                                        View in Documents
+                                    </Button>
+                                </Dialog.ActionTrigger>
+                                <Button
+                                    backgroundColor="#BD4F23"
+                                    color="white"
+                                    {...commonButtonStyles}
+                                >
+                                    Modify with AI
+                                    <Box>
+                                        <FaArrowCircleRight color="white" />
+                                    </Box>
+                                </Button>
+                            </HStack>
                             <Button 
-                                variant="outline" 
                                 color="#BD4F23" 
                                 backgroundColor="white" 
                                 {...commonButtonStyles}
+                                onClick={handleReturnToHomeClick}
                             >
-                                View in Documents
+                                <Text>Return to Home</Text>
                             </Button>
-                        </Dialog.ActionTrigger>
-                        <Button
-                            backgroundColor="#BD4F23"
-                            color="white"
-                            {...commonButtonStyles}
-                        >
-                            Modify with AI
-                            <Box>
-                                <FaArrowCircleRight color="white" />
-                            </Box>
-                        </Button>
+                        </VStack>
                     </Dialog.Footer>
                     <Dialog.CloseTrigger asChild>
                     <CloseButton size="md" variant="ghost" />
