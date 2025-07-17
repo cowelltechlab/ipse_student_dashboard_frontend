@@ -89,7 +89,7 @@ const SubmitForm = ({
 
   const handleReturnToHomeClick = () => {
     console.log("Return to home page.");
-    navigate("/");
+    navigate("/dashboard");
   };
 
   return (

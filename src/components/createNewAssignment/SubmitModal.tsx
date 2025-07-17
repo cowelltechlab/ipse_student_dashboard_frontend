@@ -30,7 +30,7 @@ const SubmitModal = ({isOpen, setIsOpen}: SubmitModalProps) => {
 
     const handleReturnToHomeClick = () => {
         console.log("Return to home page.");
-        navigate("/");
+        navigate("/dashboard");
     };
 
     return (
