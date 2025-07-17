@@ -5,12 +5,9 @@ import {
   Button,
   Dialog,
   Portal,
-  CloseButton,
-  HStack,
-  VStack
+  CloseButton
 } from '@chakra-ui/react'
 import CreateNewAssignmentFinalModalIcon from "../../assets/Create New Assignment_FinalModal.svg";
-import { FaArrowCircleRight } from 'react-icons/fa';
 import { useNavigate } from 'react-router-dom';
 
 
@@ -68,38 +65,14 @@ const SubmitModal = ({isOpen, setIsOpen}: SubmitModalProps) => {
                         </Text>
                     </Dialog.Body>
                     <Dialog.Footer justifyContent="center">
-                        <VStack>
-                            <HStack>
-                                <Dialog.ActionTrigger asChild>
-                                    <Button 
-                                        variant="outline" 
-                                        color="#BD4F23" 
-                                        backgroundColor="white" 
-                                        {...commonButtonStyles}
-                                    >
-                                        View in Documents
-                                    </Button>
-                                </Dialog.ActionTrigger>
-                                <Button
-                                    backgroundColor="#BD4F23"
-                                    color="white"
-                                    {...commonButtonStyles}
-                                >
-                                    Modify with AI
-                                    <Box>
-                                        <FaArrowCircleRight color="white" />
-                                    </Box>
-                                </Button>
-                            </HStack>
-                            <Button 
-                                color="#BD4F23" 
-                                backgroundColor="white" 
-                                {...commonButtonStyles}
-                                onClick={handleReturnToHomeClick}
-                            >
-                                <Text>Return to Home</Text>
-                            </Button>
-                        </VStack>
+                        <Button 
+                            color="#BD4F23" 
+                            backgroundColor="white" 
+                            {...commonButtonStyles}
+                            onClick={handleReturnToHomeClick}
+                        >
+                            <Text>Return to Home</Text>
+                        </Button>
                     </Dialog.Footer>
                     <Dialog.CloseTrigger asChild>
                     <CloseButton size="md" variant="ghost" />
