@@ -6,7 +6,6 @@ import { getStudents } from "../../services/studentServices";
 const useStudents = (
   searchTerm?: string | null,
   year_id?: number | null,
-
   refetchTrigger?: number
 ) => {
   const [students, setStudents] = useState<StudentType[]>([]);

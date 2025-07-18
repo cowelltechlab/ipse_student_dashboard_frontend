@@ -11,41 +11,53 @@ interface HeaderCardProps {
   cardHeading: string;
   cardText: string;
   cardImageUrl: string;
-  
 }
 
-const HeaderCard = ({ cardHeading, cardText, cardImageUrl }: HeaderCardProps) => {
+const HeaderCard = ({
+  cardHeading,
+  cardText,
+  cardImageUrl,
+}: HeaderCardProps) => {
   const imageSize = useBreakpointValue({
     base: "200px",
     md: "180px",
     lg: "240px",
   });
 
-  return (
-    <Box mx={5} position="relative" minHeight="200px">
-      {/* Decorative Blue Background Box */}
-      <Box
-        bg="#244d8a"
-        height={{ base: "315px", md: "150px" }}
-        w="100%"
-        position="absolute"
-        top="50%"
-        left={0}
-        transform="translateY(-50%)"
-        zIndex={0}
-        borderRadius="md"
-      />
+  const containerHeight = useBreakpointValue({
+    base: "360px",
+    md: "180px",
+  });
 
-      {/* Main White Content Card */}
-      <Box position="relative" bg="none" px={6} borderRadius="md" zIndex={1}>
+  return (
+    <Box
+      mx={5}
+      position="relative"
+      height={containerHeight}
+      borderRadius="md"
+      overflow="hidden"
+    >
+      {/* Blue Background Box */}
+      <Box position="absolute" inset={0} bg="#244d8a" zIndex={0} />
+
+      {/* Foreground Content */}
+      <Box
+        position="relative"
+        zIndex={1}
+        h="100%"
+        px={6}
+        display="flex"
+        alignItems="center"
+      >
         <Flex
+          w="100%"
           direction={{ base: "column", md: "row" }}
           align={{ base: "flex-end", md: "center" }}
           justify="space-between"
         >
           <Box flex="1" pr={{ md: 4 }}>
             <Heading color="white" fontSize="2xl" mb={2}>
-                {cardHeading}
+              {cardHeading}
             </Heading>
             <Text color="white" fontSize="md">
               {cardText}

@@ -3,10 +3,13 @@ import { RiArrowDropDownLine } from "react-icons/ri";
 import TextButton from "../universal/TextButton";
 import { useState } from "react";
 import CreateUserDialog from "../../homeDashboard/createUserDialog/CreateUserDialog";
+import { useNavigate } from "react-router-dom";
 
 const CreateNewDropdown = () => {
   const [isCreateUserDialogOpen, setIsCreateUserDialogOpen] =
     useState<boolean>(false);
+
+  const navigate = useNavigate();
 
   const handleCreateUser = () => {
     setIsCreateUserDialogOpen(true);
@@ -14,6 +17,7 @@ const CreateNewDropdown = () => {
 
   const handleCreateAssignment = () => {
     console.log("create assignment");
+    navigate("/create-assignment");
   };
 
   return (

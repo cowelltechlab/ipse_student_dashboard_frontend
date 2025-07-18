@@ -1,6 +1,6 @@
 import { CreatableSelect } from "chakra-react-select";
 import { useMemo } from "react";
-import type { ClassType } from "../../../../types/ClassTypes";
+import type { ClassType } from "../../../types/ClassTypes";
 
 interface ClassDropdownProps {
   selectedClassId: number | null;
@@ -20,11 +20,10 @@ function ClassDropdown({
     [classes]
   );
 
-  const selectedOption = options.find((o) => o.value === selectedClassId) ?? null;
+  const selectedOption =
+    options.find((o) => o.value === selectedClassId) ?? null;
 
-  const handleChange = (
-    option: { label: string; value: number } | null
-  ) => {
+  const handleChange = (option: { label: string; value: number } | null) => {
     if (option) {
       setSelectedClassId(option.value);
     } else {

@@ -1,12 +1,10 @@
 import { useEffect, useState } from "react";
 import type { ErrorType } from "../../types/ErrorType";
-import { getAssignments } from "../../services/assignmentServices";
-import type { AssignmentBaseType } from "../../types/AssignmentTypes";
+import { getAssignmentTypes } from "../../services/assignmentServices";
+import type { AssignmentTypeListType } from "../../types/AssignmentTypes";
 
-const useAssignments = (
-
-) => {
-  const [assignments, setAssignments] = useState<AssignmentBaseType[]>([]);
+const useAssignmentTypes = () => {
+  const [assignmentTypes, setAssignmentTypes] = useState<AssignmentTypeListType[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<ErrorType | null>(null);
 
@@ -14,14 +12,12 @@ const useAssignments = (
     const fetchAssignments = async () => {
       try {
         setLoading(true);
-        const response = await getAssignments(
-         
-        );
-        setAssignments(response);
+        const response = await getAssignmentTypes();
+        setAssignmentTypes(response);
       } catch (e) {
         const error = e as ErrorType;
         setError(error);
-        setAssignments([]);
+        setAssignmentTypes([]);
       } finally {
         setLoading(false);
       }
@@ -30,8 +26,8 @@ const useAssignments = (
     fetchAssignments();
   }, []);
 
-  return { assignments, loading, error };
+  return { assignmentTypes, loading, error };
 };
 
 
-export default useAssignments;
+export default useAssignmentTypes;

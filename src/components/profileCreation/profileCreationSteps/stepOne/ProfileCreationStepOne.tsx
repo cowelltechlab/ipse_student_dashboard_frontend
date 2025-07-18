@@ -8,11 +8,11 @@ import {
   VStack,
 } from "@chakra-ui/react";
 import YearSelect from "../../../common/universal/YearSelect";
-import ClassSelectionDialog from "./ClassSelectionDialog";
 import { useState } from "react";
 import useClasses from "../../../../hooks/classes/useClasses";
-import ClassDropdown from "./ClassDropdown";
+import ClassDropdown from "../../../common/classDropdown/ClassDropdown";
 import TextButton from "../../../common/universal/TextButton";
+import ClassSelectionDialog from "../../../common/classDropdown/ClassSelectionDialog";
 
 interface ProfileCreationStepOneProps {
   firstName: string;
@@ -64,9 +64,7 @@ const ProfileCreationStepOne = ({
   };
 
   return (
-    <Box
-      
-    >
+    <Box>
       <Heading>About Me</Heading>
       <HStack mt={4}>
         <Input

@@ -23,6 +23,7 @@ const AssignmentsTab = () => {
 
   const handleCreateAssignment = () => {
     console.log("Create new assignment clicked");
+    navigate("/create-assignment");
   };
 
   const handleNavigateAssignmentPage = (
