@@ -2,9 +2,8 @@ import { Fieldset, Field, VStack, HStack } from "@chakra-ui/react";
 import { useState } from "react";
 import CreateAssignmentStudentCardGrid from "./selectStudents/CreateAssignmentStudentCardGrid";
 import StudentYearButtons from "../common/filterButtons/StudentYearButtons";
-import useRoles from "../../hooks/roles/useRoles";
-import useUsers from "../../hooks/users/useUsers";
 import SearchBar from "../common/searchBar/SearchBar";
+import useStudents from "../../hooks/students/useStudents";
 
 interface SelectStudentsSectionProps {
   selectedStudentIds: Set<number>; // number[];
@@ -17,15 +16,10 @@ const SelectStudentsSection = ({
 }: SelectStudentsSectionProps) => {
   const [yearName, setYearName] = useState<string | null>(null);
   const [searchTerm, setSearchTerm] = useState<string>("");
-  const { roles } = useRoles();
   
-  const studentRole = roles.find((role) => role.role_name === "Student");
-
   const {
-    users: students,
-    loading,
-    error,
-  } = useUsers(0, studentRole?.id ?? undefined);
+    students, loading, error
+    }  = useStudents()
 
   const handleOnStudentClick = (clickedStudentId: number | null) => {
 

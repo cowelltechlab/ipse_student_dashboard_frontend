@@ -61,15 +61,16 @@ const SubmitModal = ({isOpen, setIsOpen}: SubmitModalProps) => {
                             mr="5%"
                             ml="5%"
                         >
-                            All set! 📂 Your document has been uploaded successfully.
+                            All set! Your document has been uploaded successfully.
                         </Text>
                     </Dialog.Body>
                     <Dialog.Footer justifyContent="center">
                         <Button 
                             color="#BD4F23" 
-                            backgroundColor="white" 
+                            backgroundColor="#eaf2ff" 
                             {...commonButtonStyles}
                             onClick={handleReturnToHomeClick}
+                            _hover={{bg:"white"}}
                         >
                             <Text>Return to Home</Text>
                         </Button>
