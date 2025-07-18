@@ -10,8 +10,8 @@ import {
 import { FaChevronDown } from "react-icons/fa";
 import useClasses from "../../hooks/classes/useClasses";
 import useAssignmentTypes from "../../hooks/assignments/useAssignmentTypes";
-import { useEffect } from "react";
 import type { AssignmentTypeListType } from "../../types/AssignmentTypes";
+import ClassDropdown from "../common/classDropdown/ClassDropdown";
 
 interface DocumentFormProps {
   title: string;
@@ -19,7 +19,9 @@ interface DocumentFormProps {
   assignmentTypeId: number | null;
   setAssignmentTypeId: (id: number | null) => void;
   classId: number | null;
-  setClassId: (id: number) => void;
+  setClassId: (selection: number | null) => void; //(id: number) => void;
+  classRefetch: number;
+  setAddClassModalOpen: (setValue: boolean) => void;
 }
 
 const DocumentForm = ({
@@ -29,22 +31,11 @@ const DocumentForm = ({
   setAssignmentTypeId,
   classId,
   setClassId,
+  classRefetch,
+  setAddClassModalOpen
 }: DocumentFormProps) => {
-  const { classes } = useClasses();
+  const { classes } = useClasses(classRefetch);
   const { assignmentTypes } = useAssignmentTypes() as { assignmentTypes: AssignmentTypeListType[] };
-
-  // TODO: Add conditional for boxes being red if neither is selected
-  useEffect(() => {
-    if (assignmentTypes.length > 0 && assignmentTypeId === null) {
-      setAssignmentTypeId(assignmentTypes[0].id);
-    }
-  }, [assignmentTypes, assignmentTypeId, setAssignmentTypeId]);
-
-  useEffect(() => {
-    if (classes.length > 0 && classId === null) {
-      setClassId(classes[0].id);
-    }
-  }, [classes, classId, setClassId]);
 
   return (
     <VStack flex="1" align="stretch">
@@ -64,7 +55,7 @@ const DocumentForm = ({
               _hover={{
                 borderColor: "gray.300",
               }}
-              width="100%" // {{ base: "100%", md: "60%" }}
+              width="100%" 
               appearance="none"
             />
           </Field.Root>
@@ -86,7 +77,7 @@ const DocumentForm = ({
                 }}
                 appearance="none"
               >
-                <option defaultValue="" disabled hidden>
+                <option defaultValue="">
                   Select type
                 </option>
 
@@ -114,40 +105,12 @@ const DocumentForm = ({
             <Field.Label fontWeight="bold" fontSize="lg">
               Select Class
             </Field.Label>
-            <NativeSelect.Root>
-              <NativeSelect.Field
-                value={classId ?? ""}
-                onChange={(e) => setClassId(Number(e.target.value))}
-                name="class"
-                border="1px solid"
-                borderColor="gray.200"
-                borderRadius="md"
-                _hover={{
-                  borderColor: "gray.300",
-                }}
-                appearance="none"
-              >
-                <option defaultValue="" disabled hidden>
-                  Select class
-                </option>
-                <For each={classes}>
-                  {(classItem) => (
-                    <option key={classItem.id} value={classItem.id}>
-                      {classItem.name} | {classItem.type} | {classItem.term}
-                    </option>
-                  )}
-                </For>
-              </NativeSelect.Field>
-              <Icon
-                as={FaChevronDown}
-                position="absolute"
-                right="3"
-                top="30%"
-                pointerEvents="none"
-                color="gray.500"
-                boxSize="4"
-              />
-            </NativeSelect.Root>
+            <ClassDropdown 
+              selectedClassId={classId}
+              setSelectedClassId={setClassId}
+              openClassAddModal={() => setAddClassModalOpen(true)}
+              classes={classes}
+            />
           </Field.Root>
         </Fieldset.Content>
       </Fieldset.Root>

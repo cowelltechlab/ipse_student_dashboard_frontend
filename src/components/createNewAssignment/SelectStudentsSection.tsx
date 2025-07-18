@@ -1,9 +1,9 @@
-import { Fieldset, Field, VStack } from "@chakra-ui/react";
+import { Fieldset, Field, VStack, HStack } from "@chakra-ui/react";
 import { useState } from "react";
 import CreateAssignmentStudentCardGrid from "./selectStudents/CreateAssignmentStudentCardGrid";
 import StudentYearButtons from "../common/filterButtons/StudentYearButtons";
-import useRoles from "../../hooks/roles/useRoles";
-import useUsers from "../../hooks/users/useUsers";
+import SearchBar from "../common/searchBar/SearchBar";
+import useStudents from "../../hooks/students/useStudents";
 
 interface SelectStudentsSectionProps {
   selectedStudentIds: Set<number>; // number[];
@@ -15,18 +15,11 @@ const SelectStudentsSection = ({
   setSelectedStudentIds,
 }: SelectStudentsSectionProps) => {
   const [yearName, setYearName] = useState<string | null>(null);
-  // TODO, Rani: You likely will not need the refetch trigger for students since you are not adding students in this page
-  // ! I use refetchTriggers to refresh pages whenever a post or delete adds or removes something that should be seen on that page
-  const [refetchTrigger, setRefetchTrigger] = useState<number>(0);
-
-  const { roles } = useRoles();
-  const studentRole = roles.find((role) => role.role_name === "Student");
-
+  const [searchTerm, setSearchTerm] = useState<string>("");
+  
   const {
-    users: students,
-    loading,
-    error,
-  } = useUsers(refetchTrigger, studentRole?.id ?? undefined);
+    students, loading, error
+    }  = useStudents()
 
   const handleOnStudentClick = (clickedStudentId: number | null) => {
 
@@ -54,14 +47,23 @@ const SelectStudentsSection = ({
             </Field.Label>
           </Field.Root>
 
-          <StudentYearButtons 
+          <HStack justifyContent="space-between">
+            <StudentYearButtons 
             selectedYear={yearName}
             onYearChange={
               (selectedYearName: string | null) => setYearName(selectedYearName)
             }
           />
+          <SearchBar
+            searchTerm={searchTerm}
+            setSearchTerm={setSearchTerm}
+            placeholder="Search student..."
+          />
+          </HStack>
+          
           <Field.Root>
             <CreateAssignmentStudentCardGrid
+              searchTerm={searchTerm}
               yearName={yearName}
               loading={loading}
               error={error}

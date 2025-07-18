@@ -7,21 +7,23 @@ import {
   Heading,
   VStack,
 } from "@chakra-ui/react";
-import { useState } from "react";
-import type { UserType } from "../../../types/UserTypes";
+import { useEffect, useState } from "react";
 import type { ErrorType } from "../../../types/ErrorType";
 import TextButton from "../../common/universal/TextButton";
+import type { StudentType } from "../../../types/StudentTypes";
 
 interface StudentCardGridProps {
+  searchTerm: string | null;
   yearName: string | null;
   loading: boolean;
   error: ErrorType | null;
   selectedStudentIds: Set<number>;
-  students: UserType[];
+  students: StudentType[];
   onStudentClick: (studentId: number | null) => void;
 }
 
 const CreateAssignmentStudentCardGrid = ({
+  searchTerm,
   yearName,
   loading,
   error,
@@ -31,11 +33,24 @@ const CreateAssignmentStudentCardGrid = ({
 }: StudentCardGridProps) => {
   const [visibleCount, setVisibleCount] = useState(15);
 
+  // const filteredStudents = students.filter((student) => {
+  //   const matchesYear = yearName
+  //     ? student.student_profile?.year_name === yearName
+  //     : true;
+  //   return matchesYear;
+  // });
+
+  useEffect(()=> (
+    console.log(students)
+  ),[students])
+
   const filteredStudents = students.filter((student) => {
+    const fullName = `${student.first_name} ${student.last_name}`.toLowerCase();
+    const matchesSearch = fullName.includes(searchTerm?.toLowerCase() || "");
     const matchesYear = yearName
-      ? student.student_profile?.year_name === yearName
+      ? student.year_name === yearName
       : true;
-    return matchesYear;
+    return matchesSearch && matchesYear;
   });
 
   const studentsToShow = filteredStudents.slice(0, visibleCount);
@@ -94,7 +109,7 @@ const CreateAssignmentStudentCardGrid = ({
                   {student.first_name} {student.last_name}
                 </Heading>
                 <Text color="black">
-                  {student.student_profile?.year_name || null}
+                  {student.year_name || null}
                 </Text>
               </Box>
             </WrapItem>
