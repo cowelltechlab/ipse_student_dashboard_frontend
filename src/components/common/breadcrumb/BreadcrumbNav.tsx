@@ -1,7 +1,8 @@
 import { Box, Breadcrumb } from "@chakra-ui/react";
+import { type ReactNode } from "react";
 
 interface BreadcrumbItem {
-  label: string;
+  label: ReactNode; // changed from string to ReactNode
   href?: string;
 }
 
@@ -24,7 +25,7 @@ const BreadcrumbNav = ({
             const isLast = index === items.length - 1;
 
             return (
-              <Breadcrumb.Item key={item.label}>
+              <Breadcrumb.Item key={index}>
                 {isLast ? (
                   <Breadcrumb.CurrentLink>{item.label}</Breadcrumb.CurrentLink>
                 ) : (

@@ -13,6 +13,12 @@ export interface ClassSelectionType {
   class_goal: string
 }
 
+export interface StudentProfileClassType {
+  class_id: number,
+  class_name: string,
+  course_code: string,
+  learning_goal: string
+}
 
 export interface StudentClassType {
   class_id: string

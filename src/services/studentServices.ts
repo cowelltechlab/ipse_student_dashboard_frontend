@@ -31,3 +31,8 @@ export const getStudentByUserId = async (user_id: number) => {
   return response.data;
 };
 
+
+export const getStudentProfile = async (student_id: string) => {
+  const response = await apiClient.get(`/profile/${student_id}`)
+  return response.data
+}
