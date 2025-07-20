@@ -43,8 +43,8 @@ const StudentDocumentBody = ({studentId}: StudentDocumentBodyProps) => {
   };
 
   return (
-    <Box>
-      <HStack>
+    <Box mt={10}>
+      <HStack my={4}>
         <SearchBar
           searchTerm={searchTerm}
           setSearchTerm={setSearchTerm}
