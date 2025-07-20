@@ -1,8 +1,8 @@
 import { Box } from "@chakra-ui/react";
-import type { StudentProfileType } from "../../types/StudentTypes";
-import ProfileUpdateOptions from "./studentProfileBody/ProfileUpdateOptions";
+import type { StudentProfileType } from "../../../types/StudentTypes";
+import ProfileUpdateOptions from "./ProfileUpdateOptions";
 import { useState } from "react";
-import StudentProfileGrid from "./studentProfileBody/StudentProfileGrid";
+import StudentProfileGrid from "./StudentProfileGrid";
 
 interface StudentProfileBodyProps {
   student: StudentProfileType | null;

@@ -1,4 +1,4 @@
-import { Button, HStack, Icon, Spacer } from "@chakra-ui/react";
+import { Button, Icon, Spacer, Stack } from "@chakra-ui/react";
 
 import { FaEdit, FaTrashAlt } from "react-icons/fa";
 import { LuFileSpreadsheet } from "react-icons/lu";
@@ -22,12 +22,10 @@ const ProfileUpdateOptions = ({
 }: ProfileUpdateOptionsProps) => {
   const { roles } = useAuth();
 
-  useEffect(()=> (
-    console.log("roles:", roles)
-  ))
+  useEffect(() => console.log("roles:", roles));
 
   return (
-    <HStack mt={6}>
+    <Stack mt={6} direction={{ base: "column", md: "row" }}>
       <Button
         onClick={() => setIsUpdating(!isUpdating)}
         borderColor="#BD4F23"
@@ -43,21 +41,23 @@ const ProfileUpdateOptions = ({
       >
         Edit Profile <Icon as={FaEdit} />
       </Button>
-      {( roles.includes("Admin") || roles.includes("Advisor")) && <Button
-        onClick={() => setIsDeleteModalOpen(!isDeleteModalOpen)}
-        borderColor="#BD4F23"
-        borderRadius={"lg"}
-        fontWeight={"bold"}
-        bg={"none"}
-        color="#BD4F23"
-        _hover={{
-          bg: "#BD4F23",
-          borderColor: "#BD4F23",
-          color: "white",
-        }}
-      >
-        Delete Profile <Icon as={FaTrashAlt} />
-      </Button>}
+      {(roles.includes("Admin") || roles.includes("Advisor")) && (
+        <Button
+          onClick={() => setIsDeleteModalOpen(!isDeleteModalOpen)}
+          borderColor="#BD4F23"
+          borderRadius={"lg"}
+          fontWeight={"bold"}
+          bg={"none"}
+          color="#BD4F23"
+          _hover={{
+            bg: "#BD4F23",
+            borderColor: "#BD4F23",
+            color: "white",
+          }}
+        >
+          Delete Profile <Icon as={FaTrashAlt} />
+        </Button>
+      )}
       <Spacer />
       <Button
         borderColor="#BD4F23"
@@ -73,7 +73,7 @@ const ProfileUpdateOptions = ({
       >
         Semester Update <Icon as={LuFileSpreadsheet} />
       </Button>
-    </HStack>
+    </Stack>
   );
 };
 

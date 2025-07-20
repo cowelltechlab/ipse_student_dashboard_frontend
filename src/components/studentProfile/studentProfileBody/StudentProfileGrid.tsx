@@ -1,11 +1,6 @@
-import {
-  Box,
-  Grid,
-  GridItem,
-  Heading,
-  List,
-} from "@chakra-ui/react";
+import { Grid, GridItem } from "@chakra-ui/react";
 import type { StudentProfileType } from "../../../types/StudentTypes";
+import ProfileInfoBox from "./ProfileInfoBox"; // adjust path as needed
 
 interface StudentProfileGridProps {
   student: StudentProfileType | null;
@@ -25,52 +20,58 @@ const StudentProfileGrid = ({
       gap={4}
       mt={6}
     >
-      {/* Full‑width box */}
       <GridItem colSpan={{ base: 1, md: 2 }}>
-        <Box bg={"#eaeef4"} p={4} borderRadius="md">
-          <Heading>Classes & Learning Goals</Heading>
-          {/* <Text>{student?.classes</Text> */}
-        </Box>
+        <ProfileInfoBox title="Classes & Learning Goals">
+          {/* Customize this box manually if needed */}
+        </ProfileInfoBox>
       </GridItem>
 
-      {/* Left column */}
-      <GridItem>
-        <Box bg="#eaeef4" p={4} borderRadius="md">
-          <Heading>What I am good at</Heading>
-          <List.Root pt={2}>
-            {student?.strengths.map((strength, index) => (
-              <List.Item key={index} ml={6}>{strength}</List.Item>
-            ))}
-          </List.Root>
-        </Box>
+      <GridItem display="flex">
+        <ProfileInfoBox
+          title="What I am good at"
+          content={student?.strengths}
+          loading={profileLoading}
+        />
       </GridItem>
 
-      <GridItem>
-        <Box bg={"#eaeef4"} p={4} borderRadius="md">
-          <Heading>Things that are hard for me</Heading>
-        </Box>
-      </GridItem>
-      <GridItem>
-        <Box bg={"#eaeef4"} p={4} borderRadius="md">
-          <Heading>After college I want to</Heading>
-        </Box>
+      <GridItem display="flex">
+        <ProfileInfoBox
+          title="Things that are hard for me"
+          content={student?.challenges}
+          loading={profileLoading}
+        />
       </GridItem>
 
-      {/* Right column */}
-      <GridItem>
-        <Box bg={"#eaeef4"} p={4} borderRadius="md">
-          <Heading>Currently I want to</Heading>
-        </Box>
+      <GridItem display="flex">
+        <ProfileInfoBox
+          title="After college I want to"
+          content={student?.long_term_goals}
+          loading={profileLoading}
+        />
       </GridItem>
-      <GridItem>
-        <Box bg={"#eaeef4"} p={4} borderRadius="md">
-          <Heading>Best way to assist me</Heading>
-        </Box>
+
+      <GridItem display="flex">
+        <ProfileInfoBox
+          title="Currently I want to"
+          content={student?.short_term_goals}
+          loading={profileLoading}
+        />
       </GridItem>
-      <GridItem>
-        <Box bg={"#eaeef4"} p={4} borderRadius="md">
-          <Heading>Things I enjoy doing for fun</Heading>
-        </Box>
+
+      <GridItem display="flex">
+        <ProfileInfoBox
+          title="Best way to assist me"
+          content={student?.best_ways_to_help}
+          loading={profileLoading}
+        />
+      </GridItem>
+
+      <GridItem display="flex">
+        <ProfileInfoBox
+          title="Things I enjoy doing for fun"
+          content={student?.hobbies_and_interests}
+          loading={profileLoading}
+        />
       </GridItem>
     </Grid>
   );

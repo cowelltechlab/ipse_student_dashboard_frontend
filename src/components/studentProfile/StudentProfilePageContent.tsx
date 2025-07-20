@@ -1,7 +1,7 @@
 import { Box, Heading } from "@chakra-ui/react";
 import type { StudentProfileType } from "../../types/StudentTypes";
 import StudentProfilePageStudentSummary from "./StudentProfilePageStudentSummary";
-import StudentProfileBody from "./StudentProfileBody";
+import StudentProfileBody from "./studentProfileBody/StudentProfileBody";
 
 interface StudentProfilePageContentProps {
   student: StudentProfileType | null;
@@ -25,7 +25,11 @@ const StudentProfilePageContent = ({
         profileLoading={profileLoading}
       />
 
-      <StudentProfileBody student={student} profileLoading={profileLoading} triggerRefetch={triggerRefetch} />
+      <StudentProfileBody
+        student={student}
+        profileLoading={profileLoading}
+        triggerRefetch={triggerRefetch}
+      />
     </Box>
   );
 };
