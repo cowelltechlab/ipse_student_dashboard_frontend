@@ -5,8 +5,16 @@ import { useNavigate } from "react-router-dom";
 import TextButton from "../../common/universal/TextButton";
 import { IoIosAddCircle } from "react-icons/io";
 import AssignmentsFilterButtons from "../../homeDashboard/homeTabs/assignmentsTab/AssignmentsFilterButtons";
+import AssignmentsTable from "../../homeDashboard/homeTabs/assignmentsTab/AssignmetsTable";
+import useAssignments from "../../../hooks/assignments/useAssignments";
 
-const StudentDocumentBody = () => {
+interface StudentDocumentBodyProps {
+    studentId: number | null
+}
+
+const StudentDocumentBody = ({studentId}: StudentDocumentBodyProps) => {
+  const { assignments, loading, error } = useAssignments(studentId);
+
   const [searchTerm, setSearchTerm] = useState("");
   const [dateRange, setDateRange] = useState<{
     from: Date | undefined;
@@ -15,11 +23,23 @@ const StudentDocumentBody = () => {
     from: undefined,
     to: undefined,
   });
+  const [filterByNeedsRating, setFilterByNeedsRating] =
+    useState<boolean>(false);
 
   const navigate = useNavigate();
 
   const handleCreateAssignment = () => {
     navigate("/create-assignment");
+  };
+
+  const handleNavigateAssignmentPage = (
+    studentId: number,
+    assignmentId: number
+  ) => {
+    console.log(
+      `Navigate to assignment page with ID: ${assignmentId} for student ID: ${studentId}`
+    );
+    navigate(`/student/${studentId}/assignment/${assignmentId}`);
   };
 
   return (
@@ -42,9 +62,20 @@ const StudentDocumentBody = () => {
       <AssignmentsFilterButtons
         dateRange={dateRange}
         setDateRange={setDateRange}
+        setFilterByNeedsRating={setFilterByNeedsRating}
+      />
+
+      <AssignmentsTable
+        assignments={assignments}
+        assignmentsLoading={loading}
+        assignmentsError={error}
+        dateRange={dateRange}
+        searchTerm={searchTerm}
+        onAssignmentClick={handleNavigateAssignmentPage}
+        filterByNeedsRating={filterByNeedsRating}
       />
     </Box>
   );
 };
 
-export default StudentDocumentBody
+export default StudentDocumentBody;
