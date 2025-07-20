@@ -1,11 +1,5 @@
 import { useState } from "react";
-import {
-  Box,
-  Text,
-  Spinner,
-  Wrap,
-  VStack,
-} from "@chakra-ui/react";
+import { Box, Text, Spinner, Wrap, VStack } from "@chakra-ui/react";
 import StudentCard from "./StudentCard";
 import type { UserType } from "../../../../../types/UserTypes";
 import type { ErrorType } from "../../../../../types/ErrorType";
@@ -17,7 +11,11 @@ interface StudentCardGridProps {
   loading: boolean;
   error: ErrorType | null;
   students?: UserType[];
-  onStudentClick?: (studentId: number | null, userId: number) => void;
+  onStudentClick?: (
+    studentId: number | null,
+    userId: number,
+    profileTag: string | null
+  ) => void;
 }
 
 const StudentCardGrid = ({
@@ -77,9 +75,11 @@ const StudentCardGrid = ({
             classYear={student.student_profile?.year_name || null}
             profilePictureUrl={student.profile_picture_url}
             profile_tag={student.profile_tag || null}
-            onClick={() =>
-              onStudentClick?.(student.student_profile?.student_id || null, student.id)
-            }
+            onClick={() => {
+              const sid = student.student_profile?.student_id ?? null;
+              const tag = student.profile_tag ?? null;
+              onStudentClick?.(sid, student.id, tag);
+            }}
           />
         ))}
       </Wrap>
