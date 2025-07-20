@@ -52,7 +52,9 @@ const StudentPageContent = ({
       headingName: "Achievements",
       subheading: "View your achievements!",
       icon: trophyIcon,
-      onClick: () => {},
+      onClick: () => {
+        navigate(`/student/${student_id}/achievements`);
+      },
     },
   ];
 
