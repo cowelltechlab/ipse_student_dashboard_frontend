@@ -1,4 +1,5 @@
 import type { ClassSelectionType } from "../types/ClassTypes";
+import type { StudentProfileUpdatePayload } from "../types/StudentProfileTypes";
 import apiClient from "./apiClient";
 
 export const getStudentProfile = async (student_id: string) => {
@@ -53,7 +54,6 @@ export const postStudentProfile = async (
   return response.data;
 };
 
-
 export const postProfilePicture = async (
   student_id: number | unknown,
   profilePictureUrl: string | null,
@@ -77,5 +77,13 @@ export const postProfilePicture = async (
     }
   );
 
+  return response.data;
+};
+
+export const putStudentProfile = async (
+  user_id: number,
+  updatePayload: StudentProfileUpdatePayload
+) => {
+  const response = await apiClient.put(`/profile/${user_id}`, updatePayload);
   return response.data;
 };

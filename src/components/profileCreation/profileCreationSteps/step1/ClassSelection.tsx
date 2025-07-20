@@ -87,8 +87,8 @@ const StudentClassSelection = ({
                 value={classObj.class_goal}
                 onChange={(e) => handleClassGoalChange(index, e.target.value)}
               />
-              <Field.Label css={floatingStyles}>
-                What do you want to learn in this class?
+              <Field.Label css={floatingStyles} fontWeight={"bold"}>
+                Learning Goal
               </Field.Label>
             </Box>
           </Field.Root>

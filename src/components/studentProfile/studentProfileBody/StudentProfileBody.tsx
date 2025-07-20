@@ -30,14 +30,11 @@ const StudentProfileBody = ({
       {isUpdating ? (
         <EditableStudentProfileGrid
           student={student}
-          profileLoading={profileLoading}
-        />
-      ) : (
-        <StudentProfileGrid
-          student={student}
-          profileLoading={profileLoading}
+          setIsEditing={setIsUpdating}
           triggerRefetch={triggerRefetch}
         />
+      ) : (
+        <StudentProfileGrid student={student} profileLoading={profileLoading} />
       )}
     </Box>
   );

@@ -1,4 +1,4 @@
-import type { StudentClassType } from "./ClassTypes";
+import type { ClassSelectionType, StudentClassType } from "./ClassTypes";
 
 interface ProfileSummariesType {
     strengths_short: string,
@@ -19,4 +19,15 @@ export interface StudentProfileType {
     best_ways_to_help: string[]
     hobbies_and_interests: string
     profile_summaries:  ProfileSummariesType
+}
+
+export interface StudentProfileUpdatePayload {
+  year_id?: number;
+  strengths?: string[];
+  challenges?: string[];
+  likes_and_hobbies?: string;
+  short_term_goals?: string;
+  long_term_goals?: string;
+  best_ways_to_help?: string[];
+  classes?: ClassSelectionType[];
 }

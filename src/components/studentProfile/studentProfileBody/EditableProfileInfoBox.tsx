@@ -13,39 +13,40 @@ import { Tooltip } from "../../ui/tooltip";
 import { IoIosRemoveCircle } from "react-icons/io";
 import { IoAddCircleSharp } from "react-icons/io5";
 
-interface EditableProfileInfoBoxProps {
+interface EditableProfileInfoBoxProps<T extends string | string[]> {
   title: string;
   titleIcon?: string;
-  value?: string | string[];
-  onChange: (val: string | string[]) => void;
+  value: T;
+  onChange: (val: T) => void;
 }
 
-const EditableProfileInfoBox = ({
+
+const EditableProfileInfoBox = <T extends string | string[]>({
   title,
   titleIcon,
   value,
   onChange,
-}: EditableProfileInfoBoxProps) => {
+}: EditableProfileInfoBoxProps<T>) => {
   const isArray = Array.isArray(value);
-  const safeArray: string[] = isArray ? value : [];
+  const safeArray: string[] = isArray ? (value as string[]) : [];
   const minLength = 3;
 
   const handleChange = (index: number, newVal: string) => {
     const updated = [...safeArray];
     updated[index] = newVal;
-    onChange(updated);
+    onChange(updated as T);
   };
 
   const handleRemove = (index: number) => {
     if (safeArray.length > minLength) {
       const updated = [...safeArray];
       updated.splice(index, 1);
-      onChange(updated);
+      onChange(updated as T);
     }
   };
 
   const handleAdd = () => {
-    onChange([...safeArray, ""]);
+    onChange([...safeArray, ""] as T);
   };
 
   return (
@@ -84,7 +85,7 @@ const EditableProfileInfoBox = ({
                 </Tooltip>
               </HStack>
             ))}
-            <Button onClick={handleAdd} size="sm" alignSelf="start">
+            <Button onClick={handleAdd} size="sm" alignSelf="end" bg={"#BD4F23"} >
               <Icon as={IoAddCircleSharp} />
               Add
             </Button>
@@ -92,13 +93,14 @@ const EditableProfileInfoBox = ({
         ) : (
           <Textarea
             bg="white"
-            value={value || ""}
-            onChange={(e) => onChange(e.target.value)}
+            value={value as string}
+            onChange={(e) => onChange(e.target.value as T)}
           />
         )}
       </VStack>
     </Box>
   );
 };
+
 
 export default EditableProfileInfoBox;

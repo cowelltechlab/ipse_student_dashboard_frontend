@@ -22,6 +22,7 @@ interface ProfileSummariesType {
 
 export interface StudentProfileType {
   student_id: number;
+  user_id: number;
   first_name: string;
   last_name: string;
   year_name: string;

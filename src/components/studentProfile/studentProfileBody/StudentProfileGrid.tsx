@@ -14,13 +14,11 @@ import hobbiesIcon from "../../../assets/icons/extracurricular-activities.png";
 interface StudentProfileGridProps {
   student: StudentProfileType | null;
   profileLoading: boolean;
-  triggerRefetch: () => void;
 }
 
 const StudentProfileGrid = ({
   student,
   profileLoading,
-  triggerRefetch,
 }: StudentProfileGridProps) => {
   return (
     <Grid
