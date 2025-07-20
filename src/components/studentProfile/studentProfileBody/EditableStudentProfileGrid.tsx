@@ -124,10 +124,20 @@ const EditableStudentProfileGrid = ({
     const isInvalid =
       longTermGoals.trim() === "" ||
       shortTermGoals.trim() === "" ||
-      selectedClasses.length < 3 ||
+      selectedClasses.length < 1 ||
       strengths.filter((s) => s.trim() !== "").length < 3 ||
       weaknesses.filter((w) => w.trim() !== "").length < 3 ||
       bestWaysToHelp.filter((b) => b.trim() !== "").length < 3;
+
+    
+
+      console.log(longTermGoals)
+      console.log(selectedClasses)
+      console.log(strengths)
+      console.log(weaknesses)
+      console.log(longTermGoals)
+      console.log(shortTermGoals)
+      console.log(bestWaysToHelp)
 
     setIsSaveDisabled(isInvalid);
   }, [
@@ -218,7 +228,7 @@ const EditableStudentProfileGrid = ({
         </GridItem>
       </Grid>
 
-      <ButtonGroup>
+      <ButtonGroup mt={4} align={"end"}>
         <Button
           onClick={handleCancelChanges}
           variant="outline"

@@ -21,23 +21,21 @@ const BreadcrumbNav = ({
     <Box ml={4} mb={4}>
       <Breadcrumb.Root size={size} variant={variant}>
         <Breadcrumb.List>
-          {items.map((item, index) => {
-            const isLast = index === items.length - 1;
-
-            return (
-              <Breadcrumb.Item key={index}>
-                {isLast ? (
+          {items.flatMap((item, i) => {
+            const element = (
+              <Breadcrumb.Item key={i}>
+                {i === items.length - 1 ? (
                   <Breadcrumb.CurrentLink>{item.label}</Breadcrumb.CurrentLink>
                 ) : (
-                  <>
-                    <Breadcrumb.Link href={item.href || "#"}>
-                      {item.label}
-                    </Breadcrumb.Link>
-                    <Breadcrumb.Separator />
-                  </>
+                  <Breadcrumb.Link href={item.href || "#"}>
+                    {item.label}
+                  </Breadcrumb.Link>
                 )}
               </Breadcrumb.Item>
             );
+            return i < items.length - 1
+              ? [element, <Breadcrumb.Separator key={`sep-${i}`} />]
+              : [element];
           })}
         </Breadcrumb.List>
       </Breadcrumb.Root>
