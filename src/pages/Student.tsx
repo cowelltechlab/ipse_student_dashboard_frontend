@@ -4,10 +4,13 @@ import BreadcrumbNav from "../components/common/breadcrumb/BreadcrumbNav";
 import StudentPageContent from "../components/studentPage/StudentPageContent";
 import useStudent from "../hooks/students/useStudent";
 import { useParams } from "react-router-dom";
+import { useState } from "react";
 
 const Student = () => {
+  const [refetchTrigger, setRefetchTrigger] = useState<number>(0)
+
   const { student_id } = useParams<{ student_id: string }>();
-  const { student, loading } = useStudent(student_id);
+  const { student, loading } = useStudent(student_id, refetchTrigger);
 
   let nameLabel;
 
@@ -28,7 +31,7 @@ const Student = () => {
     <Box>
       <PageHeader />
       <BreadcrumbNav items={breadcrumbItems} />
-      <StudentPageContent student={student}/>
+      <StudentPageContent student={student} profileLoading={loading} triggerRefetch={() => setRefetchTrigger(refetchTrigger+1)}/>
     </Box>
   );
 };

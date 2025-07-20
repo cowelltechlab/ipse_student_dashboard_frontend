@@ -34,22 +34,6 @@ export const postStudentProfile = async (
     .map((item) => item.trim())
     .filter((item) => item.length > 0);
 
-  console.log({
-    user_id,
-    year_id,
-    first_name,
-    last_name,
-    classes,
-    long_term_goals,
-    strengths,
-    challenges,
-    likes_and_hobbies,
-    short_term_goals,
-    best_ways_to_help,
-    reading_level,
-    writing_level,
-  });
-
   const response = await apiClient.post(`/profile/${user_id}`, {
     user_id: Number(user_id),
     year_id,
@@ -65,6 +49,33 @@ export const postStudentProfile = async (
     reading_level,
     writing_level,
   });
+
+  return response.data;
+};
+
+
+export const postProfilePicture = async (
+  student_id: number | unknown,
+  profilePictureUrl: string | null,
+  profilePictureUpload: File | null
+) => {
+  const formData = new FormData();
+
+  if (profilePictureUpload) {
+    formData.append("profile_picture", profilePictureUpload);
+  } else if (profilePictureUrl) {
+    formData.append("existing_blob_url", profilePictureUrl);
+  }
+
+  const response = await apiClient.post(
+    `/profile/profile-picture/${student_id}`,
+    formData,
+    {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    }
+  );
 
   return response.data;
 };

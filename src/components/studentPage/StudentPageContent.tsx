@@ -4,15 +4,17 @@ import type { StudentProfileType } from "../../types/StudentTypes";
 
 interface StudentPageContentProps {
   student: StudentProfileType | null;
+  profileLoading: boolean
+  triggerRefetch: () => void
 }
 
-const StudentPageContent = ({ student }: StudentPageContentProps) => {
+const StudentPageContent = ({ student, profileLoading, triggerRefetch }: StudentPageContentProps) => {
   return (
     <Box p={4}>
       <Heading fontSize="3xl" mb={2}>
         Dashboard
       </Heading>
-      <StudentPageCard student={student}/>
+      <StudentPageCard student={student} profileLoading={profileLoading} triggerRefetch={triggerRefetch}/>
     </Box>
   );
 };
