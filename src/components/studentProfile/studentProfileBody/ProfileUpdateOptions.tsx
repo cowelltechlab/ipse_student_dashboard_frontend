@@ -10,6 +10,9 @@ interface ProfileUpdateOptionsProps {
 
   isDeleteDialogOpen: boolean;
   setIsDeleteDialogOpen: (isDeleting: boolean) => void;
+
+  isSemesterUpdateDialogOpen: boolean;
+  setIsSemesterUpdateDialogOpen: (isDeleting: boolean) => void;
 }
 
 const ProfileUpdateOptions = ({
@@ -18,6 +21,9 @@ const ProfileUpdateOptions = ({
 
   isDeleteDialogOpen,
   setIsDeleteDialogOpen,
+
+  isSemesterUpdateDialogOpen,
+  setIsSemesterUpdateDialogOpen,
 }: ProfileUpdateOptionsProps) => {
   const { roles } = useAuth();
 
@@ -57,6 +63,9 @@ const ProfileUpdateOptions = ({
       )}
       <Spacer />
       <Button
+        onClick={() =>
+          setIsSemesterUpdateDialogOpen(!isSemesterUpdateDialogOpen)
+        }
         borderColor="#BD4F23"
         bg={"none"}
         borderRadius={"lg"}

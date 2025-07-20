@@ -11,7 +11,7 @@ import {
   HStack,
 } from "@chakra-ui/react";
 
-import CreateProfileImage from "../../assets/Create Profile.svg";
+import CreateProfileImage from "../../../assets/Create Profile.svg";
 import { useNavigate } from "react-router-dom";
 import { FaArrowAltCircleRight } from "react-icons/fa";
 
@@ -54,7 +54,7 @@ const SemesterUpdateDialog = ({
                   justifyItems={"center"}
                 >
                   <Heading size={"3xl"} color={"#244D8A"}>
-                    Time to make your profile!
+                    Time to update profile!
                   </Heading>
                 </Box>
 
@@ -67,8 +67,7 @@ const SemesterUpdateDialog = ({
                       m={6}
                       lineHeight="tall"
                     >
-                      Your profile will help AI make assignment changes{" "}
-                      <span style={{ color: "#BD4F23" }}>just for you!</span>
+                      It's time to review and update your profile for the semester.
                     </Text>
                   </Box>
                 </HStack>

@@ -5,6 +5,7 @@ import { useState } from "react";
 import StudentProfileGrid from "./StudentProfileGrid";
 import EditableStudentProfileGrid from "./EditableStudentProfileGrid";
 import DeleteUserDialog from "../../homeDashboard/homeTabs/DeleteUserDialog";
+import SemesterUpdateDialog from "./SemesterUpdateDialog";
 
 interface StudentProfileBodyProps {
   student: StudentProfileType | null;
@@ -19,6 +20,8 @@ const StudentProfileBody = ({
 }: StudentProfileBodyProps) => {
   const [isUpdating, setIsUpdating] = useState<boolean>(false);
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState<boolean>(false);
+  const [isSemesterUpdateDialogOpen, setIsSemesterUpdateDialogOpen] =
+    useState<boolean>(false);
 
   return (
     <Box>
@@ -27,6 +30,8 @@ const StudentProfileBody = ({
         setIsUpdating={setIsUpdating}
         isDeleteDialogOpen={isDeleteDialogOpen}
         setIsDeleteDialogOpen={setIsDeleteDialogOpen}
+        isSemesterUpdateDialogOpen={isSemesterUpdateDialogOpen}
+        setIsSemesterUpdateDialogOpen={setIsSemesterUpdateDialogOpen}
       />
       {isUpdating ? (
         <EditableStudentProfileGrid
@@ -46,6 +51,14 @@ const StudentProfileBody = ({
           userGTEmail={student.gt_email}
           open={isDeleteDialogOpen}
           setOpen={setIsDeleteDialogOpen}
+        />
+      )}
+
+      {student?.user_id && (
+        <SemesterUpdateDialog
+          userId={student.user_id}
+          open={isSemesterUpdateDialogOpen}
+          setOpen={setIsSemesterUpdateDialogOpen}
         />
       )}
     </Box>
