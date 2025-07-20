@@ -25,32 +25,52 @@ const StudentProfilePageStudentSummary = ({
   return (
     <Stack direction={{ base: "column", md: "row" }} mt={6} align={"end"}>
       <Skeleton loading={profileLoading} borderRadius="md">
-        <Image
-          src={student?.profile_picture_url || defaultProfileImage}
-          alt="Student Image"
-          borderRadius="md"
-          boxSize="150px"
-          objectFit="cover"
-        />
+        <Box
+          alignSelf={{ base: "center", md: "flex-start" }}
+          mb={{ base: 4, md: 0 }}
+        >
+          <Image
+            src={student?.profile_picture_url || defaultProfileImage}
+            alt="Student Image"
+            borderRadius="md"
+            boxSize={{ base: "120px", sm: "140px", md: "150px" }}
+            objectFit="cover"
+          />
+        </Box>
       </Skeleton>
 
-      <VStack align={"start"}>
+      <VStack align="start" w="100%">
         <Skeleton
           loading={profileLoading}
           borderRadius="xl"
-          width="200px"
-          height="40px"
+          w={{ base: "100%", sm: "200px" }}
+          h="40px"
         >
           <Box>
-            <Heading size={"2xl"}>
+            <Heading size="2xl">
               {student?.first_name} {student?.last_name}
             </Heading>
           </Box>
         </Skeleton>
 
-        <HStack>
-          <Skeleton loading={profileLoading} borderRadius="xl" minW="150px">
-            <HStack bg="#244d8a" color="white" px={3} py={1} borderRadius="xl">
+        <HStack
+          flexWrap={{ base: "wrap", md: "nowrap" }}
+          align="start"
+          w="100%"
+        >
+          <Skeleton
+            loading={profileLoading}
+            borderRadius="xl"
+            w={{ base: "100%", sm: "auto" }}
+          >
+            <HStack
+              bg="#244d8a"
+              color="white"
+              px={3}
+              py={1}
+              borderRadius="xl"
+              w="100%"
+            >
               <Box>
                 Year <b>{student?.year_name}</b>
               </Box>
@@ -58,8 +78,19 @@ const StudentProfilePageStudentSummary = ({
             </HStack>
           </Skeleton>
 
-          <Skeleton loading={profileLoading} borderRadius="xl" minW="200px">
-            <HStack bg="#244d8a" color="white" px={3} py={1} borderRadius="xl">
+          <Skeleton
+            loading={profileLoading}
+            borderRadius="xl"
+            w={{ base: "100%", sm: "auto" }}
+          >
+            <HStack
+              bg="#244d8a"
+              color="white"
+              px={3}
+              py={1}
+              borderRadius="xl"
+              w="100%"
+            >
               <Box>
                 Classes{" "}
                 <b>{student?.classes.map((c) => c.class_name).join(", ")}</b>

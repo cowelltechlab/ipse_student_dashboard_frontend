@@ -1,6 +1,11 @@
-import { Grid, GridItem } from "@chakra-ui/react";
+import {
+  For,
+  Grid,
+  GridItem,
+} from "@chakra-ui/react";
 import type { StudentProfileType } from "../../../types/StudentTypes";
 import ProfileInfoBox from "./ProfileInfoBox"; // adjust path as needed
+import StudentProfileClassBox from "./StudentProfileClassBox";
 
 interface StudentProfileGridProps {
   student: StudentProfileType | null;
@@ -22,7 +27,14 @@ const StudentProfileGrid = ({
     >
       <GridItem colSpan={{ base: 1, md: 2 }}>
         <ProfileInfoBox title="Classes & Learning Goals">
-          {/* Customize this box manually if needed */}
+          <For each={student?.classes}>
+            {(studentClass, index) => (
+              <StudentProfileClassBox
+                studentClass={studentClass}
+                index={index}
+              />
+            )}
+          </For>
         </ProfileInfoBox>
       </GridItem>
 
