@@ -43,6 +43,11 @@ const PeerTutorsTab = () => {
     setIsProfileDialogOpen(true);
   };
 
+  const handleDelete = () => {
+    setIsDeleteDialogOpen(false);
+    setRefetchTrigger(refetchTrigger + 1);
+  };
+
   return (
     <Box p={4} spaceY={4}>
       <HStack>
@@ -86,8 +91,7 @@ const PeerTutorsTab = () => {
           userGTEmail={selectedUser.school_email}
           open={isDeleteDialogOpen}
           setOpen={setIsDeleteDialogOpen}
-          refetchTrigger={refetchTrigger}
-          setRefetchTrigger={setRefetchTrigger}
+          handleDelete={handleDelete}
         />
       )}
 

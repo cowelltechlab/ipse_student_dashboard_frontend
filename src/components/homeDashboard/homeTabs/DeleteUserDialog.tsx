@@ -18,14 +18,14 @@ import useDeleteUser from "../../../hooks/users/useDeleteUsers";
 
 interface DisplayUserDialogProps {
   userId: number;
-  userFirstName: string
-  userLastName: string
-  userGTEmail: string
+  userFirstName: string;
+  userLastName: string;
+  userGTEmail: string;
   open: boolean;
   setOpen: (open: boolean) => void;
 
-  refetchTrigger?: number;
-  setRefetchTrigger?: (trigger: number) => void;
+
+  handleDelete: () => void;
 }
 
 const DeleteUserDialog = ({
@@ -35,8 +35,7 @@ const DeleteUserDialog = ({
   userGTEmail,
   open,
   setOpen,
-  refetchTrigger=0,
-  setRefetchTrigger=()=>{},
+  handleDelete,
 }: DisplayUserDialogProps) => {
   const [deleteHover, setDeleteHover] = useState(false);
 
@@ -44,8 +43,8 @@ const DeleteUserDialog = ({
 
   const handleDeleteProfile = () => {
     handleDeleteUser(userId);
-    setOpen(false);
-    setRefetchTrigger(refetchTrigger + 1);
+
+    handleDelete();
   };
 
   return (

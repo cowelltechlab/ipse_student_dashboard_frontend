@@ -129,15 +129,13 @@ const EditableStudentProfileGrid = ({
       weaknesses.filter((w) => w.trim() !== "").length < 3 ||
       bestWaysToHelp.filter((b) => b.trim() !== "").length < 3;
 
-    
-
-      console.log(longTermGoals)
-      console.log(selectedClasses)
-      console.log(strengths)
-      console.log(weaknesses)
-      console.log(longTermGoals)
-      console.log(shortTermGoals)
-      console.log(bestWaysToHelp)
+    console.log(longTermGoals);
+    console.log(selectedClasses);
+    console.log(strengths);
+    console.log(weaknesses);
+    console.log(longTermGoals);
+    console.log(shortTermGoals);
+    console.log(bestWaysToHelp);
 
     setIsSaveDisabled(isInvalid);
   }, [
@@ -228,37 +226,39 @@ const EditableStudentProfileGrid = ({
         </GridItem>
       </Grid>
 
-      <ButtonGroup mt={4} align={"end"}>
-        <Button
-          onClick={handleCancelChanges}
-          variant="outline"
-          borderColor="#BD4F23"
-          color="#BD4F23"
-          w={"50%"}
-          _hover={{
-            bg: "#BD4F23",
-            borderColor: "#BD4F23",
-            color: "white",
-          }}
-        >
-          Cancel
-        </Button>
-        <Button
-          onClick={handleSaveUpdates}
-          disabled={isSaveDisabled}
-          loading={loadingPatchUpdate}
-          bg="#BD4F23"
-          color="white"
-          w={"50%"}
-          _hover={{
-            bg: "#BD4F23",
-            borderColor: "#BD4F23",
-            color: "white",
-          }}
-        >
-          Update <Icon as={FaCheckCircle} ml={2} color={"white"} />
-        </Button>
-      </ButtonGroup>
+      <Box mt={4} display="flex" justifyContent="flex-start">
+        <ButtonGroup mt={4} align={"end"}>
+          <Button
+            onClick={handleCancelChanges}
+            variant="outline"
+            borderColor="#BD4F23"
+            color="#BD4F23"
+            w={"50%"}
+            _hover={{
+              bg: "#BD4F23",
+              borderColor: "#BD4F23",
+              color: "white",
+            }}
+          >
+            Cancel
+          </Button>
+          <Button
+            onClick={handleSaveUpdates}
+            disabled={isSaveDisabled}
+            loading={loadingPatchUpdate}
+            bg="#BD4F23"
+            color="white"
+            w={"50%"}
+            _hover={{
+              bg: "#BD4F23",
+              borderColor: "#BD4F23",
+              color: "white",
+            }}
+          >
+            Update <Icon as={FaCheckCircle} ml={2} color={"white"} />
+          </Button>
+        </ButtonGroup>
+      </Box>
     </Box>
   );
 };

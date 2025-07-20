@@ -6,6 +6,7 @@ import StudentProfileGrid from "./StudentProfileGrid";
 import EditableStudentProfileGrid from "./EditableStudentProfileGrid";
 import DeleteUserDialog from "../../homeDashboard/homeTabs/DeleteUserDialog";
 import SemesterUpdateDialog from "./SemesterUpdateDialog";
+import { useNavigate } from "react-router-dom";
 
 interface StudentProfileBodyProps {
   student: StudentProfileType | null;
@@ -22,6 +23,12 @@ const StudentProfileBody = ({
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState<boolean>(false);
   const [isSemesterUpdateDialogOpen, setIsSemesterUpdateDialogOpen] =
     useState<boolean>(false);
+
+  const navigate = useNavigate();
+
+  const handleDelete = () => {
+    navigate("/dashboard");
+  };
 
   return (
     <Box>
@@ -51,6 +58,7 @@ const StudentProfileBody = ({
           userGTEmail={student.gt_email}
           open={isDeleteDialogOpen}
           setOpen={setIsDeleteDialogOpen}
+          handleDelete={handleDelete}
         />
       )}
 
