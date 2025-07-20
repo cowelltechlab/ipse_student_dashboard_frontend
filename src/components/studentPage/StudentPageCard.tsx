@@ -7,6 +7,7 @@ import {
   Icon,
   Spacer,
   SimpleGrid,
+  Stack,
 } from "@chakra-ui/react";
 import { FaChalkboardTeacher, FaTasks, FaGraduationCap } from "react-icons/fa";
 import { SiTarget } from "react-icons/si";
@@ -17,19 +18,30 @@ import ProfileImageSection from "./ProfileImageSection";
 
 interface StudentPageCardProps {
   student: StudentProfileType | null;
-  profileLoading: boolean
-  triggerRefetch: () => void
+  profileLoading: boolean;
+  triggerRefetch: () => void;
 }
 
-const StudentPageCard = ({ student, profileLoading, triggerRefetch }: StudentPageCardProps) => {
+const StudentPageCard = ({
+  student,
+  profileLoading,
+  triggerRefetch,
+}: StudentPageCardProps) => {
   return (
-    <HStack w="100%" align="stretch" spaceX={4} color="white" borderRadius="lg">
+    <Stack
+      w="100%"
+      direction={{ base: "column", md: "row" }}
+      spaceY={{ base: 4, md: 0 }}
+      align="stretch"
+      color="white"
+      borderRadius="lg"
+    >
       {/* Profile Image */}
       <ProfileImageSection
         studentId={student?.student_id}
         profilePictureUrl={student?.profile_picture_url}
         imageLoading={profileLoading}
-        triggerRefetch={triggerRefetch} 
+        triggerRefetch={triggerRefetch}
       />
 
       {/* Right Content */}
@@ -109,7 +121,7 @@ const StudentPageCard = ({ student, profileLoading, triggerRefetch }: StudentPag
           </Box>
         </SimpleGrid>
       </VStack>
-    </HStack>
+    </Stack>
   );
 };
 
