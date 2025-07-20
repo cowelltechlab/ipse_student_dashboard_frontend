@@ -5,11 +5,14 @@ import {
   Skeleton,
   SkeletonText,
   Text,
+  Image,
+  HStack,
 } from "@chakra-ui/react";
 import { type ReactNode } from "react";
 
 interface ProfileInfoBoxProps {
   title: string;
+  titleIcon?: string;
   content?: string | string[];
   children?: ReactNode;
   loading?: boolean;
@@ -17,6 +20,7 @@ interface ProfileInfoBoxProps {
 
 const ProfileInfoBox = ({
   title,
+  titleIcon,
   content,
   children,
   loading = false,
@@ -24,12 +28,13 @@ const ProfileInfoBox = ({
   const isArray = Array.isArray(content);
 
   return (
-    <Box bg="#eaeef4" p={4} borderRadius="md" w="100%">
-      <Skeleton loading={loading}>
-        <Heading mb={2}>
-          {title}
-        </Heading>
-      </Skeleton>
+    <Box bg="#eaeef4" p={4} borderRadius="md" w="100%" >
+        <HStack align={"center"} mb={2}>
+          {titleIcon && (
+            <Image src={titleIcon} boxSize="40px" objectFit="contain" />
+          )}
+          <Heading>{title}</Heading>
+        </HStack>
 
       {children ? (
         <Skeleton loading={loading}>{children}</Skeleton>
