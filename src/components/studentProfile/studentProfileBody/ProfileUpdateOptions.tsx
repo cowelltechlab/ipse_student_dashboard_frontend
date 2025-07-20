@@ -29,13 +29,14 @@ const ProfileUpdateOptions = ({
         borderColor="#BD4F23"
         fontWeight={"bold"}
         borderRadius={"lg"}
-        bg={"none"}
-        color="#BD4F23"
+        bg={isUpdating? "none" : "#F2C5B5"}
+        color={"#BD4F23"}
         _hover={{
           bg: "#BD4F23",
           borderColor: "#BD4F23",
           color: "white",
         }}
+
       >
         Edit Profile <Icon as={FaEdit} />
       </Button>

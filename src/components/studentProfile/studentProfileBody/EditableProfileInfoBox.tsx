@@ -20,7 +20,6 @@ interface EditableProfileInfoBoxProps<T extends string | string[]> {
   onChange: (val: T) => void;
 }
 
-
 const EditableProfileInfoBox = <T extends string | string[]>({
   title,
   titleIcon,
@@ -50,7 +49,15 @@ const EditableProfileInfoBox = <T extends string | string[]>({
   };
 
   return (
-    <Box bg="#eaeef4" p={4} borderRadius="md" w="100%">
+    <Box
+      bg="#eaeef4"
+      p={4}
+      borderRadius="md"
+      w="100%"
+      h="100%"
+      display="flex"
+      flexDirection="column"
+    >
       <HStack align="center" mb={2}>
         {titleIcon && (
           <Image src={titleIcon} boxSize="40px" objectFit="contain" />
@@ -58,7 +65,7 @@ const EditableProfileInfoBox = <T extends string | string[]>({
         <Heading>{title}</Heading>
       </HStack>
 
-      <VStack gap={3}>
+      <VStack gap={3} flex="1">
         {isArray ? (
           <>
             {safeArray.map((item, idx) => (
@@ -85,22 +92,32 @@ const EditableProfileInfoBox = <T extends string | string[]>({
                 </Tooltip>
               </HStack>
             ))}
-            <Button onClick={handleAdd} size="sm" alignSelf="end" bg={"#BD4F23"} >
-              <Icon as={IoAddCircleSharp} />
-              Add
-            </Button>
           </>
         ) : (
           <Textarea
             bg="white"
             value={value as string}
+            h={"100%"}
             onChange={(e) => onChange(e.target.value as T)}
           />
         )}
       </VStack>
+
+      {isArray && (
+        <Button
+          onClick={handleAdd}
+          size="sm"
+          alignSelf="end"
+          mt={4}
+          bg="#BD4F23"
+          color="white"
+        >
+          <Icon as={IoAddCircleSharp} />
+          Add
+        </Button>
+      )}
     </Box>
   );
 };
-
 
 export default EditableProfileInfoBox;
