@@ -8,20 +8,20 @@ import {
   Icon,
   Box,
 } from "@chakra-ui/react";
-import type { StudentProfileType } from "../../types/StudentTypes";
+import type { StudentProfileType } from "../../../types/StudentTypes";
 
-import defaultProfileImage from "../../assets/default_profile_picture.jpg";
+import defaultProfileImage from "../../../assets/default_profile_picture.jpg";
 import { FaEdit } from "react-icons/fa";
 
-interface StudentProfilePageStudentSummaryProps {
+interface StudentSummaryHeaderCardProps {
   student: StudentProfileType | null;
   profileLoading: boolean;
 }
 
-const StudentProfilePageStudentSummary = ({
+const StudentSummaryHeaderCard = ({
   student,
   profileLoading,
-}: StudentProfilePageStudentSummaryProps) => {
+}: StudentSummaryHeaderCardProps) => {
   return (
     <Stack direction={{ base: "column", md: "row" }} mt={6} align={"end"}>
       <Skeleton loading={profileLoading} borderRadius="md">
@@ -104,4 +104,4 @@ const StudentProfilePageStudentSummary = ({
   );
 };
 
-export default StudentProfilePageStudentSummary;
+export default StudentSummaryHeaderCard;

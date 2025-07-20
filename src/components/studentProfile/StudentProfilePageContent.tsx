@@ -1,6 +1,6 @@
 import { Box, Heading } from "@chakra-ui/react";
 import type { StudentProfileType } from "../../types/StudentTypes";
-import StudentProfilePageStudentSummary from "./StudentProfilePageStudentSummary";
+import StudentProfilePageStudentSummary from "../common/studentProfilePages/StudentSummaryHeaderCard";
 import StudentProfileBody from "./studentProfileBody/StudentProfileBody";
 
 interface StudentProfilePageContentProps {

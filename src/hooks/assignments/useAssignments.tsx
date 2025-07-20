@@ -1,12 +1,12 @@
 import { useEffect, useState } from "react";
 import type { ErrorType } from "../../types/ErrorType";
 import { getAssignments } from "../../services/assignmentServices";
-import type { AssignmentBaseType } from "../../types/AssignmentTypes";
+import type { AssignmentDetailType } from "../../types/AssignmentTypes";
 
 const useAssignments = (
 
 ) => {
-  const [assignments, setAssignments] = useState<AssignmentBaseType[]>([]);
+  const [assignments, setAssignments] = useState<AssignmentDetailType[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<ErrorType | null>(null);
 

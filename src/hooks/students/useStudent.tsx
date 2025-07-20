@@ -3,7 +3,7 @@ import { type StudentProfileType } from "../../types/StudentTypes";
 import { type ErrorType } from "../../types/ErrorType";
 import { getStudentProfile } from "../../services/studentServices";
 
-const useStudent = (studentId: string | undefined, refetchTrigger: number) => {
+const useStudent = (studentId: string | undefined, refetchTrigger?: number) => {
   const [student, setStudent] = useState<StudentProfileType | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<ErrorType | null>(null);

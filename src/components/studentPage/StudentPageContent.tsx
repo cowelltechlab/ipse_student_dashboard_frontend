@@ -44,7 +44,9 @@ const StudentPageContent = ({
       subheading:
         "Access and reivew materials already uploaded for this student",
       icon: documentIcon,
-      onClick: () => {},
+      onClick: () => {
+        navigate(`/student/${student_id}/documents`);
+      },
     },
     {
       headingName: "Achievements",

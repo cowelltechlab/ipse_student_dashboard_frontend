@@ -10,6 +10,7 @@ import Register from "./pages/Register";
 import CreateNewAssignment from "./pages/CreateNewAssignment";
 import StudentProfileCreation from "./pages/StudentProfileCreation";
 import StudentProfile from "./pages/StudentProfile";
+import StudentDocuments from "./pages/StudentDocument";
 
 const App: React.FC = () => {
   return (
@@ -43,6 +44,7 @@ const App: React.FC = () => {
       <Route path="/student/:student_id" element={<Student />} />
 
       <Route path="/student/:student_id/profile" element={<StudentProfile />} />
+      <Route path="/student/:student_id/documents" element={<StudentDocuments />} />
 
       <Route
         path="/student/:student_id/assignment/:assignment_id"
