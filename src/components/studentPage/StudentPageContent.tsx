@@ -6,6 +6,7 @@ import studentIcon from "../../assets/icons/graduated.png";
 import documentIcon from "../../assets/icons/documents.png";
 import trophyIcon from "../../assets/icons/trophy.png";
 import StudentProfileSubsection from "./StudentProfileSubsection";
+import { useNavigate } from "react-router-dom";
 
 interface StudentPageContentProps {
   student: StudentProfileType | null;
@@ -25,12 +26,18 @@ const StudentPageContent = ({
   profileLoading,
   triggerRefetch,
 }: StudentPageContentProps) => {
+  const navigate = useNavigate();
+
+  const student_id = student?.student_id;
+
   const sections: StudentProfileSectionSelection[] = [
     {
       headingName: "Profile",
       subheading: "View the full profile, make edits, and customize details.",
       icon: studentIcon,
-      onClick: () => {},
+      onClick: () => {
+        navigate(`/student/${student_id}/profile`);
+      },
     },
     {
       headingName: "Documents",

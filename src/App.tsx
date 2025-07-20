@@ -9,6 +9,7 @@ import Student from "./pages/Student";
 import Register from "./pages/Register";
 import CreateNewAssignment from "./pages/CreateNewAssignment";
 import StudentProfileCreation from "./pages/StudentProfileCreation";
+import StudentProfile from "./pages/StudentProfile";
 
 const App: React.FC = () => {
   return (
@@ -41,6 +42,8 @@ const App: React.FC = () => {
 
       <Route path="/student/:student_id" element={<Student />} />
 
+      <Route path="/student/:student_id/profile" element={<StudentProfile />} />
+
       <Route
         path="/student/:student_id/assignment/:assignment_id"
         element={<AssignmentDetails />}
@@ -51,20 +54,11 @@ const App: React.FC = () => {
         element={<StudentProfileCreation />}
       />
 
-      
-
       {/* Backup route */}
       <Route path="*" element={<div>Page not found</div>} />
 
-      <Route
-        element={
-          <ProtectedRoute requiredRoles={["Admin", "Advisor"]} />
-        }
-      >
-        <Route
-          path="/create-assignment"
-          element={<CreateNewAssignment/>}
-        />
+      <Route element={<ProtectedRoute requiredRoles={["Admin", "Advisor"]} />}>
+        <Route path="/create-assignment" element={<CreateNewAssignment />} />
       </Route>
 
       {/* TODO: Update so student default is their own page */}
