@@ -137,7 +137,6 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const loginWithGoogle = async () => {
     try {
       const response = await apiClient.get("/auth/login/google");
-      // console.log(response.data.google_auth_url);
       window.location.href = response.data.google_auth_url;
     } catch (error) {
       console.error("Login failed", error);

@@ -3,6 +3,7 @@ import type { StudentProfileType } from "../../../types/StudentTypes";
 import ProfileUpdateOptions from "./ProfileUpdateOptions";
 import { useState } from "react";
 import StudentProfileGrid from "./StudentProfileGrid";
+import EditableStudentProfileGrid from "./EditableStudentProfileGrid";
 
 interface StudentProfileBodyProps {
   student: StudentProfileType | null;
@@ -26,12 +27,18 @@ const StudentProfileBody = ({
         isDeleteModalOpen={isDeleteModalOpen}
         setIsDeleteModalOpen={setIsDeleteModalOpen}
       />
-
-      <StudentProfileGrid
-        student={student}
-        profileLoading={profileLoading}
-        triggerRefetch={triggerRefetch}
-      />
+      {isUpdating ? (
+        <EditableStudentProfileGrid
+          student={student}
+          profileLoading={profileLoading}
+        />
+      ) : (
+        <StudentProfileGrid
+          student={student}
+          profileLoading={profileLoading}
+          triggerRefetch={triggerRefetch}
+        />
+      )}
     </Box>
   );
 };

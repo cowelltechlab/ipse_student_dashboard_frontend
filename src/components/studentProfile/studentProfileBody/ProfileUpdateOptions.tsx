@@ -3,7 +3,6 @@ import { Button, Icon, Spacer, Stack } from "@chakra-ui/react";
 import { FaEdit, FaTrashAlt } from "react-icons/fa";
 import { LuFileSpreadsheet } from "react-icons/lu";
 import useAuth from "../../../contexts/useAuth";
-import { useEffect } from "react";
 
 interface ProfileUpdateOptionsProps {
   isUpdating: boolean;
@@ -22,7 +21,6 @@ const ProfileUpdateOptions = ({
 }: ProfileUpdateOptionsProps) => {
   const { roles } = useAuth();
 
-  useEffect(() => console.log("roles:", roles));
 
   return (
     <Stack mt={6} direction={{ base: "column", md: "row" }}>

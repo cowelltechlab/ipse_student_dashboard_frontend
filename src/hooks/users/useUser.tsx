@@ -15,7 +15,6 @@ const useUser = (userId?: number) => {
       try {
         setLoading(true);
         const response = await getUser(userId);
-        console.log(response)
         setUser(response);
       } catch (e) {
         const error = e as ErrorType;
