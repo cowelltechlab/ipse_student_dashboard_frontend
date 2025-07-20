@@ -1,20 +1,70 @@
-import { Box, Heading } from "@chakra-ui/react";
+import { Box, For, Heading, Separator } from "@chakra-ui/react";
 import StudentPageCard from "./StudentPageCard";
 import type { StudentProfileType } from "../../types/StudentTypes";
 
+import studentIcon from "../../assets/icons/graduated.png";
+import documentIcon from "../../assets/icons/documents.png";
+import trophyIcon from "../../assets/icons/trophy.png";
+import StudentProfileSubsection from "./StudentProfileSubsection";
+
 interface StudentPageContentProps {
   student: StudentProfileType | null;
-  profileLoading: boolean
-  triggerRefetch: () => void
+  profileLoading: boolean;
+  triggerRefetch: () => void;
 }
 
-const StudentPageContent = ({ student, profileLoading, triggerRefetch }: StudentPageContentProps) => {
+export type StudentProfileSectionSelection = {
+  headingName: string;
+  subheading: string;
+  icon: string;
+  onClick: () => void;
+};
+
+const StudentPageContent = ({
+  student,
+  profileLoading,
+  triggerRefetch,
+}: StudentPageContentProps) => {
+  const sections: StudentProfileSectionSelection[] = [
+    {
+      headingName: "Profile",
+      subheading: "View the full profile, make edits, and customize details.",
+      icon: studentIcon,
+      onClick: () => {},
+    },
+    {
+      headingName: "Documents",
+      subheading:
+        "Access and reivew materials already uploaded for this student",
+      icon: documentIcon,
+      onClick: () => {},
+    },
+    {
+      headingName: "Achievements",
+      subheading: "View your achievements!",
+      icon: trophyIcon,
+      onClick: () => {},
+    },
+  ];
+
   return (
     <Box p={4}>
       <Heading fontSize="3xl" mb={2}>
         Dashboard
       </Heading>
-      <StudentPageCard student={student} profileLoading={profileLoading} triggerRefetch={triggerRefetch}/>
+      <StudentPageCard
+        student={student}
+        profileLoading={profileLoading}
+        triggerRefetch={triggerRefetch}
+      />
+      <Separator my={6} />
+      <For each={sections}>
+        {(item, index) => (
+          <Box key={index} w={"100%"}>
+            <StudentProfileSubsection section={item} />
+          </Box>
+        )}
+      </For>
     </Box>
   );
 };
