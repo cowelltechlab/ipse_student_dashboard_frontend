@@ -26,6 +26,8 @@ export interface StudentProfileType {
   first_name: string;
   last_name: string;
   year_name: string;
+  email: string;
+  gt_email: string
   profile_picture_url: string;
   classes: StudentProfileClassType[];
   strengths: string[];

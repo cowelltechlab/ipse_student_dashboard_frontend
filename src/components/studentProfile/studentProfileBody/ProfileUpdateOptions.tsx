@@ -8,19 +8,18 @@ interface ProfileUpdateOptionsProps {
   isUpdating: boolean;
   setIsUpdating: (isUpdating: boolean) => void;
 
-  isDeleteModalOpen: boolean;
-  setIsDeleteModalOpen: (isDeleting: boolean) => void;
+  isDeleteDialogOpen: boolean;
+  setIsDeleteDialogOpen: (isDeleting: boolean) => void;
 }
 
 const ProfileUpdateOptions = ({
   isUpdating,
   setIsUpdating,
 
-  isDeleteModalOpen,
-  setIsDeleteModalOpen,
+  isDeleteDialogOpen,
+  setIsDeleteDialogOpen,
 }: ProfileUpdateOptionsProps) => {
   const { roles } = useAuth();
-
 
   return (
     <Stack mt={6} direction={{ base: "column", md: "row" }}>
@@ -29,20 +28,19 @@ const ProfileUpdateOptions = ({
         borderColor="#BD4F23"
         fontWeight={"bold"}
         borderRadius={"lg"}
-        bg={isUpdating? "none" : "#F2C5B5"}
+        bg={isUpdating ? "#F2C5B5" : "none"}
         color={"#BD4F23"}
         _hover={{
           bg: "#BD4F23",
           borderColor: "#BD4F23",
           color: "white",
         }}
-
       >
         Edit Profile <Icon as={FaEdit} />
       </Button>
       {(roles.includes("Admin") || roles.includes("Advisor")) && (
         <Button
-          onClick={() => setIsDeleteModalOpen(!isDeleteModalOpen)}
+          onClick={() => setIsDeleteDialogOpen(!isDeleteDialogOpen)}
           borderColor="#BD4F23"
           borderRadius={"lg"}
           fontWeight={"bold"}

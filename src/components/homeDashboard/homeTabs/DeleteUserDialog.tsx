@@ -10,7 +10,6 @@ import {
   Box,
   Heading,
 } from "@chakra-ui/react";
-import type { UserType } from "../../../types/UserTypes";
 
 import deleteProfileImage from "../../../assets/Create Profile.svg";
 import { useState } from "react";
@@ -18,27 +17,33 @@ import { FaCheckCircle } from "react-icons/fa";
 import useDeleteUser from "../../../hooks/users/useDeleteUsers";
 
 interface DisplayUserDialogProps {
-  user: UserType;
+  userId: number;
+  userFirstName: string
+  userLastName: string
+  userGTEmail: string
   open: boolean;
   setOpen: (open: boolean) => void;
 
-  refetchTrigger: number;
-  setRefetchTrigger: (trigger: number) => void;
+  refetchTrigger?: number;
+  setRefetchTrigger?: (trigger: number) => void;
 }
 
 const DeleteUserDialog = ({
-  user,
+  userId,
+  userFirstName,
+  userLastName,
+  userGTEmail,
   open,
   setOpen,
-  refetchTrigger,
-  setRefetchTrigger,
+  refetchTrigger=0,
+  setRefetchTrigger=()=>{},
 }: DisplayUserDialogProps) => {
   const [deleteHover, setDeleteHover] = useState(false);
 
   const { handleDeleteUser } = useDeleteUser();
 
   const handleDeleteProfile = () => {
-    handleDeleteUser(user.id);
+    handleDeleteUser(userId);
     setOpen(false);
     setRefetchTrigger(refetchTrigger + 1);
   };
@@ -66,7 +71,7 @@ const DeleteUserDialog = ({
                 </Text>
                 <Box bg={"#244D8A"} p={2} borderRadius="md" w={"100%"}>
                   <Heading fontSize="md" color="white" textAlign="center">
-                    {user.first_name} {user.last_name} | {user.email}
+                    {userFirstName} {userLastName} | {userGTEmail}
                   </Heading>
                 </Box>
 

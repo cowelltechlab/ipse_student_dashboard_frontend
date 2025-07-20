@@ -52,7 +52,7 @@ const AdvisorsTab = () => {
 
         <TextButton color="#bd4f23" onClick={handleCreateAdvisor}>
           <HStack gap={1}>
-           <IoIosAddCircle  color="#bd4f23" />
+            <IoIosAddCircle color="#bd4f23" />
             Create new Advisor
           </HStack>
         </TextButton>
@@ -77,7 +77,10 @@ const AdvisorsTab = () => {
 
       {selectedUser && (
         <DeleteUserDialog
-          user={selectedUser}
+          userId={selectedUser.id}
+          userFirstName={selectedUser.first_name}
+          userLastName={selectedUser.last_name}
+          userGTEmail={selectedUser.school_email}
           open={isDeleteDialogOpen}
           setOpen={setIsDeleteDialogOpen}
           refetchTrigger={refetchTrigger}
