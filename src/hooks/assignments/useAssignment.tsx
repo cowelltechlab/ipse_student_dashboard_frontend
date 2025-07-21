@@ -1,10 +1,12 @@
 import { useEffect, useState } from "react";
 import type { ErrorType } from "../../types/ErrorType";
-import { getAssignments } from "../../services/assignmentServices";
+import { getAssignment } from "../../services/assignmentServices";
 import type { AssignmentDetailType } from "../../types/AssignmentTypes";
 
-const useAssignments = (studentId?: number | null) => {
-  const [assignments, setAssignments] = useState<AssignmentDetailType[]>([]);
+const useAssignment = (assignmentId: number) => {
+  const [assignment, setAssignment] = useState<AssignmentDetailType | null>(
+    null
+  );
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<ErrorType | null>(null);
 
@@ -12,28 +14,27 @@ const useAssignments = (studentId?: number | null) => {
     const fetchAssignments = async () => {
       try {
         setLoading(true);
-        const response = await getAssignments(studentId ?? undefined);
-        console.log(response)
-        setAssignments(response);
+        const response = await getAssignment(assignmentId);
+        setAssignment(response);
       } catch (e) {
         const error = e as ErrorType;
         setError(error);
-        setAssignments([]);
+        setAssignment(null);
       } finally {
         setLoading(false);
       }
     };
 
-    // Only fetch if studentId is a number or undefined
-    if (studentId !== null) {
+    // Only fetch if assignmentId is a number
+    if (assignmentId !== null) {
       fetchAssignments();
     } else {
       setLoading(false);
-      setAssignments([]);
+      setAssignment(null);
     }
-  }, [studentId]);
+  }, [assignmentId]);
 
-  return { assignments, loading, error };
+  return { assignment, loading, error };
 };
 
-export default useAssignments;
+export default useAssignment;
