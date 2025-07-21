@@ -7,7 +7,7 @@ import { Tabs } from "@chakra-ui/react";
 
 const HomeContent = () => {
   return (
-    <Tabs.Root defaultValue="students" variant={"line"}>
+    <Tabs.Root defaultValue="students" variant={"line"} mt={10}>
       <Tabs.List>
         <Tabs.Trigger _selected={{ fontWeight: "bold" }} value="students">
           Students
