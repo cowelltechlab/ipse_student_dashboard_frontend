@@ -5,13 +5,12 @@ import {
   VStack,
   Heading,
   HStack,
-  Icon,
   Box,
 } from "@chakra-ui/react";
 import type { StudentProfileType } from "../../../types/StudentTypes";
 
 import defaultProfileImage from "../../../assets/default_profile_picture.jpg";
-import { FaEdit } from "react-icons/fa";
+// import { FaEdit } from "react-icons/fa";
 
 interface StudentSummaryHeaderCardProps {
   student: StudentProfileType | null;
@@ -74,7 +73,7 @@ const StudentSummaryHeaderCard = ({
               <Box>
                 Year <b>{student?.year_name}</b>
               </Box>
-              <Icon as={FaEdit} />
+              {/* <Icon as={FaEdit} /> */}
             </HStack>
           </Skeleton>
 
@@ -95,7 +94,7 @@ const StudentSummaryHeaderCard = ({
                 Classes{" "}
                 <b>{student?.classes.map((c) => c.class_name).join(", ")}</b>
               </Box>
-              <Icon as={FaEdit} />
+              {/* <Icon as={FaEdit} /> */}
             </HStack>
           </Skeleton>
         </HStack>

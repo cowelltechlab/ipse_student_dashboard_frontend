@@ -16,7 +16,6 @@ const useGetPrefillStudentProfile = (user_id?: string | null) => {
       try {
         setLoading(true);
         const response = await getPrefillStudentProfile(user_id);
-        console.log(response);
         setStudentProfile(response);
       } catch (e) {
         console.error("Error fetching student profile:", e);

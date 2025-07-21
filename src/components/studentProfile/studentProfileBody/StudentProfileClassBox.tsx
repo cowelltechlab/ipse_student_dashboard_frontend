@@ -4,16 +4,13 @@ import type { StudentProfileClassType } from "../../../types/ClassTypes";
 
 interface StudentProfileClassBoxProps {
   studentClass: StudentProfileClassType;
-  index: number;
 }
 
 const StudentProfileClassBox = ({
   studentClass,
-  index,
 }: StudentProfileClassBoxProps) => {
   return (
     <Box
-      key={index}
       border="1px solid #e2e8f0"
       borderRadius="lg"
       p={4}

@@ -27,20 +27,23 @@ const StudentProfileGrid = ({
       gap={4}
       mt={6}
     >
-      <GridItem colSpan={{ base: 1, md: 2 }}>
-        <ProfileInfoBox title="Classes & Learning Goals" titleIcon={studyingIcon}>
+      <GridItem colSpan={{ base: 1, md: 2 }} key={"classes"}>
+        <ProfileInfoBox
+          title="Classes & Learning Goals"
+          titleIcon={studyingIcon}
+        >
           <For each={student?.classes}>
             {(studentClass, index) => (
               <StudentProfileClassBox
+                key={index}
                 studentClass={studentClass}
-                index={index}
               />
             )}
           </For>
         </ProfileInfoBox>
       </GridItem>
 
-      <GridItem display="flex">
+      <GridItem display="flex" key={"strengths"}>
         <ProfileInfoBox
           title="What I am good at"
           titleIcon={strengthsIcon}
@@ -49,7 +52,7 @@ const StudentProfileGrid = ({
         />
       </GridItem>
 
-      <GridItem display="flex">
+      <GridItem display="flex" key={"challengess"}>
         <ProfileInfoBox
           title="Things that are hard for me"
           titleIcon={challengesIcon}
@@ -58,7 +61,7 @@ const StudentProfileGrid = ({
         />
       </GridItem>
 
-      <GridItem display="flex">
+      <GridItem display="flex" key={"longTermGoals"}>
         <ProfileInfoBox
           title="After college I want to"
           titleIcon={longTermGoalsIcon}
@@ -67,7 +70,7 @@ const StudentProfileGrid = ({
         />
       </GridItem>
 
-      <GridItem display="flex">
+      <GridItem display="flex" key={"shortTermGoals"}>
         <ProfileInfoBox
           title="Currently I want to"
           titleIcon={workinOnIcon}
@@ -76,7 +79,7 @@ const StudentProfileGrid = ({
         />
       </GridItem>
 
-      <GridItem display="flex">
+      <GridItem display="flex" key={"bestWaysToAssist"}>
         <ProfileInfoBox
           title="Best way to assist me"
           titleIcon={bestWaysIcon}
@@ -85,7 +88,7 @@ const StudentProfileGrid = ({
         />
       </GridItem>
 
-      <GridItem display="flex">
+      <GridItem display="flex" key={"hobbies"}>
         <ProfileInfoBox
           title="Things I enjoy doing for fun"
           titleIcon={hobbiesIcon}

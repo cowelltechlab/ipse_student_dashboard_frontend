@@ -13,7 +13,6 @@ const useGetStudentProfile = (student_id: string) => {
       try {
         setLoading(true);
         const response = await getStudentProfile(student_id);
-        console.log(response)
         setStudentProfile(response);
       } catch (e) {
         console.error("Error fetching student profile:", e);
