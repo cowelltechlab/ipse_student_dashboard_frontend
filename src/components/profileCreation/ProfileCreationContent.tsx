@@ -1,6 +1,5 @@
 import { Box, Button, ButtonGroup, Steps } from "@chakra-ui/react";
 import { useParams } from "react-router-dom";
-import useUser from "../../hooks/users/useUser";
 import ProfileCreationStepOne from "./profileCreationSteps/step1/ProfileCreationStepOne";
 import ProfileCreationStepTwo from "./profileCreationSteps/step2/ProfileCreationStepTwo";
 import ProfileCreationStepThree from "./profileCreationSteps/step3/ProfileCreationStepThree";
@@ -10,10 +9,11 @@ import type { ClassSelectionType } from "../../types/ClassTypes";
 import SubmissionCompletedModal from "./SubmissionCompleteModal";
 import usePostStudentProfile from "../../hooks/studentProfiles/usePostStudentProfile";
 import { toaster } from "../ui/toaster";
+import useGetPrefillStudentProfile from "../../hooks/studentProfiles/useGetPrefillStudentProfile";
 
 const ProfileCreationContent = () => {
   const { user_id } = useParams<{ user_id: string }>();
-  const { user } = useUser(Number(user_id));
+  const { studentProfile } = useGetPrefillStudentProfile(user_id);
 
   const [currentStep, setCurrentStep] = useState<number>(0);
 
@@ -71,18 +71,13 @@ const ProfileCreationContent = () => {
     }
   };
 
-  useEffect(() => {
-    if (user?.first_name) setFirstName(user.first_name);
-    if (user?.last_name) setLastName(user.last_name);
-  }, [user]);
-
   //  Step 1 Props
   const [isStep1Complete, setIsStep1Complete] = useState<boolean>(false);
   const [isStep2Complete, setIsStep2Complete] = useState<boolean>(false);
   const [isStep3Complete, setIsStep3Complete] = useState<boolean>(false);
 
-  const [firstName, setFirstName] = useState<string>(user?.first_name || "");
-  const [lastName, setLastName] = useState<string>(user?.last_name || "");
+  const [firstName, setFirstName] = useState<string>("");
+  const [lastName, setLastName] = useState<string>("");
   const [selectedYearId, setSelectedYearId] = useState<number | null>(null);
   const [selectedClasses, setSelectedClasses] = useState<ClassSelectionType[]>([
     { class_id: -1, class_goal: "" },
@@ -100,6 +95,31 @@ const ProfileCreationContent = () => {
   const [readingLevel, setReadingLevel] = useState<string[]>([]);
   const [writingLevel, setWritingLevel] = useState<string[]>([]);
 
+  useEffect(() => {
+    if (!studentProfile) return;
+
+    setFirstName(studentProfile.first_name);
+    setLastName(studentProfile.last_name);
+    setSelectedYearId(studentProfile.year_id ?? null);
+
+    const mappedClasses: ClassSelectionType[] =
+      (studentProfile.classes as ClassSelectionType[])?.map((c) => ({
+        class_id: Number(c.class_id),
+        class_goal: c.class_goal ?? "",
+      })) ?? [];
+
+    setSelectedClasses(mappedClasses);
+
+    setLongTermGoals(studentProfile.long_term_goals ?? "");
+    setStrengths(studentProfile.strengths ?? []);
+    setWeaknesses(studentProfile.challenges ?? []);
+    setHobbies(studentProfile.hobbies_and_interests ?? "");
+    setShortTermGoals(studentProfile.short_term_goals ?? "");
+    setBestWaysToHelp((studentProfile.best_ways_to_help ?? []).join(", "));
+    setReadingLevel(studentProfile.reading_level ?? []);
+    setWritingLevel(studentProfile.writing_level ?? []);
+  }, [studentProfile]);
+
   const isStepComplete = () => {
     if (currentStep === 0) return isStep1Complete;
     if (currentStep === 1) return isStep2Complete;
@@ -115,8 +135,8 @@ const ProfileCreationContent = () => {
           setStepComplete={(isComplete: boolean) =>
             setIsStep1Complete(isComplete)
           }
-          firstName={firstName}
-          lastName={lastName}
+          firstName={firstName || ""}
+          lastName={lastName || ""}
           setFirstName={setFirstName}
           setLastName={setLastName}
           selectedYearId={selectedYearId}

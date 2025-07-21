@@ -7,6 +7,11 @@ export const getStudentProfile = async (student_id: string) => {
   return response.data;
 };
 
+export const getPrefillStudentProfile = async (user_id: string) => {
+  const response = await apiClient.get(`/profile/by-user/${user_id}`);
+  return response.data;
+};
+
 export const postStudentProfile = async (
   user_id: string,
 
