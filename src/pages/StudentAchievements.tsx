@@ -1,13 +1,16 @@
-import { Box, Heading, Separator, Skeleton, VStack } from "@chakra-ui/react";
+import { Box, Skeleton } from "@chakra-ui/react";
 import useStudent from "../hooks/students/useStudent";
 import { useParams } from "react-router-dom";
 import PageHeader from "../components/common/pageHeader/PageHeader";
 import BreadcrumbNav from "../components/common/breadcrumb/BreadcrumbNav";
-import StudentSummaryHeaderCard from "../components/common/studentProfilePages/StudentSummaryHeaderCard";
+import StudentAchievementsPageContent from "../components/studentAchievements/StudentAchievementsPageContent";
+import { useState } from "react";
 
 const StudentAchievements = () => {
   const { student_id } = useParams<{ student_id: string }>();
   const { student, loading } = useStudent(student_id);
+
+  const [refetchTrigger, setRefetchTrigger] = useState<number>(0);
 
   let nameLabel;
 
@@ -31,16 +34,13 @@ const StudentAchievements = () => {
     <Box>
       <PageHeader />
       <BreadcrumbNav items={breadcrumbItems} />
-      <Box p={4}>
-        <StudentSummaryHeaderCard student={student} profileLoading={loading} />
-        <Separator my={6} />
-        <VStack>
-            <Heading color={"#244D8A"}>Complete Your Achievements</Heading>
-          <Box h={"800px"} bg={"#EAEEF4"} w={"100%"} borderRadius={"lg"}>
-            
-          </Box>
-        </VStack>
-      </Box>
+      <StudentAchievementsPageContent
+        student={student}
+        profileLoading={loading}
+        triggerRefetch={() => {
+          setRefetchTrigger(refetchTrigger + 1);
+        }}
+      />
     </Box>
   );
 };

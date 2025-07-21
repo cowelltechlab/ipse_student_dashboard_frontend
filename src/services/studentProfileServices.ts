@@ -92,3 +92,18 @@ export const putStudentProfile = async (
   const response = await apiClient.put(`/profile/${user_id}`, updatePayload);
   return response.data;
 };
+
+export const postEmbedUrl = async (
+  user_id: number,
+  embed_url: string,
+  edit_url: string
+) => {
+  const response = await apiClient.post(
+    `/profile/achievements-urls/${user_id}`,
+    {
+      embed_url,
+      edit_url
+    }
+  );
+  return response.data;
+};

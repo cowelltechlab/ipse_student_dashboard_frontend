@@ -20,6 +20,7 @@ const useStudent = (studentId: string | undefined, refetchTrigger?: number) => {
       try {
         setLoading(true);
         const response = await getStudentProfile(studentId);
+        console.log(response)
         setStudent(response);
         setError(null);
       } catch (e) {

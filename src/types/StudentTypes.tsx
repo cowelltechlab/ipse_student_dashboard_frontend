@@ -37,4 +37,6 @@ export interface StudentProfileType {
   best_ways_to_help: string[];
   hobbies_and_interests: string;
   profile_summaries: ProfileSummariesType;
+  ppt_embed_url: string
+  ppt_edit_url: string
 }
