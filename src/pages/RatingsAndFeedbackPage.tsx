@@ -12,10 +12,9 @@ interface BreadcrumbItem {
   href?: string;
 }
 
-// interface RatingsAndFeedbackPageProps {
-//     studentName: string;
-//     studentProfileLink: string;
-// }
+// TODO: Refer to Figma for details, including styling
+// TODO: Make accordian arrow match Figma
+// TODO: Connect to backend to automatically retrieve form info
 
 const RatingsAndFeedbackPage = () => {
     const breadcrumbItems: BreadcrumbItem[] = [
@@ -23,12 +22,23 @@ const RatingsAndFeedbackPage = () => {
     ]
 
     return (
-        <Box>
+        <Box
+            margin={2}
+        >
             <PageHeader />
-            <BreadcrumbNav items={breadcrumbItems} />
+            <BreadcrumbNav 
+                items={breadcrumbItems} 
+                // TODO: Fix. Doesn't appear properly
+            />
             <VStack>
-                <Box alignContent="left">
-                    <Text alignContent="left" fontSize="lg">Feedback & Rating</Text>
+                <Box justifyContent="left" width="100%">
+                    <Text
+                        alignContent="left" 
+                        fontSize="lg"
+                        fontWeight="bold"
+                    >
+                        Feedback & Rating
+                    </Text>
                 </Box>
                 <Separator variant="solid" />
                 <Accordion.Root collapsible>

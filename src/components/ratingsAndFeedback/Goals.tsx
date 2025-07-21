@@ -9,7 +9,10 @@ const Goals = () => {
             <Span flex="1">{title}</Span>
             <Accordion.ItemIndicator />
             </Accordion.ItemTrigger>
-            <Accordion.ItemContent>
+            <Accordion.ItemContent
+                bg="#cce0ff"
+                padding={2}
+            >
             <Accordion.ItemBody>         
                 <Text> GOALS SECTION </Text>
             </Accordion.ItemBody>

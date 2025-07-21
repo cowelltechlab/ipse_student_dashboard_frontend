@@ -20,7 +20,9 @@ const SubmitFinalRatingButton = () => {
             backgroundColor="#BD4F23"
             onClick={handleReturnToHomeClick}
             >
-            <Text fontWeight="bold">Submit Final Rating</Text>
+            <Text fontWeight="bold">
+                Submit Final Rating
+            </Text>
             <Box ml={2}>
                 <FaCheckCircle color="white" />
             </Box>
