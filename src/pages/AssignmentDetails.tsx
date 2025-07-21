@@ -5,6 +5,7 @@ import { useState } from "react";
 import useStudent from "../hooks/students/useStudent";
 import BreadcrumbNav from "../components/common/breadcrumb/BreadcrumbNav";
 import useAssignment from "../hooks/assignments/useAssignment";
+import AssignmentDetailsPageContent from "../components/assignmentDetails/AssignmentDetailsPageContent";
 
 const AssignmentDetails = () => {
   const { student_id, assignment_id } = useParams<{
@@ -54,11 +55,15 @@ const AssignmentDetails = () => {
     <Box>
       <PageHeader />
       <BreadcrumbNav items={breadcrumbItems} />
-      {/* <StudentPageContent
+      <AssignmentDetailsPageContent
         student={student}
-        profileLoading={loading}
-        triggerRefetch={() => setRefetchTrigger(refetchTrigger + 1)}
-      /> */}
+        assignment={assignment}
+        profileLoading={StudentLoading}
+        assignmentLoading={AssignmentLoading}
+        triggerRefetch={() => {
+          setRefetchTrigger(refetchTrigger + 1);
+        }}
+      />
     </Box>
   );
 };
