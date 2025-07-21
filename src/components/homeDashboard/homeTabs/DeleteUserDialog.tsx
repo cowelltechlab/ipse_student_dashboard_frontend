@@ -10,7 +10,6 @@ import {
   Box,
   Heading,
 } from "@chakra-ui/react";
-import type { UserType } from "../../../types/UserTypes";
 
 import deleteProfileImage from "../../../assets/Create Profile.svg";
 import { useState } from "react";
@@ -18,23 +17,34 @@ import { FaCheckCircle } from "react-icons/fa";
 import useDeleteUser from "../../../hooks/users/useDeleteUsers";
 
 interface DisplayUserDialogProps {
-  user: UserType;
+  userId: number;
+  userFirstName: string;
+  userLastName: string;
+  userGTEmail: string;
   open: boolean;
   setOpen: (open: boolean) => void;
 
-  refetchTrigger: number;
-  setRefetchTrigger: (trigger: number) => void;
+
+  handleDelete: () => void;
 }
 
-const DeleteUserDialog = ({ user, open, setOpen, refetchTrigger, setRefetchTrigger }: DisplayUserDialogProps) => {
+const DeleteUserDialog = ({
+  userId,
+  userFirstName,
+  userLastName,
+  userGTEmail,
+  open,
+  setOpen,
+  handleDelete,
+}: DisplayUserDialogProps) => {
   const [deleteHover, setDeleteHover] = useState(false);
 
   const { handleDeleteUser } = useDeleteUser();
 
   const handleDeleteProfile = () => {
-    handleDeleteUser(user.id);
-    setOpen(false);
-    setRefetchTrigger(refetchTrigger + 1);
+    handleDeleteUser(userId);
+
+    handleDelete();
   };
 
   return (
@@ -44,6 +54,8 @@ const DeleteUserDialog = ({ user, open, setOpen, refetchTrigger, setRefetchTrigg
       onOpenChange={(e) => setOpen(e.open)}
       placement={"center"}
       size={"lg"}
+      closeOnInteractOutside={false}
+      closeOnEscape={false}
     >
       <Portal>
         <Dialog.Backdrop />
@@ -58,7 +70,7 @@ const DeleteUserDialog = ({ user, open, setOpen, refetchTrigger, setRefetchTrigg
                 </Text>
                 <Box bg={"#244D8A"} p={2} borderRadius="md" w={"100%"}>
                   <Heading fontSize="md" color="white" textAlign="center">
-                    {user.first_name} {user.last_name} | {user.email}
+                    {userFirstName} {userLastName} | {userGTEmail}
                   </Heading>
                 </Box>
 

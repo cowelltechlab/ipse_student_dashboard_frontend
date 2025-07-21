@@ -13,7 +13,7 @@ export const getUsers = async (
 export const getUser = async (
   user_id: number
 ): Promise<UserType> => {
-  const response = await apiClient.get(`/user/${user_id}`)
+  const response = await apiClient.get(`/users/${user_id}`)
   return response.data
 }
 

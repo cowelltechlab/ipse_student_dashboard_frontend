@@ -8,8 +8,11 @@ import AssignmentsTable from "./AssignmetsTable";
 import AssignmentsFilterButtons from "./AssignmentsFilterButtons";
 import { useNavigate } from "react-router-dom";
 import { IoIosAddCircle } from "react-icons/io";
+import useAssignments from "../../../../hooks/assignments/useAssignments";
 
 const AssignmentsTab = () => {
+  const { assignments, loading, error } = useAssignments();
+
   const [searchTerm, setSearchTerm] = useState("");
   const [dateRange, setDateRange] = useState<{
     from: Date | undefined;
@@ -18,11 +21,12 @@ const AssignmentsTab = () => {
     from: undefined,
     to: undefined,
   });
+  const [filterByNeedsRating, setFilterByNeedsRating] =
+    useState<boolean>(false);
 
   const navigate = useNavigate();
 
   const handleCreateAssignment = () => {
-    console.log("Create new assignment clicked");
     navigate("/create-assignment");
   };
 
@@ -47,7 +51,7 @@ const AssignmentsTab = () => {
         <Spacer />
         <TextButton color="#bd4f23" onClick={handleCreateAssignment}>
           <HStack gap={1}>
-            <IoIosAddCircle  color="#bd4f23" />
+            <IoIosAddCircle color="#bd4f23" />
             Create New Assignment
           </HStack>
         </TextButton>
@@ -56,12 +60,18 @@ const AssignmentsTab = () => {
       <AssignmentsFilterButtons
         dateRange={dateRange}
         setDateRange={setDateRange}
+        setFilterByNeedsRating={setFilterByNeedsRating}
       />
 
       <AssignmentsTable
+        assignments={assignments}
+        assignmentsLoading={loading}
+        assignmentsError={error}
+
         dateRange={dateRange}
         searchTerm={searchTerm}
         onAssignmentClick={handleNavigateAssignmentPage}
+        filterByNeedsRating={filterByNeedsRating}
       />
     </Box>
   );

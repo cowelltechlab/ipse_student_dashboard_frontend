@@ -7,11 +7,13 @@ interface AssignmentsFilterButtonsProps {
   setDateRange: React.Dispatch<
     React.SetStateAction<{ from: Date | undefined; to?: Date | undefined }>
   >;
+  setFilterByNeedsRating: (filter: boolean) => void
 }
 
 const AssignmetsFilterButtons = ({
   dateRange,
   setDateRange,
+  setFilterByNeedsRating
 }: AssignmentsFilterButtonsProps) => {
   const [open, setOpen] = useState(false);
   const [activeButton, setActiveButton] = useState<string>("allAssignments");
@@ -34,6 +36,7 @@ const AssignmetsFilterButtons = ({
         onClick={() => {
           setActiveButton("allAssignments");
           setDateRange({ from: undefined, to: undefined });
+          setFilterByNeedsRating(false)
         }}
       >
         All Assignments
@@ -44,6 +47,7 @@ const AssignmetsFilterButtons = ({
         onClick={() => {
           setActiveButton("needsRating");
           setDateRange({ from: undefined, to: undefined });
+          setFilterByNeedsRating(true)
         }}
       >
         Needs Rating
@@ -55,7 +59,9 @@ const AssignmetsFilterButtons = ({
             {...getButtonStyles("dateFilter")}
             onClick={() => {
               setActiveButton("dateFilter");
+              setFilterByNeedsRating(false)
             }}
+
           >
             Filter By Date
           </Button>

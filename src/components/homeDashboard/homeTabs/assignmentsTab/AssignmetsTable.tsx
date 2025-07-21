@@ -7,23 +7,34 @@ import {
   Alert,
   VStack,
   Heading,
+  Box,
 } from "@chakra-ui/react";
-import useAssignments from "../../../../hooks/assignments/useAssignments";
 import { IoDocumentText } from "react-icons/io5";
 import { useState } from "react";
 import AssignmentsTableRowButtons from "./AssignmentsTableRowButtons";
+import type { AssignmentDetailType } from "../../../../types/AssignmentTypes";
+import type { ErrorType } from "../../../../types/ErrorType";
 
 interface AssignmentsTableProps {
+  assignments: AssignmentDetailType[];
+  assignmentsLoading: boolean;
+  assignmentsError: ErrorType | null;
+
   dateRange: { from: Date | undefined; to?: Date | undefined };
   searchTerm: string | null;
   onAssignmentClick?: (studentId: number, assignmentId: number) => void;
+  filterByNeedsRating: boolean;
 }
 const AssignmentsTable = ({
+  assignments,
+  assignmentsLoading,
+  assignmentsError,
+
   dateRange,
   searchTerm,
   onAssignmentClick,
+  filterByNeedsRating,
 }: AssignmentsTableProps) => {
-  const { assignments, loading, error } = useAssignments();
   const [visibleCount, setVisibleCount] = useState(10);
 
   const handleLoadMore = () => {
@@ -32,10 +43,9 @@ const AssignmentsTable = ({
 
   const filteredAssignments = assignments.filter((assignment) => {
     const assignmentDate = new Date(
-      assignment.date_modified ?? assignment.date_created
+      assignment.date_modified ?? assignment.date_created ?? ""
     );
 
-    // Handle possible undefined/null dateRange.from and dateRange.to
     const fromDate = dateRange?.from;
     const toDate = dateRange?.to;
 
@@ -51,20 +61,25 @@ const AssignmentsTable = ({
         .toLowerCase()
         .includes(lowerSearch);
 
-    return inDateRange && matchesSearch;
+    const needsRating =
+      !filterByNeedsRating ||
+      assignment.rating_status === "Pending" ||
+      assignment.rating_status === "Partially Rated";
+
+    return inDateRange && matchesSearch && needsRating;
   });
 
   const visibleAssignments = filteredAssignments.slice(0, visibleCount);
   const hasMore = visibleCount < filteredAssignments.length;
 
-  if (error) {
+  if (assignmentsError) {
     return (
       <Alert.Root status="error">
         <Alert.Indicator />
         <Alert.Content>
           <Alert.Title>Error Loading Assignments</Alert.Title>
           <Alert.Description>
-            {error.message ||
+            {assignmentsError.message ||
               "An unexpected error occurred while loading assignments."}
           </Alert.Description>
         </Alert.Content>
@@ -75,7 +90,7 @@ const AssignmentsTable = ({
     <Stack gap="10" p={4}>
       <Table.Root size="sm">
         <Table.Body>
-          {loading
+          {assignmentsLoading
             ? Array.from({ length: 10 }).map((_, index) => (
                 <Table.Row key={index}>
                   <Table.Cell>
@@ -91,17 +106,36 @@ const AssignmentsTable = ({
                   key={assignment.id}
                   cursor="pointer"
                   _hover={{ bg: "gray.100" }}
-                  onClick={() =>
-                    onAssignmentClick?.(assignment.student_id, assignment.id)
-                  }
+                  onClick={() => {
+                    if (
+                      assignment.student_id !== undefined &&
+                      assignment.id !== undefined
+                    ) {
+                      onAssignmentClick?.(assignment.student_id, assignment.id);
+                    }
+                  }}
                 >
                   <Table.Cell>
                     <HStack align="start" spaceX={3}>
                       <IoDocumentText size={"25px"} style={{ marginTop: 4 }} />
                       <VStack align="start" spaceX={0}>
-                        <Heading fontSize={"md"} fontWeight="bold">
-                          {assignment.title}
-                        </Heading>
+                        <HStack>
+                          {" "}
+                          <Heading fontSize={"md"} fontWeight="bold">
+                            {assignment.title}
+                          </Heading>
+                          {assignment.finalized && (
+                            <Box
+                              bg={"#fbde8e"}
+                              px={3}
+                              py={1}
+                              borderRadius="full"
+                            >
+                              Final Version
+                            </Box>
+                          )}
+                        </HStack>
+
                         <Text fontSize="sm" color="gray.500">
                           Student: {assignment.first_name}{" "}
                           {assignment.last_name}
@@ -113,7 +147,9 @@ const AssignmentsTable = ({
                                 assignment.date_modified
                               ).toLocaleDateString()
                             : new Date(
-                                assignment.date_created
+                                assignment.date_modified ??
+                                  assignment.date_created ??
+                                  ""
                               ).toLocaleDateString()}
                         </Text>
                       </VStack>
@@ -127,7 +163,7 @@ const AssignmentsTable = ({
         </Table.Body>
       </Table.Root>
 
-      {!loading && hasMore && (
+      {!assignmentsLoading && hasMore && (
         <Text
           onClick={handleLoadMore}
           alignSelf="center"

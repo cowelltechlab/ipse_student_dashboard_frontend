@@ -25,7 +25,12 @@ export interface AssignmentDetailType extends AssignmentBaseType {
   first_name?: string;
   last_name?: string;
   assignment_type_id?: number;
+
+  finalized?: boolean;
+  rating_status?: string;
+  date_modified?: string; 
 }
+
 
 export interface AssignmentTypeListType {
   id: number;

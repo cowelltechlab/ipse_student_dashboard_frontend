@@ -44,12 +44,14 @@ const StudentsTab = () => {
 
   const handleNavigateStudentPage = (
     studentId: number | null,
-    userId: number
+    userId: number,
+    profileTag: string | null
   ) => {
-    if (studentId) navigate(`/student/${studentId}`);
-    else {
+    if (profileTag === "Profile Incomplete") {
       setProfileCreateUserId(userId);
       setIsCreateProfileDialogOpen(true);
+    } else if (studentId) {
+      navigate(`/student/${studentId}`);
     }
   };
 

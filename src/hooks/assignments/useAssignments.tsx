@@ -1,12 +1,10 @@
 import { useEffect, useState } from "react";
 import type { ErrorType } from "../../types/ErrorType";
 import { getAssignments } from "../../services/assignmentServices";
-import type { AssignmentBaseType } from "../../types/AssignmentTypes";
+import type { AssignmentDetailType } from "../../types/AssignmentTypes";
 
-const useAssignments = (
-
-) => {
-  const [assignments, setAssignments] = useState<AssignmentBaseType[]>([]);
+const useAssignments = (studentId?: number | null) => {
+  const [assignments, setAssignments] = useState<AssignmentDetailType[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<ErrorType | null>(null);
 
@@ -14,9 +12,7 @@ const useAssignments = (
     const fetchAssignments = async () => {
       try {
         setLoading(true);
-        const response = await getAssignments(
-         
-        );
+        const response = await getAssignments(studentId ?? undefined);
         setAssignments(response);
       } catch (e) {
         const error = e as ErrorType;
@@ -27,11 +23,16 @@ const useAssignments = (
       }
     };
 
-    fetchAssignments();
-  }, []);
+    // Only fetch if studentId is a number or undefined
+    if (studentId !== null) {
+      fetchAssignments();
+    } else {
+      setLoading(false);
+      setAssignments([]);
+    }
+  }, [studentId]);
 
   return { assignments, loading, error };
 };
-
 
 export default useAssignments;

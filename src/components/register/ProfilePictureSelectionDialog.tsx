@@ -6,6 +6,7 @@ import {
   Flex,
   Portal,
   Text,
+  type ButtonProps,
 } from "@chakra-ui/react";
 import DefaultProfilePictureGrid from "./DefaultProfilePictureGrid";
 import { useState } from "react";
@@ -14,14 +15,20 @@ import ProfilePictureUpload from "../common/universal/ProfilePictureUpload";
 interface ProfilePictureSelectionDialogProps {
   onSelectDefaultImage: (pictureUrl: string) => void;
   onUploadedImage: (file: File) => void;
+  buttonStyles?: ButtonProps;
+  saveLoading?: boolean
 }
 
 const ProfilePictureSelectionDialog = ({
   onSelectDefaultImage,
   onUploadedImage,
+  buttonStyles = {},
+  saveLoading = false
 }: ProfilePictureSelectionDialogProps) => {
   const [open, setOpen] = useState(false);
-  const [selectedDefaultPicture, setSelectedDefaultPicture] = useState<string | null>(null);
+  const [selectedDefaultPicture, setSelectedDefaultPicture] = useState<
+    string | null
+  >(null);
   const [tempUploadedImage, setTempUploadedImage] = useState<File | null>(null);
 
   const handleDefaultSelect = (url: string) => {
@@ -52,6 +59,8 @@ const ProfilePictureSelectionDialog = ({
           bg="none"
           color="white"
           _hover={{ bg: "#eaa98f", border: "none" }}
+          {...buttonStyles}
+          loading={saveLoading}
         >
           Upload Profile Picture
         </Button>
@@ -59,9 +68,11 @@ const ProfilePictureSelectionDialog = ({
       <Portal>
         <Dialog.Backdrop />
         <Dialog.Positioner>
-          <Dialog.Content bg="#244d8a" borderRadius="md" pb={5}>
+          <Dialog.Content bg="white" borderRadius="md" pb={5}>
             <Dialog.Header>
-              <Dialog.Title color="white">Select Profile Picture</Dialog.Title>
+              <Dialog.Title color="#244d8a">
+                Select Profile Picture
+              </Dialog.Title>
             </Dialog.Header>
             <Dialog.Body>
               <DefaultProfilePictureGrid
@@ -70,9 +81,9 @@ const ProfilePictureSelectionDialog = ({
               />
 
               <Flex align="center" w="full" my={4}>
-                <Box flex="1" height="1px" bg="white" />
+                <Box flex="1" height="1px" bg="#244d8a" />
                 <Box
-                  bg="white"
+                  bg="#244d8a"
                   px={3}
                   borderRadius="full"
                   mx={2}
@@ -82,11 +93,11 @@ const ProfilePictureSelectionDialog = ({
                   minW="40px"
                   minH="32px"
                 >
-                  <Text textAlign="center" color="#244d8a" fontWeight="bold">
+                  <Text textAlign="center" color="white" fontWeight="bold">
                     or
                   </Text>
                 </Box>
-                <Box flex="1" height="1px" bg="white" />
+                <Box flex="1" height="1px" bg="#244d8a" />
               </Flex>
 
               <ProfilePictureUpload onFileUpload={handleFileUpload} />
@@ -95,8 +106,9 @@ const ProfilePictureSelectionDialog = ({
               <Dialog.ActionTrigger asChild>
                 <Button
                   variant="outline"
-                  color="white"
-                  _hover={{ bg: "#eaa98f", border: "none" }}
+                  borderColor={"#bd4f23"}
+                  color={"#bd4f23"}
+                  _hover={{ bg: "#eaa98f", border: "none", color: "white" }}
                 >
                   Cancel
                 </Button>
