@@ -9,6 +9,7 @@ import Student from "./pages/Student";
 import Register from "./pages/Register";
 import CreateNewAssignment from "./pages/CreateNewAssignment";
 import StudentProfileCreation from "./pages/StudentProfileCreation";
+import RatingsAndFeedbackPage from "./pages/RatingsAndFeedbackPage";
 
 const App: React.FC = () => {
   return (
@@ -41,6 +42,12 @@ const App: React.FC = () => {
 
       <Route path="/student/:student_id" element={<Student />} />
 
+      {/* TODO: Protect route after development */}
+      <Route 
+        path="/student/:student_id/feedback"
+        element={<RatingsAndFeedbackPage />}
+      />
+
       <Route
         path="/student/:student_id/assignment/:assignment_id"
         element={<AssignmentDetails />}
@@ -50,8 +57,6 @@ const App: React.FC = () => {
         path="/profile-creation/:user_id"
         element={<StudentProfileCreation />}
       />
-
-      
 
       {/* Backup route */}
       <Route path="*" element={<div>Page not found</div>} />
