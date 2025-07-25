@@ -77,7 +77,7 @@ export const postAssignment = async (assignmentData: {
   return response.data;
 };
 
-export const getAssignmentTypes = async (): Promise<AssignmentTypeListType> => {
+export const getAssignmentTypes = async (): Promise<AssignmentTypeListType[]> => {
   const response = await apiClient.get("/assignments/types");
   return response.data;
 };

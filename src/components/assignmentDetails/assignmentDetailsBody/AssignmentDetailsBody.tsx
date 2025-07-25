@@ -24,8 +24,8 @@ export type AssignmentHeaderDisplay = {
 
 const AssignmentDetailsBody = ({
   assignment,
-  assignmentLoading,
-  triggerRefetch,
+  // assignmentLoading,
+  // triggerRefetch,
 }: AssignmentDetailsBodyProps) => {
   const sections: AssignmentHeaderDisplay[] = [
     {
@@ -38,7 +38,8 @@ const AssignmentDetailsBody = ({
     },
     {
       heading: "Assignment Type",
-      subHeading: assignment?.assignment_type_id || "",
+      // subHeading: assignment?.assignment_type_id || "",
+      subHeading: "Assignment Type"
     },
   ];
 
