@@ -11,7 +11,7 @@ export const getAssignments = async (student_id?: number) => {
     return response.data;
   }
 
-  const response = await apiClient.get("/assignments");
+  const response = await apiClient.get("/assignments/");
   return response.data;
 };
 
