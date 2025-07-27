@@ -15,6 +15,7 @@ const useAssignment = (assignmentId: number) => {
       try {
         setLoading(true);
         const response = await getAssignment(assignmentId);
+        console.log(response)
         setAssignment(response);
       } catch (e) {
         const error = e as ErrorType;

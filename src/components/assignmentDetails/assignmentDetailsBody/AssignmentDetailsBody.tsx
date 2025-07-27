@@ -1,15 +1,19 @@
+import { Box, Text, VStack, Image, Button, Icon } from "@chakra-ui/react";
 import {
-  Box,
-  HStack,
-  VStack,
-  Text,
-  For,
-  Button,
-  Heading,
-  Stack,
-} from "@chakra-ui/react";
-import type { AssignmentDetailType } from "../../../types/AssignmentTypes";
-import { BsStars } from "react-icons/bs";
+  type VersionInfoType,
+  type AssignmentDetailType,
+} from "../../../types/AssignmentTypes";
+import AssignmentSection from "./AssignmentSection";
+import AssignmentPreviews from "./AssignmentPreviews";
+import AssignmentDetailsHeaderCard from "./AssignmentDetailsHeaderCard";
+
+import noDraftImage from "../../../assets/Student Profile _Document_No draft selected.svg";
+import { useEffect, useState } from "react";
+import {
+  IoIosArrowDropdownCircle,
+  IoIosArrowDropupCircle,
+} from "react-icons/io";
+import AssignmentVersionHistoryTable from "./AssignmentVersionHistoryTable";
 
 interface AssignmentDetailsBodyProps {
   assignment: AssignmentDetailType | null;
@@ -17,72 +21,66 @@ interface AssignmentDetailsBodyProps {
   triggerRefetch: () => void;
 }
 
-export type AssignmentHeaderDisplay = {
-  heading: string;
-  subHeading: string | null;
-};
-
 const AssignmentDetailsBody = ({
   assignment,
-  // assignmentLoading,
-  // triggerRefetch,
+  assignmentLoading,
+  triggerRefetch,
 }: AssignmentDetailsBodyProps) => {
-  const sections: AssignmentHeaderDisplay[] = [
-    {
-      heading: "Document Name",
-      subHeading: assignment?.title || "",
-    },
-    {
-      heading: "Created By",
-      subHeading: assignment?.title || "",
-    },
-    {
-      heading: "Assignment Type",
-      // subHeading: assignment?.assignment_type_id || "",
-      subHeading: "Assignment Type"
-    },
-  ];
+  const [showHistory, setShowHistory] = useState<boolean>(false);
+  const [finalVersion, setFinalVersion] = useState<VersionInfoType | null>(
+    null
+  );
+
+  useEffect(() => {
+    if (assignment?.versions) {
+      const finalizedVersion =
+        assignment.versions.find((v) => v.finalized === true) || null;
+
+      setFinalVersion(finalizedVersion);
+    }
+  }, [assignment]);
 
   return (
-    <Box>
-      <Box bg={"#244d8a"} w={"100%"} p={4} borderRadius={"md"}>
-        <HStack color={"white"}>
-          <For each={sections}>
-            {(item, index) => (
-              <VStack key={index} w={"100%"}>
-                <Text fontWeight={"bold"}>{item.heading}</Text>
-                <Text>{item.subHeading}</Text>
-              </VStack>
-            )}
-          </For>
-          <Button color="white" bg="#BD4F23" borderRadius={"xl"}>
-            Change <BsStars />
-          </Button>
-        </HStack>
-      </Box>
+    <Box m={4}>
+      <AssignmentDetailsHeaderCard assignment={assignment} />
+      <AssignmentPreviews assignment={assignment} />
 
-      <Stack direction={{ base: "column", md: "row" }} mt={6} w={"100%"}>
-        <VStack w={{ base: "100%", md: "50%" }} align="start">
-          <Heading>Original Assignment</Heading>
-          <Box
-            w="100%"
-            p={4}
-            borderWidth={1}
-            borderRadius="md"
-            dangerouslySetInnerHTML={{ __html: assignment?.html_content || "" }}
-          />
+      {assignment?.finalized && (
+        <AssignmentSection
+          tagContent="Final Version"
+          assignment={assignment}
+          downloadUrl={finalVersion?.document_url}
+        />
+      )}
+      <AssignmentSection
+        tagContent="Original Version"
+        assignment={assignment}
+        downloadUrl={assignment?.blob_url}
+      />
+
+      {!assignment?.finalized && (
+        <VStack mt={5} gap={3}>
+          <Image src={noDraftImage} height={40} />
+          <Text fontWeight={"bold"}>No assignment has been finalized yet.</Text>
         </VStack>
-        <VStack w={{ base: "100%", md: "50%" }} align="start">
-          <Heading>Modified Assignment</Heading>
-          <Box
-            w="100%"
-            p={4}
-            borderWidth={1}
-            borderRadius="md"
-            dangerouslySetInnerHTML={{ __html: assignment?.html_content || "" }}
-          />
-        </VStack>
-      </Stack>
+      )}
+
+      <Button
+        w={"100%"}
+        borderRadius={"md"}
+        color={"white"}
+        fontWeight={"bold"}
+        bg={showHistory ? "#f2c5b5" : "#bd4f23"}
+        onClick={() => setShowHistory(!showHistory)}
+        mt={"5"}
+      >
+        History
+        <Icon
+          as={showHistory ? IoIosArrowDropupCircle : IoIosArrowDropdownCircle}
+        />
+      </Button>
+
+      {showHistory && <AssignmentVersionHistoryTable assignment={assignment} />}
     </Box>
   );
 };
