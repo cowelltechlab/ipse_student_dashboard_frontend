@@ -1,6 +1,7 @@
 import { Stack, Text, Accordion, Span, List, Checkbox } from "@chakra-ui/react";
 import type { LearningPathwayOption } from "../../types/AssignmentModificationTypes";
 import { useState } from "react";
+import { IoMdArrowRoundForward } from "react-icons/io";
 
 interface LearningPathwaysSectionProps {
   learningPathways: LearningPathwayOption[];
@@ -60,10 +61,15 @@ const LearningPathwaysSection = ({
 
             <Accordion.ItemContent>
               <Accordion.ItemBody>
-                <Text fontWeight="bold">{learningPathway.description}</Text>
-                <List.Root>
+                <Text fontWeight="bold" color={"#244d8a"}>{learningPathway.description}</Text>
+                <List.Root mt={2}>
                   {learningPathway.reasons.map((reason, i) => (
-                    <List.Item key={i}>{reason}</List.Item>
+                    <List.Item key={i}>
+                      <List.Indicator asChild color="#244d8a">
+                        <IoMdArrowRoundForward />
+                      </List.Indicator>
+                      {reason}
+                    </List.Item>
                   ))}
                 </List.Root>
               </Accordion.ItemBody>

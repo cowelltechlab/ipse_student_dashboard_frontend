@@ -7,15 +7,23 @@ import {
   Text,
   Textarea,
   Flex,
+  Button,
+  Icon,
 } from "@chakra-ui/react";
 import type { StudentProfileType } from "../../types/StudentTypes";
 import type { AssignmentDetailType } from "../../types/AssignmentTypes";
 import type { AssignmentVersionData } from "../../types/AssignmentModificationTypes";
 import LearningPathwaysSection from "./LearningPathwaysSection";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import thinkingIcon from "../../assets/icons/design-thinking.png";
 import skillsIcon from "../../assets/icons/logical-thinking.png";
+import HtmlContentBox from "../common/universal/HTMLContentDisplay";
+import originalAssignmentIcon from "../../assets/icons/assignment.png";
+import modifiedAssignmentIcon from "../../assets/icons/note.png";
+import { IoArrowForwardCircle } from "react-icons/io5";
+import { FaCircleCheck } from "react-icons/fa6";
+import RichTextEditor from "../common/universal/EditableHTMLContentBox";
 
 interface AssignmentDetailsPageContentProps {
   student: StudentProfileType | null;
@@ -36,6 +44,13 @@ const AssignmentDetailsPageContent = ({
   const [selectedLearningPathways, setSelectedLearningPathways] = useState<
     string[]
   >([]);
+
+  const [updatedAssignment, setUpdatedAssignment] = useState<string>("");
+
+  useEffect(
+    () => console.log(selectedLearningPathways),
+    [selectedLearningPathways]
+  );
 
   const versionData: AssignmentVersionData = {
     version_document_id: "0e61f014-f122-484c-90dd-208d8e8e2fd4",
@@ -78,15 +93,30 @@ const AssignmentDetailsPageContent = ({
 
   return (
     <Box p={4} w={"100%"}>
-      <HStack w={"100%"}>
+      <HStack w="100%" align={"start"}>
         <Box w="33%">
-          <Heading>Original Assignment</Heading>
-          <Box
-            p={4}
-            borderWidth={1}
-            borderRadius="md"
-            dangerouslySetInnerHTML={{ __html: assignment?.html_content || "" }}
-          />
+          <VStack>
+            <Box borderWidth="1px" borderRadius="md" borderColor={"#244d8a"}>
+              <Flex
+                bg="#244d8a"
+                color="white"
+                px={4}
+                py={2}
+                align="center"
+                justify="space-between"
+                borderTopRadius="md"
+              >
+                <Image src={originalAssignmentIcon} height={"50px"} />
+
+                <Heading>Original Assignment</Heading>
+              </Flex>
+              <HtmlContentBox
+                padding={5}
+                height={"80vh"}
+                htmlContent={assignment?.html_content}
+              />
+            </Box>
+          </VStack>
         </Box>
         <Box w="33%">
           <VStack>
@@ -151,10 +181,53 @@ const AssignmentDetailsPageContent = ({
                 onChange={(e) => setIdeasForChange(e.target.value)}
               />
             </Box>
+            <Button
+              borderRadius={"xl"}
+              bg={"#bd4f23"}
+              color={"white"}
+              w={"100%"}
+              disabled={selectedLearningPathways.length < 1}
+            >
+              Generate Assignment
+              <Icon as={IoArrowForwardCircle} />
+            </Button>
           </VStack>
         </Box>
+
         <Box w="33%">
-          <Heading>Select Changes to make your assignment</Heading>
+          <VStack>
+            <Box borderWidth="1px" borderRadius="md" borderColor={"#244d8a"}>
+              <Flex
+                bg="#244d8a"
+                color="white"
+                px={4}
+                py={2}
+                align="center"
+                justify="space-between"
+                borderTopRadius="md"
+              >
+                <Image src={modifiedAssignmentIcon} height={"50px"} />
+
+                <Heading>Modified Assignment</Heading>
+              </Flex>
+              <RichTextEditor
+                value={updatedAssignment || assignment?.html_content || ""}
+                onChange={(newHtml) => setUpdatedAssignment(newHtml)}
+                height="80vh"
+              />
+            </Box>
+          </VStack>
+          <Button
+            borderRadius={"xl"}
+            mt={4}
+            bg={"#bd4f23"}
+            color={"white"}
+            w={"100%"}
+            disabled={updatedAssignment === "" || updatedAssignment === null}
+          >
+            Save Changes
+            <Icon as={FaCircleCheck} />
+          </Button>
         </Box>
       </HStack>
     </Box>

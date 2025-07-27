@@ -1,7 +1,8 @@
 export interface LearningPathwayOption {
-  title: string;
+  name: string;
   description: string;
-  reasons: string[];
+  why_good_existing: string,
+  why_good_growth: string,
   internal_id: string;
 }
 
