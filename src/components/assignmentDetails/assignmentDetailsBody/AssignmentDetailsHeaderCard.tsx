@@ -1,6 +1,7 @@
 import { Box, HStack, VStack, Text, For, Button } from "@chakra-ui/react";
 import type { AssignmentDetailType } from "../../../types/AssignmentTypes";
 import { BsStars } from "react-icons/bs";
+import { useNavigate } from "react-router-dom";
 
 export type AssignmentHeaderDisplay = {
   heading: string;
@@ -14,6 +15,13 @@ interface AssignmentDetailsHeaderCardProps {
 const AssignmentDetailsHeaderCard = ({
   assignment,
 }: AssignmentDetailsHeaderCardProps) => {
+
+    const navigate = useNavigate()
+
+    const handleModificationClick = () => {
+        navigate(`/student/${assignment?.student.id}/assignment/${assignment?.assignment_id}/modification`)
+    }
+
   const sections: AssignmentHeaderDisplay[] = [
     {
       heading: "Document Name",
@@ -43,7 +51,7 @@ const AssignmentDetailsHeaderCard = ({
             </VStack>
           )}
         </For>
-        <Button color="white" bg="#BD4F23" borderRadius={"xl"}>
+        <Button color="white" bg="#BD4F23" borderRadius={"xl"} onClick={handleModificationClick}>
           Change <BsStars />
         </Button>
       </HStack>

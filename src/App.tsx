@@ -12,6 +12,7 @@ import StudentProfileCreation from "./pages/StudentProfileCreation";
 import StudentProfile from "./pages/StudentProfile";
 import StudentDocuments from "./pages/StudentDocument";
 import StudentAchievements from "./pages/StudentAchievements";
+import AssignmentModifications from "./pages/AssignmentModification";
 
 const App: React.FC = () => {
   return (
@@ -51,6 +52,10 @@ const App: React.FC = () => {
       <Route
         path="/student/:student_id/assignment/:assignment_id"
         element={<AssignmentDetails />}
+      />
+       <Route
+        path="/student/:student_id/assignment/:assignment_id/modification"
+        element={<AssignmentModifications />}
       />
 
       <Route
