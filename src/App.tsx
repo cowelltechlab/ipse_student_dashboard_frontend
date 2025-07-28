@@ -1,6 +1,8 @@
 import React from "react";
 import { Routes, Route } from "react-router-dom";
 import ProtectedRoute from "./routing/ProtectedRoute";
+
+// Pages
 import Login from "./pages/Login";
 import Home from "./pages/Home";
 import OAuthCallbackHandler from "./pages/Callback";
@@ -17,63 +19,40 @@ import AssignmentModifications from "./pages/AssignmentModification";
 const App: React.FC = () => {
   return (
     <Routes>
+      {/* Public Routes */}
       <Route path="/login" element={<Login />} />
       <Route path="/auth/callback" element={<OAuthCallbackHandler />} />
-      <Route
-        path="/unauthorized"
-        element={<div>You are not authorized to view this page.</div>}
-      />
+      <Route path="/complete-invite" element={<Register />} />
+      <Route path="/unauthorized" element={<div>You are not authorized to view this page.</div>} />
 
-      {/* Protected wrapper for roles */}
-      <Route
-        element={
-          <ProtectedRoute requiredRoles={["Admin", "Advisor", "Peer Tutor"]} />
-        }
-      >
+      {/* Protected Routes - Admin, Advisor, Peer Tutor */}
+      <Route element={<ProtectedRoute requiredRoles={["Admin", "Advisor", "Peer Tutor"]} />}>
         <Route path="/dashboard" element={<Home />} />
       </Route>
 
-      <Route path="/dashboard" element={<Home />} />
-
-      {/*  TODO: Update student routes so students cannot access other students' pages. */}
-      {/* Protected wrapper for students
-      <Route element={<ProtectedRoute />}>
-        <Route path="/student/:student_id" element={<StudentDashboard />} />
-      </Route> */}
-
-      <Route path="/complete-invite" element={<Register />} />
-
+      {/* Student Routes */}
+      {/* TODO: Update student routes so students cannot access other students' pages */}
       <Route path="/student/:student_id" element={<Student />} />
-
       <Route path="/student/:student_id/profile" element={<StudentProfile />} />
       <Route path="/student/:student_id/documents" element={<StudentDocuments />} />
       <Route path="/student/:student_id/achievements" element={<StudentAchievements />} />
 
-      <Route
-        path="/student/:student_id/assignment/:assignment_id"
-        element={<AssignmentDetails />}
-      />
-       <Route
-        path="/student/:student_id/assignment/:assignment_id/modification"
-        element={<AssignmentModifications />}
-      />
+      <Route path="/student/:student_id/assignment/:assignment_id" element={<AssignmentDetails />} />
+      <Route path="/student/:student_id/assignment/:assignment_id/modification" element={<AssignmentModifications />} />
 
-      <Route
-        path="/profile-creation/:user_id"
-        element={<StudentProfileCreation />}
-      />
+      {/* Student Profile Creation */}
+      <Route path="/profile-creation/:user_id" element={<StudentProfileCreation />} />
 
-
+      {/* Protected Routes - Admin, Advisor Only */}
       <Route element={<ProtectedRoute requiredRoles={["Admin", "Advisor"]} />}>
         <Route path="/create-assignment" element={<CreateNewAssignment />} />
       </Route>
 
-      {/* TODO: Update so student default is their own page */}
+      {/* Default/Fallback Route */}
+      <Route path="/dashboard" element={<Home />} />
       <Route path="*" element={<Home />} />
-
-      
-      {/* Backup route */}
-      {/* <Route path="*" element={<div>Page not found</div>} /> */}
+      {/* Optionally, use a Not Found page:
+          <Route path="*" element={<div>Page not found</div>} /> */}
     </Routes>
   );
 };
