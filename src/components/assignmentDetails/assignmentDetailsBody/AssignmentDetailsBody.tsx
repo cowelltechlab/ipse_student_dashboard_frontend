@@ -15,6 +15,8 @@ import {
 } from "react-icons/io";
 import AssignmentVersionHistoryTable from "./AssignmentVersionHistoryTable";
 import useGetAssignmentVersionByDocId from "../../../hooks/assignmentVersions/useGetAssignmentVersionByDocId";
+import useFinalizeAssignmentVerstion from "../../../hooks/assignmentVersions/useFinalizeAssignmentVersion";
+import { toaster } from "../../ui/toaster";
 
 interface AssignmentDetailsBodyProps {
   assignment: AssignmentDetailType | null;
@@ -25,6 +27,7 @@ interface AssignmentDetailsBodyProps {
 const AssignmentDetailsBody = ({
   assignment,
   assignmentLoading,
+  triggerRefetch,
 }: AssignmentDetailsBodyProps) => {
   const [showHistory, setShowHistory] = useState<boolean>(false);
   const [finalVersion, setFinalVersion] = useState<VersionInfoType | null>(
@@ -33,13 +36,45 @@ const AssignmentDetailsBody = ({
 
   const [activeVersion, setActiveVersion] = useState<string | null>(null);
 
+  const { assignmentVersion, loading: AssignmentVersionLoading } =
+    useGetAssignmentVersionByDocId(activeVersion);
+
   const {
-    assignmentVersion,
-    loading: AssignmentVersionLoading,
-  } = useGetAssignmentVersionByDocId(activeVersion);
+    handleFinalizeAssignmentVersion,
+  } = useFinalizeAssignmentVerstion();
 
   const handleSelectVersionClick = (selectedVersionId: string) => {
     setActiveVersion(selectedVersionId);
+  };
+
+  const finalizeVersion = async (versionId: string) => {
+    if (!versionId) {
+      console.error("No version ID provided to finalize.");
+      return;
+    }
+
+    try {
+      const response = await handleFinalizeAssignmentVersion(versionId);
+      if (response) {
+        toaster.create({
+          description: `Assginment finalized successfully`,
+          type: "success",
+        });
+      }
+      triggerRefetch();
+    } catch (e) {
+      console.error(e);
+      const error = e as {
+        message: string;
+        response?: { data: { message: string } };
+      };
+
+      const errorMessage = error.response?.data.message || error.message;
+      toaster.create({
+        description: `Error creating class: ${errorMessage}`,
+        type: "error",
+      });
+    }
   };
 
   useEffect(() => {
@@ -56,9 +91,11 @@ const AssignmentDetailsBody = ({
       <AssignmentDetailsHeaderCard assignment={assignment} />
       <AssignmentPreviews
         assignment={assignment}
-        assignmentLoading = {assignmentLoading}
-        selectedVersionHTML={assignmentVersion?.final_generated_content?.html_content}
-        selectedVersionLoading = {AssignmentVersionLoading}
+        assignmentLoading={assignmentLoading}
+        selectedVersionHTML={
+          assignmentVersion?.final_generated_content?.html_content
+        }
+        selectedVersionLoading={AssignmentVersionLoading}
       />
 
       {assignment?.finalized && (
@@ -100,6 +137,7 @@ const AssignmentDetailsBody = ({
         <AssignmentVersionHistoryTable
           assignment={assignment}
           handleSelectVersionClick={handleSelectVersionClick}
+          finalizeVersion={finalizeVersion}
         />
       )}
     </Box>

@@ -3,7 +3,7 @@ import type { ErrorType } from "../../types/ErrorType";
 import { getAssignment } from "../../services/assignmentServices";
 import type { AssignmentDetailType } from "../../types/AssignmentTypes";
 
-const useAssignment = (assignmentId: number) => {
+const useAssignment = (assignmentId: number, refetchTrigger?:number) => {
   const [assignment, setAssignment] = useState<AssignmentDetailType | null>(
     null
   );
@@ -33,7 +33,7 @@ const useAssignment = (assignmentId: number) => {
       setLoading(false);
       setAssignment(null);
     }
-  }, [assignmentId]);
+  }, [assignmentId, refetchTrigger]);
 
   return { assignment, loading, error };
 };

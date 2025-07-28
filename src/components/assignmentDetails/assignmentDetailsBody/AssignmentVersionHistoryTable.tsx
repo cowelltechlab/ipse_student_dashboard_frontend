@@ -3,16 +3,19 @@
 import { Box, Table, Text } from "@chakra-ui/react";
 import type { AssignmentDetailType } from "../../../types/AssignmentTypes";
 import AssignmentDetailsDocLine from "./AssignmentDetailsDocLine";
+import AssignmentsVersionHistoryTableRowButtons from "./AssignmentVersionHistoryTableButtons";
 
 interface AssignmentVersionHistoryTableProps {
   assignment: AssignmentDetailType | null;
 
   handleSelectVersionClick: (selectedVersionId: string) => void;
+  finalizeVersion: (finalizedVersionDocumentId: string) => void;
 }
 
 const AssignmentVersionHistoryTable = ({
   assignment,
   handleSelectVersionClick,
+  finalizeVersion,
 }: AssignmentVersionHistoryTableProps) => {
   if (!assignment) {
     return <Text>No assignment data</Text>;
@@ -30,9 +33,18 @@ const AssignmentVersionHistoryTable = ({
             >
               <AssignmentDetailsDocLine
                 assignment={assignment}
-                fileName={assignment.title}
                 versionNumber={`Version ${version.version_number}`}
-              />
+              >
+                <AssignmentsVersionHistoryTableRowButtons
+                  fileName={assignment.title}
+                  fileType={assignment.source_format}
+                  handleVersionFinalization={() =>
+                    version.version_number
+                      ? finalizeVersion(version.document_id)
+                      : () => {}
+                  }
+                />
+              </AssignmentDetailsDocLine>
             </Table.Row>
           ))}
         </Table.Body>

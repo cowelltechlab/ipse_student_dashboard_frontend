@@ -9,6 +9,7 @@ interface AssignmentDetailsDocLineProps {
   downloadUrl?: string;
   versionNumber?: string;
   dateModified?: string;
+  children?: React.ReactNode; // allow custom buttons or actions
 }
 
 const AssignmentDetailsDocLine = ({
@@ -17,9 +18,10 @@ const AssignmentDetailsDocLine = ({
   downloadUrl,
   versionNumber,
   dateModified,
+  children,
 }: AssignmentDetailsDocLineProps) => {
   return (
-    <HStack align={"center"} w={"100%"} my={2} p ={2}>
+    <HStack align={"center"} w={"100%"} my={2} p={2}>
       <HStack align="start" spaceX={3}>
         <IoDocumentText size={"25px"} style={{ marginTop: 4 }} />
         <VStack align="start" spaceX={0}>
@@ -36,7 +38,7 @@ const AssignmentDetailsDocLine = ({
           </Text>
           {versionNumber && (
             <Text fontSize="sm" color="gray.500">
-              Version Number: {versionNumber} 
+              Version Number: {versionNumber}
             </Text>
           )}
           <Text fontSize="sm" color="gray.500">
@@ -55,11 +57,13 @@ const AssignmentDetailsDocLine = ({
 
       <Spacer />
 
-      <AssignmentsTableRowButtons
-        fileName={fileName}
-        fileType={assignment?.source_format}
-        downloadUrl={downloadUrl}
-      />
+      {children ?? (
+        <AssignmentsTableRowButtons
+          fileName={fileName}
+          fileType={assignment?.source_format}
+          downloadUrl={downloadUrl}
+        />
+      )}
     </HStack>
   );
 };

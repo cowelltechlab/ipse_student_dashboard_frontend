@@ -49,3 +49,13 @@ export const getDocumentByDocId = async (document_version_id: string) => {
 
   return response.data;
 };
+
+export const postFinalizeAssignmentVersion = async (
+  document_version_id: string
+) => {
+  const response = await apiClient.post(
+    `/versions/assignment/finalize/${document_version_id}`
+  );
+
+  return response.data;
+};
