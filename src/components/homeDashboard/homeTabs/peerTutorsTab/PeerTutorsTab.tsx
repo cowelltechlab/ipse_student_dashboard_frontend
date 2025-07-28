@@ -43,6 +43,11 @@ const PeerTutorsTab = () => {
     setIsProfileDialogOpen(true);
   };
 
+  const handleDelete = () => {
+    setIsDeleteDialogOpen(false);
+    setRefetchTrigger(refetchTrigger + 1);
+  };
+
   return (
     <Box p={4} spaceY={4}>
       <HStack>
@@ -55,7 +60,7 @@ const PeerTutorsTab = () => {
 
         <TextButton color="#bd4f23" onClick={handleCreatePeerTutor}>
           <HStack gap={1}>
-            <IoIosAddCircle  color="#bd4f23" />
+            <IoIosAddCircle color="#bd4f23" />
             Create new Peer Tutor
           </HStack>
         </TextButton>
@@ -80,11 +85,13 @@ const PeerTutorsTab = () => {
 
       {selectedUser && (
         <DeleteUserDialog
-          user={selectedUser}
+          userId={selectedUser.id}
+          userFirstName={selectedUser.first_name}
+          userLastName={selectedUser.last_name}
+          userGTEmail={selectedUser.school_email}
           open={isDeleteDialogOpen}
           setOpen={setIsDeleteDialogOpen}
-          refetchTrigger={refetchTrigger}
-          setRefetchTrigger={setRefetchTrigger}
+          handleDelete={handleDelete}
         />
       )}
 

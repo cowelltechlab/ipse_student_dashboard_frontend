@@ -4,7 +4,7 @@ import apiClient from "./apiClient";
 export const getUsers = async (
   role_id: number | null = null
 ): Promise<UserType[]> => {
-  const response = await apiClient.get("/users", {
+  const response = await apiClient.get("/users/", {
     params: { role_id },
   });
   return response.data;
@@ -13,7 +13,7 @@ export const getUsers = async (
 export const getUser = async (
   user_id: number
 ): Promise<UserType> => {
-  const response = await apiClient.get(`/user/${user_id}`)
+  const response = await apiClient.get(`/users/${user_id}`)
   return response.data
 }
 

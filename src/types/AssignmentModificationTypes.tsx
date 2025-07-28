@@ -1,0 +1,13 @@
+export interface LearningPathwayOption {
+  name: string;
+  description: string;
+  why_good_existing: string,
+  why_good_growth: string,
+  internal_id: string;
+}
+
+export interface AssignmentVersionData {
+  version_document_id: string;
+  skills_for_success: string;
+  learning_pathways: LearningPathwayOption[];
+}

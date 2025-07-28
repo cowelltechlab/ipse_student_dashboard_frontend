@@ -39,11 +39,6 @@ const DefaultProfilePictureGrid = ({
                   ? "0 0 0 4px white, 0 0 8px 4px #3182ce"
                   : "none"
               }
-              border={
-                picture.url === selectedPicture
-                  ? "2px solid #3182ce"
-                  : "2px solid transparent"
-              }
               transition="all 0.2s ease-in-out"
             />
           ))}

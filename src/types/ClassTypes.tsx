@@ -7,3 +7,21 @@ export interface ClassesBase {
 export interface ClassType extends ClassesBase {
     term: string;
 }
+
+export interface ClassSelectionType {
+  class_id: number,
+  class_goal: string
+}
+
+export interface StudentProfileClassType {
+  class_id: number,
+  class_name: string,
+  course_code: string,
+  learning_goal: string
+}
+
+export interface StudentClassType {
+  class_id: string
+  class_name: string,
+  class_goal: string
+}
