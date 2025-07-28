@@ -14,7 +14,7 @@ export const postAssignmentVersion = async (
 ) => {
   const payload = {
     selected_options,
-    additional_edit_suggestions: additional_edit_suggestions || ""
+    additional_edit_suggestions: additional_edit_suggestions || "",
   };
 
   const response = await apiClient.post(
@@ -25,7 +25,6 @@ export const postAssignmentVersion = async (
   return response.data;
 };
 
-
 export const putAssignmentVersion = async (
   assignment_version_id: string,
   updated_html_content: string
@@ -34,7 +33,8 @@ export const putAssignmentVersion = async (
 
   const response = await apiClient.put(
     `/assignment-generation/${assignment_version_id}`,
-    payload
+    payload,
+    { headers: { "Content-Type": "application/json" } }
   );
 
   return response.data;

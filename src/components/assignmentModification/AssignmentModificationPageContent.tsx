@@ -1,22 +1,14 @@
 import {
   Box,
-  Heading,
   HStack,
-  Image,
-  VStack,
-  Flex,
   Button,
   Icon,
-  Textarea,
-  Spinner,
-  Text,
+
 } from "@chakra-ui/react";
 import type { AssignmentDetailType } from "../../types/AssignmentTypes";
 import { useState } from "react";
 
-import modifiedAssignmentIcon from "../../assets/icons/note.png";
 import { FaCircleCheck } from "react-icons/fa6";
-import RichTextEditor from "../common/universal/EditableHTMLContentBox";
 import useAssignmentVersionOptions from "../../hooks/assignmentVersions/useAssignmentVersionOptions";
 import OriginalAssignmentSection from "./OriginalAssignmentSection";
 import ModificationOptionsSection from "./ModificationOptionsSection";
@@ -25,18 +17,19 @@ import usePostAssignmentVersion from "../../hooks/assignmentVersions/usePostAssi
 import usePutAssignmentVersion from "../../hooks/assignmentVersions/usePutAssignmentVersion";
 import { toaster } from "../ui/toaster";
 import AssignmentModificationCompletionDialog from "./AssignmentModificationCompletionDialog";
+import UpdatedAssignmentSection from "./UpdatedAssignmentSection";
 
 interface AssignmentDetailsPageContentProps {
   assignment: AssignmentDetailType | null;
   assignmentLoading: boolean;
 
-  studentId?: string
+  studentId?: string;
 }
 
 const AssignmentDetailsPageContent = ({
   assignment,
   assignmentLoading,
-  studentId
+  studentId,
 }: AssignmentDetailsPageContentProps) => {
   const [ideasForChange, setIdeasForChange] = useState<string>("");
   const [selectedLearningPathways, setSelectedLearningPathways] = useState<
@@ -45,13 +38,10 @@ const AssignmentDetailsPageContent = ({
 
   const [updatedAssignment, setUpdatedAssignment] = useState<string>("");
   const [isCompletionModalOpen, setIsCompletionModalOpen] =
-    useState<boolean>(true);
-
-  // const { versionOptions, loading: versionsLoading } =
-  //   useAssignmentVersionOptions(assignment?.assignment_id);
+    useState<boolean>(false);
 
   const { versionOptions, loading: versionsLoading } =
-    useAssignmentVersionOptions();
+    useAssignmentVersionOptions(assignment?.assignment_id);
 
   const { handlePostAssignmentVersion, loading: loadingAssignmentGeneration } =
     usePostAssignmentVersion();
@@ -93,6 +83,8 @@ const AssignmentDetailsPageContent = ({
 
         setUpdatedAssignment(html_content);
       }
+
+      setIsCompletionModalOpen(true);
     } catch (e) {
       console.error(e);
       const error = e as {
@@ -140,55 +132,11 @@ const AssignmentDetailsPageContent = ({
         </Box>
 
         <Box w="33%">
-          <VStack>
-            <Box
-              borderWidth="1px"
-              borderRadius="md"
-              borderColor={"#244d8a"}
-              w={"100%"}
-            >
-              <Flex
-                bg="#244d8a"
-                color="white"
-                px={4}
-                py={2}
-                align="center"
-                justify="space-between"
-                borderTopRadius="md"
-              >
-                <Image src={modifiedAssignmentIcon} height={"50px"} />
-                <Heading>Modified Assignment</Heading>
-              </Flex>
-
-              {loadingAssignmentGeneration ? (
-                // Spinner + message while generating
-                <Flex
-                  direction="column"
-                  align="center"
-                  justify="center"
-                  height="80vh"
-                >
-                  <Spinner size="xl" color="#244d8a" />
-                  <Text mt={4} fontSize="lg" color="gray.600">
-                    Hang tight! Generating your new assignment...
-                  </Text>
-                </Flex>
-              ) : updatedAssignment ? (
-                <RichTextEditor
-                  value={updatedAssignment || ""}
-                  onChange={(newHtml) => setUpdatedAssignment(newHtml)}
-                />
-              ) : (
-                <Textarea
-                  pt={4}
-                  height="80vh"
-                  value="Select Changes to Generate Modified Assignment"
-                  fontSize={"md"}
-                  disabled
-                />
-              )}
-            </Box>
-          </VStack>
+          <UpdatedAssignmentSection
+            updatedAssignment={updatedAssignment}
+            setUpdatedAssignment={setUpdatedAssignment}
+            loadingAssignmentGeneration={loadingAssignmentGeneration}
+          />
 
           <Button
             borderRadius={"xl"}
@@ -206,7 +154,7 @@ const AssignmentDetailsPageContent = ({
         </Box>
       </HStack>
 
-      {assignment && studentId &&  isCompletionModalOpen && (
+      {assignment && studentId && isCompletionModalOpen && (
         <AssignmentModificationCompletionDialog
           student_id={studentId}
           assignment_id={assignment?.assignment_id}

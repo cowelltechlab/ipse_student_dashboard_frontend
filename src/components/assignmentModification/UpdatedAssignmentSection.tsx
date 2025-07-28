@@ -1,46 +1,72 @@
-import {
-  Box,
-  Heading,
-  Image,
-  VStack,
-  Flex,
-
-} from "@chakra-ui/react";
-
+import { Box, Heading, Image, VStack, Flex, Spinner, Text, Textarea } from "@chakra-ui/react";
 
 import modifiedAssignmentIcon from "../../assets/icons/note.png";
 import RichTextEditor from "../common/universal/EditableHTMLContentBox";
 
 interface UpdatedAssignmentSectionProps {
-    updatedAssignment: string,
-    setUpdatedAssignment: (HTMLContent: string) => void
+  updatedAssignment: string;
+  setUpdatedAssignment: (HTMLContent: string) => void;
+
+  loadingAssignmentGeneration: boolean
 }
 
-const UpdatedAssignmentSection = ({updatedAssignment, setUpdatedAssignment}:UpdatedAssignmentSectionProps) => {
-    return (
-        <VStack>
-            <Box borderWidth="1px" borderRadius="md" borderColor={"#244d8a"}>
-              <Flex
-                bg="#244d8a"
-                color="white"
-                px={4}
-                py={2}
-                align="center"
-                justify="space-between"
-                borderTopRadius="md"
-              >
-                <Image src={modifiedAssignmentIcon} height={"50px"} />
+const UpdatedAssignmentSection = ({
+  updatedAssignment,
+  setUpdatedAssignment,
 
-                <Heading>Modified Assignment</Heading>
-              </Flex>
-              <RichTextEditor
-                value={updatedAssignment || ""}
-                onChange={(newHtml) => setUpdatedAssignment(newHtml)}
-                height="80vh"
-              />
-            </Box>
-          </VStack>
-    )
-}
+  loadingAssignmentGeneration
+}: UpdatedAssignmentSectionProps) => {
+  return (
+    <VStack>
+      <Box
+        borderWidth="1px"
+        borderRadius="md"
+        borderColor={"#244d8a"}
+        w={"100%"}
+      >
+        <Flex
+          bg="#244d8a"
+          color="white"
+          px={4}
+          py={2}
+          align="center"
+          justify="space-between"
+          borderTopRadius="md"
+        >
+          <Image src={modifiedAssignmentIcon} height={"50px"} />
+          <Heading>Modified Assignment</Heading>
+        </Flex>
 
-export default UpdatedAssignmentSection
+        {loadingAssignmentGeneration ? (
+          // Spinner + message while generating
+          <Flex
+            direction="column"
+            align="center"
+            justify="center"
+            height="80vh"
+          >
+            <Spinner size="xl" color="#244d8a" />
+            <Text mt={4} fontSize="lg" color="gray.600">
+              Hang tight! Generating your new assignment...
+            </Text>
+          </Flex>
+        ) : updatedAssignment ? (
+          <RichTextEditor
+            value={updatedAssignment || ""}
+            onChange={(newHtml) => setUpdatedAssignment(newHtml)}
+          />
+        ) : (
+          <Textarea
+            pt={4}
+            height="80vh"
+            value="Select Changes to Generate Modified Assignment"
+            fontSize={"md"}
+            disabled
+          />
+        )}
+      </Box>
+    </VStack>
+  );
+};
+
+export default UpdatedAssignmentSection;
