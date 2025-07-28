@@ -1,4 +1,13 @@
-import { Box, Text, VStack, Image, Button, Icon } from "@chakra-ui/react";
+import {
+  Box,
+  Text,
+  VStack,
+  Image,
+  Button,
+  Icon,
+  HStack,
+  DownloadTrigger,
+} from "@chakra-ui/react";
 import {
   type VersionInfoType,
   type AssignmentDetailType,
@@ -17,6 +26,11 @@ import AssignmentVersionHistoryTable from "./AssignmentVersionHistoryTable";
 import useGetAssignmentVersionByDocId from "../../../hooks/assignmentVersions/useGetAssignmentVersionByDocId";
 import useFinalizeAssignmentVerstion from "../../../hooks/assignmentVersions/useFinalizeAssignmentVersion";
 import { toaster } from "../../ui/toaster";
+import { Tooltip } from "../../ui/tooltip";
+import { IoCloudDownload } from "react-icons/io5";
+import { FaStar } from "react-icons/fa";
+import { BsStars } from "react-icons/bs";
+import { useNavigate } from "react-router-dom";
 
 interface AssignmentDetailsBodyProps {
   assignment: AssignmentDetailType | null;
@@ -29,6 +43,8 @@ const AssignmentDetailsBody = ({
   assignmentLoading,
   triggerRefetch,
 }: AssignmentDetailsBodyProps) => {
+  const navigate = useNavigate();
+
   const [showHistory, setShowHistory] = useState<boolean>(false);
   const [finalVersion, setFinalVersion] = useState<VersionInfoType | null>(
     null
@@ -43,6 +59,14 @@ const AssignmentDetailsBody = ({
 
   const handleSelectVersionClick = (selectedVersionId: string) => {
     setActiveVersion(selectedVersionId);
+  };
+
+  const handleRatingNavigateClick = (assignment_id?: string) => {
+    const student_id = assignment?.student.id;
+
+    navigate(
+      `/student/${student_id}/assignment/${assignment_id}/rating-and-feedback`
+    );
   };
 
   const finalizeVersion = async (versionId: string) => {
@@ -107,13 +131,71 @@ const AssignmentDetailsBody = ({
           tagContent="Final Version"
           assignment={assignment}
           downloadUrl={finalVersion?.document_url}
-        />
+        >
+          <HStack gap={2} alignItems="center" justifyContent="right">
+            <Tooltip
+              content="Download Assignment"
+              positioning={{ placement: "top" }}
+            >
+              {/* TODO: Complete download trigger */}
+              <DownloadTrigger data={""} fileName={""} mimeType={""} asChild>
+                <Button variant={"ghost"} padding={0}>
+                  <Icon size="md">
+                    <IoCloudDownload />
+                  </Icon>
+                </Button>
+              </DownloadTrigger>
+            </Tooltip>
+            <Tooltip
+              content="Rate Assignment"
+              positioning={{ placement: "top" }}
+            >
+              <Button
+                variant={"ghost"}
+                padding={0}
+                onClick={() =>
+                  handleRatingNavigateClick(finalVersion?.document_id)
+                }
+              >
+                <Icon size="md">
+                  <FaStar />
+                </Icon>
+              </Button>
+            </Tooltip>
+          </HStack>
+        </AssignmentSection>
       )}
       <AssignmentSection
         tagContent="Original Version"
         assignment={assignment}
         downloadUrl={assignment?.blob_url}
-      />
+      >
+        <HStack gap={2} alignItems="center" justifyContent="right">
+          <Tooltip
+            content="Download Assignment"
+            positioning={{ placement: "top" }}
+          >
+            {/* TODO: Complete download trigger */}
+            <DownloadTrigger data={""} fileName={""} mimeType={""} asChild>
+              <Button variant={"ghost"} padding={0}>
+                <Icon size="md">
+                  <IoCloudDownload />
+                </Icon>
+              </Button>
+            </DownloadTrigger>
+          </Tooltip>
+          <Tooltip
+            content="Modify Assignment"
+            positioning={{ placement: "top" }}
+          >
+            <Button variant={"ghost"} padding={0}>
+              <Icon size="md">
+                <BsStars />
+              </Icon>
+            </Button>
+          </Tooltip>
+        </HStack>
+      </AssignmentSection>
 
       {!assignment?.finalized && (
         <VStack mt={5} gap={3}>

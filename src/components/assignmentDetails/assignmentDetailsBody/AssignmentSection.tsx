@@ -4,15 +4,17 @@ import AssignmentDetailsTag from "./AssignmentDetailsTag";
 import AssignmentDetailsDocLine from "./AssignmentDetailsDocLine";
 
 interface AssignmentSectionProps {
-    tagContent: string
+  tagContent: string;
   assignment: AssignmentDetailType | null;
-  downloadUrl?: string
+  downloadUrl?: string;
+  children?: React.ReactNode; // allow custom buttons or actions
 }
 
 const AssignmentSection = ({
-    tagContent,
+  tagContent,
   assignment,
-  downloadUrl
+  downloadUrl,
+  children
 }: AssignmentSectionProps) => {
   return (
     <VStack align={"left"} mt={10} mx={10}>
@@ -22,7 +24,7 @@ const AssignmentSection = ({
         assignment={assignment}
         fileName={assignment?.title}
         downloadUrl={downloadUrl}
-      />
+      >{children}</AssignmentDetailsDocLine>
     </VStack>
   );
 };
