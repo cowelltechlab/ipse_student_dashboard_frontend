@@ -39,11 +39,11 @@ const AssignmentDetailsPageContent = ({
   const [isCompletionModalOpen, setIsCompletionModalOpen] =
     useState<boolean>(false);
 
-  //   const { versionOptions, loading: versionsLoading } =
-  //     useAssignmentVersionOptions(assignment?.assignment_id);
+    const { versionOptions, loading: versionsLoading } =
+      useAssignmentVersionOptions(assignment?.assignment_id);
 
-  const { versionOptions, loading: versionsLoading } =
-    useAssignmentVersionOptions();
+//   const { versionOptions, loading: versionsLoading } =
+//     useAssignmentVersionOptions();
 
   const { handlePostAssignmentVersion, loading: loadingAssignmentGeneration } =
     usePostAssignmentVersion();
@@ -105,9 +105,9 @@ const AssignmentDetailsPageContent = ({
   return (
     <Box p={4} w={"100%"}>
       <AssignmentModificationVisibilityButtons
-        isOriginalVisible
-        isOptionsVisible
-        isNewVisible
+        isOriginalVisible={isOriginalVisible}
+        isOptionsVisible={isOptionsVisible}
+        isNewVisible={isNewVisible}
         toggleOriginalVisibility={() =>
           setIsOriginalVisible(!isOriginalVisible)
         }
@@ -117,56 +117,62 @@ const AssignmentDetailsPageContent = ({
         toggleNewVisibility={() => setIsNewVisible(!isNewVisible)}
       />
 
-      <HStack w="100%" align={"start"}>
-        <Box w="33%">
-          <OriginalAssignmentSection
-            originalAssignmentHTML={assignment?.html_content}
-            assignmentLoading={assignmentLoading}
-          />
-        </Box>
-        <Box w="33%">
-          <ModificationOptionsSection
-            versionOptions={versionOptions}
-            versionOptionsLoading={versionsLoading}
-            selectedLearningPathways={selectedLearningPathways}
-            setSelectedLearningPathways={setSelectedLearningPathways}
-            ideasForChange={ideasForChange}
-            setIdeasForChange={setIdeasForChange}
-          />
-          <Button
-            borderRadius="xl"
-            bg="#bd4f23"
-            color="white"
-            w="100%"
-            disabled={selectedLearningPathways.length < 1}
-            onClick={handleAssignmentGenerationClick}
-          >
-            Generate Assignment
-            <Icon as={IoArrowForwardCircle} />
-          </Button>
-        </Box>
+      <HStack w="100%" align="start">
+        {isOriginalVisible && (
+          <Box flex="1">
+            <OriginalAssignmentSection
+              originalAssignmentHTML={assignment?.html_content}
+              assignmentLoading={assignmentLoading}
+            />
+          </Box>
+        )}
 
-        <Box w="33%">
-          <UpdatedAssignmentSection
-            updatedAssignment={updatedAssignment}
-            setUpdatedAssignment={setUpdatedAssignment}
-            loadingAssignmentGeneration={loadingAssignmentGeneration}
-          />
+        {isOptionsVisible && (
+          <Box flex="1">
+            <ModificationOptionsSection
+              versionOptions={versionOptions}
+              versionOptionsLoading={versionsLoading}
+              selectedLearningPathways={selectedLearningPathways}
+              setSelectedLearningPathways={setSelectedLearningPathways}
+              ideasForChange={ideasForChange}
+              setIdeasForChange={setIdeasForChange}
+            />
+            <Button
+              borderRadius="xl"
+              bg="#bd4f23"
+              color="white"
+              w="100%"
+              disabled={selectedLearningPathways.length < 1}
+              onClick={handleAssignmentGenerationClick}
+            >
+              Generate Assignment
+              <Icon as={IoArrowForwardCircle} />
+            </Button>
+          </Box>
+        )}
 
-          <Button
-            borderRadius={"xl"}
-            mt={4}
-            bg={"#bd4f23"}
-            color={"white"}
-            w={"100%"}
-            disabled={updatedAssignment === "" || updatedAssignment === null}
-            loading={loadingAssignmentUpdate}
-            onClick={handleSaveChangesClick}
-          >
-            Save Changes
-            <Icon as={FaCircleCheck} />
-          </Button>
-        </Box>
+        {isNewVisible && (
+          <Box flex="1">
+            <UpdatedAssignmentSection
+              updatedAssignment={updatedAssignment}
+              setUpdatedAssignment={setUpdatedAssignment}
+              loadingAssignmentGeneration={loadingAssignmentGeneration}
+            />
+            <Button
+              borderRadius="xl"
+              mt={4}
+              bg="#bd4f23"
+              color="white"
+              w="100%"
+              disabled={!updatedAssignment}
+              loading={loadingAssignmentUpdate}
+              onClick={handleSaveChangesClick}
+            >
+              Save Changes
+              <Icon as={FaCircleCheck} />
+            </Button>
+          </Box>
+        )}
       </HStack>
 
       {assignment && studentId && isCompletionModalOpen && (

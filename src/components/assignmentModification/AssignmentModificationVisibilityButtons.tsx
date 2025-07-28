@@ -23,8 +23,10 @@ const AssignmentModificationVisibilityButtons = ({
   return (
     <HStack gap={1} mb={4} w="300px">
       <Button
+        fontWeight={"bold"}
         flex="1"
         bg={isOriginalVisible ? "#244d8a" : "#eaeef4"}
+        color={isOriginalVisible ? "#eaeef4" : "#244d8a"}
         size="sm"
         borderTopRightRadius="0"
         borderBottomRightRadius="0"
@@ -39,6 +41,7 @@ const AssignmentModificationVisibilityButtons = ({
         flex="1"
         borderRadius="0"
         size="sm"
+        color={isOptionsVisible ? "#eaeef4" : "#244d8a"}
         bg={isOptionsVisible ? "#244d8a" : "#eaeef4"}
         onClick={toggleVersionOptionsVisibility}
       >
@@ -47,7 +50,9 @@ const AssignmentModificationVisibilityButtons = ({
 
       <Button
         flex="1"
+        fontWeight={"bold"}
         bg={isNewVisible ? "#244d8a" : "#eaeef4"}
+        color={isNewVisible ? "#eaeef4" : "#244d8a"}
         size="sm"
         borderTopRightRadius="full"
         borderBottomRightRadius="full"

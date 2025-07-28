@@ -43,7 +43,7 @@ const UpdatedAssignmentSection = ({
             direction="column"
             align="center"
             justify="center"
-            height="80vh"
+            height="75vh"
           >
             <Spinner size="xl" color="#244d8a" />
             <Text mt={4} fontSize="lg" color="gray.600">
@@ -58,7 +58,7 @@ const UpdatedAssignmentSection = ({
         ) : (
           <Textarea
             pt={4}
-            height="80vh"
+            height="75vh"
             value="Select Changes to Generate Modified Assignment"
             fontSize={"md"}
             disabled

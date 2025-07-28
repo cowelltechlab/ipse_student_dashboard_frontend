@@ -36,13 +36,13 @@ const OriginalAssignmentSection = ({
         </Flex>
 
         {assignmentLoading ? (
-          <Center height="80vh" p={5}>
+          <Center height="75vh" p={5}>
             <Spinner size="xl" color="#244d8a" />
           </Center>
         ) : (
           <HtmlContentBox
             padding={5}
-            height="80vh"
+            height="75vh"
             htmlContent={originalAssignmentHTML}
           />
         )}
