@@ -40,6 +40,8 @@ const App: React.FC = () => {
 
       <Route path="/student/:student_id/assignment/:assignment_id" element={<AssignmentDetails />} />
       <Route path="/student/:student_id/assignment/:assignment_id/modification" element={<AssignmentModifications />} />
+      <Route path="/student/:student_id/assignment/:version_document_id/rating-and-feedback" element={<RatingsAndFeedbackPage />} />
+
 
       {/* Student Profile Creation */}
       <Route path="/profile-creation/:user_id" element={<StudentProfileCreation />} />
