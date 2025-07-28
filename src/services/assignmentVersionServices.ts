@@ -1,5 +1,6 @@
 import apiClient from "./apiClient";
 
+//  For Version Generation
 export const getAssignmentVersionOptions = async (assignment_id: number) => {
   const response = await apiClient.get(
     `/assignment-generation/${assignment_id}`
@@ -35,6 +36,15 @@ export const putAssignmentVersion = async (
     `/assignment-generation/${assignment_version_id}`,
     payload,
     { headers: { "Content-Type": "application/json" } }
+  );
+
+  return response.data;
+};
+
+// For versions vieweing
+export const getDocumentByDocId = async (document_version_id: string) => {
+  const response = await apiClient.get(
+    `/versions/assignment/${document_version_id}`
   );
 
   return response.data;

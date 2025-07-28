@@ -19,7 +19,7 @@ const AssignmentDetailsDocLine = ({
   dateModified,
 }: AssignmentDetailsDocLineProps) => {
   return (
-    <HStack align={"center"} w={"100%"}>
+    <HStack align={"center"} w={"100%"} my={2} p ={2}>
       <HStack align="start" spaceX={3}>
         <IoDocumentText size={"25px"} style={{ marginTop: 4 }} />
         <VStack align="start" spaceX={0}>

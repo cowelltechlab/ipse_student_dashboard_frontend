@@ -14,6 +14,7 @@ import {
   IoIosArrowDropupCircle,
 } from "react-icons/io";
 import AssignmentVersionHistoryTable from "./AssignmentVersionHistoryTable";
+import useGetAssignmentVersionByDocId from "../../../hooks/assignmentVersions/useGetAssignmentVersionByDocId";
 
 interface AssignmentDetailsBodyProps {
   assignment: AssignmentDetailType | null;
@@ -24,12 +25,22 @@ interface AssignmentDetailsBodyProps {
 const AssignmentDetailsBody = ({
   assignment,
   assignmentLoading,
-  triggerRefetch,
 }: AssignmentDetailsBodyProps) => {
   const [showHistory, setShowHistory] = useState<boolean>(false);
   const [finalVersion, setFinalVersion] = useState<VersionInfoType | null>(
     null
   );
+
+  const [activeVersion, setActiveVersion] = useState<string | null>(null);
+
+  const {
+    assignmentVersion,
+    loading: AssignmentVersionLoading,
+  } = useGetAssignmentVersionByDocId(activeVersion);
+
+  const handleSelectVersionClick = (selectedVersionId: string) => {
+    setActiveVersion(selectedVersionId);
+  };
 
   useEffect(() => {
     if (assignment?.versions) {
@@ -43,7 +54,12 @@ const AssignmentDetailsBody = ({
   return (
     <Box m={4}>
       <AssignmentDetailsHeaderCard assignment={assignment} />
-      <AssignmentPreviews assignment={assignment} />
+      <AssignmentPreviews
+        assignment={assignment}
+        assignmentLoading = {assignmentLoading}
+        selectedVersionHTML={assignmentVersion?.final_generated_content?.html_content}
+        selectedVersionLoading = {AssignmentVersionLoading}
+      />
 
       {assignment?.finalized && (
         <AssignmentSection
@@ -80,7 +96,12 @@ const AssignmentDetailsBody = ({
         />
       </Button>
 
-      {showHistory && <AssignmentVersionHistoryTable assignment={assignment} />}
+      {showHistory && (
+        <AssignmentVersionHistoryTable
+          assignment={assignment}
+          handleSelectVersionClick={handleSelectVersionClick}
+        />
+      )}
     </Box>
   );
 };
