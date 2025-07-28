@@ -6,17 +6,12 @@ import {
   Text,
   Textarea,
   Flex,
-  Button,
-  Icon,
-  Center,
-  Spinner,
-  Skeleton,
   SkeletonText,
+  Skeleton,
 } from "@chakra-ui/react";
 import LearningPathwaysSection from "./LearningPathwaysSection";
 import thinkingIcon from "../../assets/icons/design-thinking.png";
 import skillsIcon from "../../assets/icons/logical-thinking.png";
-import { IoArrowForwardCircle } from "react-icons/io5";
 import type { AssignmentVersionData } from "../../types/AssignmentModificationTypes";
 
 interface ModificationOptionsSectionProps {
@@ -30,7 +25,6 @@ interface ModificationOptionsSectionProps {
   setIdeasForChange: (ideas: string) => void;
 }
 
-
 const ModificationOptionsSection = ({
   versionOptions,
   versionOptionsLoading,
@@ -41,18 +35,10 @@ const ModificationOptionsSection = ({
   ideasForChange,
   setIdeasForChange,
 }: ModificationOptionsSectionProps) => {
-  if (versionOptionsLoading ) {
-    return (
-      <Center height="60vh">
-        <Spinner size="xl" color="#244d8a"  />
-      </Center>
-    );
-  }
-
   return (
     <VStack>
       {/* Skills for Success */}
-      <Box borderWidth="1px" borderRadius="md" borderColor="#244d8a" overflow="hidden"  w={"100%"}>
+      <Box borderWidth="1px" borderRadius="md" borderColor="#244d8a" w="100%">
         <Flex
           bg="#244d8a"
           color="white"
@@ -65,17 +51,27 @@ const ModificationOptionsSection = ({
           <Image src={skillsIcon} height="50px" />
           <Heading>Skills for Success</Heading>
         </Flex>
-        <Box px={4} py={3} bg="white"  w={"100%"}>
-          {versionOptions?.skills_for_success ? (
+
+        <Box px={4} py={3} bg="white" w="100%">
+          {versionOptionsLoading ? (
+            // Show skeleton while loading
+            <SkeletonText mt="4" noOfLines={3} spaceY="4" />
+          ) : versionOptions?.skills_for_success ? (
             <Text color="#244d8a">{versionOptions.skills_for_success}</Text>
           ) : (
-            <SkeletonText noOfLines={3} spaceY="4" />
+            <Text color="gray.400">No skills data available.</Text>
           )}
         </Box>
       </Box>
 
       {/* Learning Pathways */}
-      <Box borderWidth="1px" borderRadius="md" borderColor="#244d8a" overflow="hidden"  w={"100%"}>
+      <Box
+        borderWidth="1px"
+        borderRadius="md"
+        borderColor="#244d8a"
+        overflow="hidden"
+        w={"100%"}
+      >
         <Flex
           bg="#244d8a"
           color="white"
@@ -89,14 +85,18 @@ const ModificationOptionsSection = ({
           <Heading>Learning Pathways</Heading>
         </Flex>
         <Box px={4} py={3} bg="white">
-          {versionOptions?.learning_pathways ? (
+          {versionOptionsLoading ? (
+            // Use a solid loading block
+            <Skeleton height="220px" borderRadius="md" />
+          ) : versionOptions?.learning_pathways &&
+            versionOptions.learning_pathways.length > 0 ? (
             <LearningPathwaysSection
               learningPathways={versionOptions.learning_pathways}
               selectedLearningPaths={selectedLearningPathways}
               setSelectedLearningPaths={setSelectedLearningPathways}
             />
           ) : (
-            <Skeleton height="100px" />
+            <Text color="gray.400">No learning pathways available.</Text>
           )}
         </Box>
       </Box>
@@ -113,17 +113,6 @@ const ModificationOptionsSection = ({
           onChange={(e) => setIdeasForChange(e.target.value)}
         />
       </Box>
-
-      <Button
-        borderRadius="xl"
-        bg="#bd4f23"
-        color="white"
-        w="100%"
-        disabled={selectedLearningPathways.length < 1}
-      >
-        Generate Assignment
-        <Icon as={IoArrowForwardCircle} />
-      </Button>
     </VStack>
   );
 };

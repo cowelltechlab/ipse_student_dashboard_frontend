@@ -10,11 +10,10 @@ const useAssignmentVersionOptions = (assignmentId?: number) => {
   const [error, setError] = useState<ErrorType | null>(null);
 
   useEffect(() => {
-    if (!assignmentId) {
-      return;
-    }
-
-    const fetchClasses = async () => {
+    const handleFetchAssignmentVersionOptions = async () => {
+      if (!assignmentId) {
+        return;
+      }
       try {
         setLoading(true);
         const response = await getAssignmentVersionOptions(assignmentId);
@@ -29,7 +28,7 @@ const useAssignmentVersionOptions = (assignmentId?: number) => {
       }
     };
 
-    fetchClasses();
+    handleFetchAssignmentVersionOptions();
   }, [assignmentId]);
 
   return { versionOptions, loading, error };

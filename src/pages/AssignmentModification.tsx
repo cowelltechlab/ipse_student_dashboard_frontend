@@ -53,6 +53,8 @@ const AssignmentModifications = () => {
       <AssignmentModificationPageContent
         assignment={assignment}
         assignmentLoading={AssignmentLoading}
+
+        studentId={student_id}
       />
     </Box>
   );

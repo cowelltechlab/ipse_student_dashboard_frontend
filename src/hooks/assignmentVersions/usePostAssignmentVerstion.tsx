@@ -6,10 +6,12 @@ const usePostAssignmentVersion = () => {
   const [loading, setLoading] = useState<boolean>(false);
 
   const handlePostAssignmentVersion = async (
-    assignmentVersionId: string,
     selectedOptions: string[],
+    assignmentVersionId?: string,
     additionalEditSuggestions?: string
   ) => {
+    if (!assignmentVersionId) return;
+
     try {
       setLoading(true);
       const response = await postAssignmentVersion(
