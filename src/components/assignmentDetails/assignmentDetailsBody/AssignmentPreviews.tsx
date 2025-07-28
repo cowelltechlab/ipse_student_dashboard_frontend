@@ -8,6 +8,8 @@ import {
   Skeleton,
   Spinner,
   Center,
+  Spacer,
+  HStack,
 } from "@chakra-ui/react";
 import type { AssignmentDetailType } from "../../../types/AssignmentTypes";
 import HtmlContentBox from "../../common/universal/HTMLContentDisplay";
@@ -19,6 +21,7 @@ interface AssignmentPreviewsProps {
   assignmentLoading: boolean;
   selectedVersionHTML?: string | null;
   selectedVersionLoading: boolean;
+  isFinalizedVersion?: boolean;
 }
 
 const AssignmentPreviews = ({
@@ -26,6 +29,7 @@ const AssignmentPreviews = ({
   assignmentLoading,
   selectedVersionHTML,
   selectedVersionLoading,
+  isFinalizedVersion,
 }: AssignmentPreviewsProps) => {
   return (
     <Stack direction={{ base: "column", md: "row" }} mt={6} w="100%">
@@ -46,7 +50,23 @@ const AssignmentPreviews = ({
 
       {/* Modified Assignment Section */}
       <VStack w={{ base: "100%", md: "50%" }} align="start">
-        <Heading>Modified Assignment</Heading>
+        <HStack align="center" w="100%">
+          <Heading>Modified Assignment</Heading>
+          <Spacer />
+          {isFinalizedVersion && (
+            <Box
+              bg="#fbde8e"
+              color="black"
+              fontSize="sm"
+              px={2}
+              py={1}
+              borderRadius="full"
+            >
+              Final Version
+            </Box>
+          )}
+        </HStack>
+
         <Box w="100%" p={4} borderWidth={1} borderRadius="md" h="500px">
           {selectedVersionLoading ? (
             <Center h="100%">

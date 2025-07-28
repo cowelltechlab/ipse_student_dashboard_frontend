@@ -39,9 +39,7 @@ const AssignmentDetailsBody = ({
   const { assignmentVersion, loading: AssignmentVersionLoading } =
     useGetAssignmentVersionByDocId(activeVersion);
 
-  const {
-    handleFinalizeAssignmentVersion,
-  } = useFinalizeAssignmentVerstion();
+  const { handleFinalizeAssignmentVersion } = useFinalizeAssignmentVerstion();
 
   const handleSelectVersionClick = (selectedVersionId: string) => {
     setActiveVersion(selectedVersionId);
@@ -83,6 +81,11 @@ const AssignmentDetailsBody = ({
         assignment.versions.find((v) => v.finalized === true) || null;
 
       setFinalVersion(finalizedVersion);
+
+      // If there is a finalized version, set it as the active version
+      if (finalizedVersion?.document_id) {
+        setActiveVersion(finalizedVersion.document_id);
+      }
     }
   }, [assignment]);
 
@@ -96,6 +99,7 @@ const AssignmentDetailsBody = ({
           assignmentVersion?.final_generated_content?.html_content
         }
         selectedVersionLoading={AssignmentVersionLoading}
+        isFinalizedVersion={activeVersion === finalVersion?.document_id}
       />
 
       {assignment?.finalized && (
