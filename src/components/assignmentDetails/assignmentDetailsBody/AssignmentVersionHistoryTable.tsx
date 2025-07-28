@@ -18,7 +18,7 @@ const AssignmentVersionHistoryTable = ({
   }
 
   return (
-    <Box overflowX="auto" >
+    <Box overflowX="auto" p={6} >
       <Table.Root>
         <Table.Body>
           {assignment.versions.map((version) => (
