@@ -1,10 +1,10 @@
 import { useEffect, useState } from "react";
 import type { ErrorType } from "../../types/ErrorType";
 import { getAssignments } from "../../services/assignmentServices";
-import type { AssignmentDetailType } from "../../types/AssignmentTypes";
+import type { AssignmentBasicType } from "../../types/AssignmentTypes";
 
 const useAssignments = (studentId?: number | null) => {
-  const [assignments, setAssignments] = useState<AssignmentDetailType[]>([]);
+  const [assignments, setAssignments] = useState<AssignmentBasicType[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<ErrorType | null>(null);
 
@@ -13,6 +13,7 @@ const useAssignments = (studentId?: number | null) => {
       try {
         setLoading(true);
         const response = await getAssignments(studentId ?? undefined);
+        console.log(response)
         setAssignments(response);
       } catch (e) {
         const error = e as ErrorType;

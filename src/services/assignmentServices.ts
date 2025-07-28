@@ -11,9 +11,14 @@ export const getAssignments = async (student_id?: number) => {
     return response.data;
   }
 
-  const response = await apiClient.get("/assignments");
+  const response = await apiClient.get("/assignments/");
   return response.data;
 };
+
+export const getAssignment = async (assignment_id: number) => {
+  const response = await apiClient.get(`/assignments/id/${assignment_id}`)
+  return response.data
+}
 
 export const postManyAssignments = async (assignmentData: {
   student_ids: number[];
@@ -72,7 +77,7 @@ export const postAssignment = async (assignmentData: {
   return response.data;
 };
 
-export const getAssignmentTypes = async (): Promise<AssignmentTypeListType> => {
+export const getAssignmentTypes = async (): Promise<AssignmentTypeListType[]> => {
   const response = await apiClient.get("/assignments/types");
   return response.data;
 };

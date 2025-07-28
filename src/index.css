@@ -1,3 +1,16 @@
+/* .ql-toolbar {
+  background: #244d8a;
+  border: none;
+  color: "white";
+}
+.ql-toolbar button svg {
+  fill: white;
+}
+.ql-container {
+  border-top: 1px solid #244d8a;
+}
+ */
+
 /* :root {
   font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
   line-height: 1.5;

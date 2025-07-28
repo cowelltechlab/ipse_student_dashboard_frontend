@@ -1,7 +1,7 @@
 import apiClient from "./apiClient";
 
 export const getClasses = async () => {
-  const response = await apiClient.get("/classes");
+  const response = await apiClient.get("/classes/");
   return response.data;
 };
 
@@ -12,7 +12,7 @@ export const postClass = async (
   type: "IPSE" | "Inclusive",
   course_code: string
 ) => {
-  const response = await apiClient.post("/classes", {
+  const response = await apiClient.post("/classes/", {
     name, 
     term,
     type,

@@ -11,12 +11,12 @@ import {
 } from "@chakra-ui/react";
 import { IoDocumentText } from "react-icons/io5";
 import { useState } from "react";
-import AssignmentsTableRowButtons from "./AssignmentsTableRowButtons";
-import type { AssignmentDetailType } from "../../../../types/AssignmentTypes";
+import AssignmentsTableRowButtons from "../../../common/assignments/AssignmentsTableRowButtons";
+import type { AssignmentBasicType } from "../../../../types/AssignmentTypes";
 import type { ErrorType } from "../../../../types/ErrorType";
 
 interface AssignmentsTableProps {
-  assignments: AssignmentDetailType[];
+  assignments: AssignmentBasicType[];
   assignmentsLoading: boolean;
   assignmentsError: ErrorType | null;
 
@@ -56,7 +56,7 @@ const AssignmentsTable = ({
     const lowerSearch = searchTerm?.toLowerCase().trim();
     const matchesSearch =
       !lowerSearch ||
-      assignment.title.toLowerCase().includes(lowerSearch) ||
+      assignment?.title?.toLowerCase().includes(lowerSearch) ||
       `${assignment.first_name} ${assignment.last_name}`
         .toLowerCase()
         .includes(lowerSearch);
