@@ -54,23 +54,29 @@ const LearningPathwaysSection = ({
                 />
               </Checkbox.Root>
               <Span flex="1" color={"#244d8a"} fontWeight={"bold"}>
-                {learningPathway.title}
+                {learningPathway.name}
               </Span>
               <Accordion.ItemIndicator />
             </Accordion.ItemTrigger>
 
             <Accordion.ItemContent>
               <Accordion.ItemBody>
-                <Text fontWeight="bold" color={"#244d8a"}>{learningPathway.description}</Text>
+                <Text fontWeight="bold" color={"#244d8a"}>
+                  {learningPathway.description}
+                </Text>
                 <List.Root mt={2}>
-                  {learningPathway.reasons.map((reason, i) => (
-                    <List.Item key={i}>
-                      <List.Indicator asChild color="#244d8a">
-                        <IoMdArrowRoundForward />
-                      </List.Indicator>
-                      {reason}
-                    </List.Item>
-                  ))}
+                  <List.Item>
+                    <List.Indicator asChild color="#244d8a">
+                      <IoMdArrowRoundForward />
+                    </List.Indicator>
+                    {learningPathway.why_good_existing}
+                  </List.Item>
+                  <List.Item>
+                    <List.Indicator asChild color="#244d8a">
+                      <IoMdArrowRoundForward />
+                    </List.Indicator>
+                    {learningPathway.why_good_growth}
+                  </List.Item>
                 </List.Root>
               </Accordion.ItemBody>
             </Accordion.ItemContent>

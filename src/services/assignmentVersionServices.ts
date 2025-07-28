@@ -1,6 +1,6 @@
 import apiClient from "./apiClient";
 
-export const getAssignmentVersionOptions = async (assignment_id: string) => {
+export const getAssignmentVersionOptions = async (assignment_id: number) => {
   const response = await apiClient.get(
     `/assignment-generation/${assignment_id}`
   );

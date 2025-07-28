@@ -1,7 +1,6 @@
 import { Box, Skeleton } from "@chakra-ui/react";
 import { useParams } from "react-router-dom";
 import PageHeader from "../components/common/pageHeader/PageHeader";
-import { useState } from "react";
 import useStudent from "../hooks/students/useStudent";
 import BreadcrumbNav from "../components/common/breadcrumb/BreadcrumbNav";
 import useAssignment from "../hooks/assignments/useAssignment";
@@ -13,12 +12,7 @@ const AssignmentModifications = () => {
     assignment_id: string;
   }>();
 
-  const [refetchTrigger, setRefetchTrigger] = useState<number>(0);
-
-  const { student, loading: StudentLoading } = useStudent(
-    student_id,
-    refetchTrigger
-  );
+  const { student, loading: StudentLoading } = useStudent(student_id);
   const { assignment, loading: AssignmentLoading } = useAssignment(
     Number(assignment_id)
   );
@@ -57,13 +51,8 @@ const AssignmentModifications = () => {
       <PageHeader />
       <BreadcrumbNav items={breadcrumbItems} />
       <AssignmentModificationPageContent
-        student={student}
         assignment={assignment}
-        profileLoading={StudentLoading}
         assignmentLoading={AssignmentLoading}
-        triggerRefetch={() => {
-          setRefetchTrigger(refetchTrigger + 1);
-        }}
       />
     </Box>
   );

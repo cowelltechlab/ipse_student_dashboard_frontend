@@ -3,12 +3,17 @@ import type { ErrorType } from "../../types/ErrorType";
 import type { AssignmentVersionData } from "../../types/AssignmentModificationTypes";
 import { getAssignmentVersionOptions } from "../../services/assignmentVersionServices";
 
-const useAssignmentVersionOptions = (assignmentId: string) => {
-  const [versionOptions, setsetVersionOptions] = useState<AssignmentVersionData[]>([]);
+const useAssignmentVersionOptions = (assignmentId?: number) => {
+  const [versionOptions, setsetVersionOptions] =
+    useState<AssignmentVersionData | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<ErrorType | null>(null);
 
   useEffect(() => {
+    if (!assignmentId) {
+      return;
+    }
+
     const fetchClasses = async () => {
       try {
         setLoading(true);
@@ -18,7 +23,7 @@ const useAssignmentVersionOptions = (assignmentId: string) => {
         console.error(e);
         const error = e as ErrorType;
         setError(error);
-        setsetVersionOptions([]);
+        setsetVersionOptions(null);
       } finally {
         setLoading(false);
       }
