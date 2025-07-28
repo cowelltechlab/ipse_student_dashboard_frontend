@@ -1,10 +1,4 @@
-import {
-  Box,
-  HStack,
-  Button,
-  Icon,
-
-} from "@chakra-ui/react";
+import { Box, HStack, Button, Icon } from "@chakra-ui/react";
 import type { AssignmentDetailType } from "../../types/AssignmentTypes";
 import { useState } from "react";
 
@@ -18,6 +12,7 @@ import usePutAssignmentVersion from "../../hooks/assignmentVersions/usePutAssign
 import { toaster } from "../ui/toaster";
 import AssignmentModificationCompletionDialog from "./AssignmentModificationCompletionDialog";
 import UpdatedAssignmentSection from "./UpdatedAssignmentSection";
+import AssignmentModificationVisibilityButtons from "./AssignmentModificationVisibilityButtons";
 
 interface AssignmentDetailsPageContentProps {
   assignment: AssignmentDetailType | null;
@@ -31,6 +26,10 @@ const AssignmentDetailsPageContent = ({
   assignmentLoading,
   studentId,
 }: AssignmentDetailsPageContentProps) => {
+  const [isOriginalVisible, setIsOriginalVisible] = useState<boolean>(true);
+  const [isOptionsVisible, setIsOptionsVisible] = useState<boolean>(true);
+  const [isNewVisible, setIsNewVisible] = useState<boolean>(true);
+
   const [ideasForChange, setIdeasForChange] = useState<string>("");
   const [selectedLearningPathways, setSelectedLearningPathways] = useState<
     string[]
@@ -40,8 +39,11 @@ const AssignmentDetailsPageContent = ({
   const [isCompletionModalOpen, setIsCompletionModalOpen] =
     useState<boolean>(false);
 
+  //   const { versionOptions, loading: versionsLoading } =
+  //     useAssignmentVersionOptions(assignment?.assignment_id);
+
   const { versionOptions, loading: versionsLoading } =
-    useAssignmentVersionOptions(assignment?.assignment_id);
+    useAssignmentVersionOptions();
 
   const { handlePostAssignmentVersion, loading: loadingAssignmentGeneration } =
     usePostAssignmentVersion();
@@ -102,6 +104,19 @@ const AssignmentDetailsPageContent = ({
 
   return (
     <Box p={4} w={"100%"}>
+      <AssignmentModificationVisibilityButtons
+        isOriginalVisible
+        isOptionsVisible
+        isNewVisible
+        toggleOriginalVisibility={() =>
+          setIsOriginalVisible(!isOriginalVisible)
+        }
+        toggleVersionOptionsVisibility={() =>
+          setIsOptionsVisible(!isOptionsVisible)
+        }
+        toggleNewVisibility={() => setIsNewVisible(!isNewVisible)}
+      />
+
       <HStack w="100%" align={"start"}>
         <Box w="33%">
           <OriginalAssignmentSection
