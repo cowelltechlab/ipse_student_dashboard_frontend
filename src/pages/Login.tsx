@@ -3,7 +3,18 @@ import { Box, Flex, Image, Text } from "@chakra-ui/react";
 import loginImage from "../assets/Login.svg";
 import LoginForm from "../components/login/LoginForm";
 
+import { useNavigate } from "react-router-dom";
+import useAuth from "../contexts/useAuth";
+
 const Login = () => {
+  const navigate = useNavigate();
+
+  const { userId } = useAuth();
+
+  if (userId) {
+    navigate("/dashboard");
+  }
+
   return (
     <Flex
       minH="100vh"
