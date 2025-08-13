@@ -55,7 +55,7 @@ const ProfileImageSection = ({
       <ProfilePictureSelectionDialog
         onSelectDefaultImage={handleSelectDefaultImage}
         onUploadedImage={handleUploadImage}
-        buttonStyles={{ bg: "#244d8a", borderColor: "None", _hover: { bg: "#5e89caff" } }}
+        buttonStyles={{ bg: "#BD4F23", borderColor: "None", _hover: { bg: "#5e89caff" } }}
         saveLoading={loading}
       />
     </VStack>

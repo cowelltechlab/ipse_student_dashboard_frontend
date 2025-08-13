@@ -4,10 +4,12 @@ const TextButton = ({
   children,
   onClick,
   color = "black",
+  fontSize = "md",
 }: {
   children: React.ReactNode;
   onClick: () => void;
   color?: string;
+  fontSize?: string;
 }) => {
   return (
     <Box
@@ -16,6 +18,7 @@ const TextButton = ({
       color={color}
       cursor={"pointer"}
       _hover={{ textDecoration: "underline" }}
+      fontSize={fontSize}
     >
       {children}
     </Box>

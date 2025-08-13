@@ -46,7 +46,6 @@ const AssignmentsFilterButtons = ({
       </Button>
 
       <Button
-        
         {...getButtonStyles("needsRating")}
         onClick={() => {
           setActiveButton("needsRating");

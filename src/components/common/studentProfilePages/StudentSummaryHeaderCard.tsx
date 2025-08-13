@@ -11,9 +11,7 @@ import {
 import type { StudentProfileType } from "../../../types/StudentTypes";
 
 import defaultProfileImage from "../../../assets/default_profile_picture.jpg";
-// import { FaEdit } from "react-icons/fa";
 
-import visionIcon from "../../../assets/map.png";
 
 interface StudentSummaryHeaderCardProps {
   student: StudentProfileType | null;
@@ -28,11 +26,11 @@ const StudentSummaryHeaderCard = ({
     <Stack
       direction={{ base: "column", md: "row" }}
       mt={6}
-      align={"end"}
       m={3}
       p={6}
       borderRadius="lg"
       color="white"
+       align="stretch"
     >
       <Skeleton loading={profileLoading} borderRadius="md">
         <Box
@@ -43,7 +41,7 @@ const StudentSummaryHeaderCard = ({
             src={student?.profile_picture_url || defaultProfileImage}
             alt="Student Image"
             borderRadius="md"
-            boxSize={{ base: "120px", sm: "140px", md: "150px" }}
+            boxSize={{ base: "130px", sm: "150px", md: "165px" }}
             objectFit="cover"
           />
         </Box>
@@ -64,14 +62,14 @@ const StudentSummaryHeaderCard = ({
         </Skeleton>
 
         <HStack align={"center"}>
-          <Image src={visionIcon} h={"40px"} />
-          <Text>{student?.profile_summaries.vision}</Text>
+          {!profileLoading && <Text>"{student?.profile_summaries.vision}"</Text>}
         </HStack>
 
         <HStack
           flexWrap={{ base: "wrap", md: "nowrap" }}
           align="start"
           w="100%"
+          mt={1}
         >
           <Skeleton
             loading={profileLoading}
@@ -85,6 +83,7 @@ const StudentSummaryHeaderCard = ({
               py={1}
               borderRadius="xl"
               w="100%"
+              shadow={"xl"}
             >
               <Box>
                 Year <b>{student?.year_name}</b>

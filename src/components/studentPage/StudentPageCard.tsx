@@ -9,6 +9,7 @@ import {
   Stack,
   Skeleton,
   Image,
+  Span,
 } from "@chakra-ui/react";
 
 import type { StudentProfileType } from "../../types/StudentTypes";
@@ -37,7 +38,7 @@ const StudentPageCard = ({
       direction={{ base: "column", md: "row" }}
       spaceY={{ base: 4, md: 0 }}
       align="stretch"
-      color="black"
+      color="white"
       borderRadius="lg"
     >
       {/* Profile Image */}
@@ -51,18 +52,12 @@ const StudentPageCard = ({
       {/* Right Content */}
 
       {profileLoading ? (
-        <Skeleton spaceY={2} flex={1} bg="#EAEEF4" borderRadius="lg" p={6} />
+        <Skeleton spaceY={2} flex={1} bg="#244D8A" borderRadius="lg" p={6} />
       ) : (
-        <VStack
-          align="start"
-          flex={1}
-          bg="#EAEEF4"
-          borderRadius="lg"
-          p={6}
-        >
+        <VStack align="start" flex={1} bg="#244D8A" borderRadius="lg" p={6}>
           {/* Name and Year */}
           <HStack w="100%">
-            <Heading size="2xl" >
+            <Heading size="2xl">
               {student?.first_name} {student?.last_name}
             </Heading>
             <Spacer />
@@ -79,7 +74,7 @@ const StudentPageCard = ({
             </HStack>
           </HStack>
 
-          <HStack spaceX={4} mt={2}>
+          {/* <HStack spaceX={4} mt={2}>
             <Box bg="#BD4F23" color="white" px={3} py={1} borderRadius="xl">
               Year: <b>{student?.year_name}</b>
             </Box>
@@ -89,15 +84,16 @@ const StudentPageCard = ({
                 {student?.classes.map((c) => c.class_name).join(", ")}
               </Text>
             </Box>
-          </HStack>
+          </HStack> */}
 
           {/* Vision Statement (Full width) */}
           <Box w="100%">
-            <HStack mb={1} align={"center"}>
-              <Image src={visionIcon} height="40px" />
-              <Text fontWeight="bold">Vision Statement</Text>
-            </HStack>
-            <Text bg={"white"} p={3} borderRadius={"lg"}>{student?.profile_summaries.vision}</Text>
+
+            <Text bg={"white"} p={2} borderRadius={"lg"} color={"black"}>
+              {" "}
+              <Span fontWeight="bold" pr={3}>Vision Statement:</Span>
+              {student?.profile_summaries.vision}
+            </Text>
           </Box>
 
           {/* Grid for 4 remaining sections */}
@@ -105,18 +101,22 @@ const StudentPageCard = ({
             <Box>
               <HStack mb={1} align={"center"}>
                 <Image src={skillIcon} height="40px" />
-                <Text fontWeight="bold">Skill Summary</Text>
+                <Text fontWeight="bold" >Skill Summary</Text>
               </HStack>
-              <Text>{student?.profile_summaries.strengths_short}</Text>
+              <Text bg={"white"} color={"black"} p={3} borderRadius={"lg"}>
+                {student?.profile_summaries.strengths_short}
+              </Text>
             </Box>
 
             <Box>
               <HStack mb={1} align={"center"}>
                 <Image src={bestWayIcon} height="40px" />
 
-                <Text fontWeight="bold">Best Way to assist me is:</Text>
+                <Text  fontWeight="bold">Best Way to assist me is:</Text>
               </HStack>
-              <Text>{student?.profile_summaries.best_ways_to_help}</Text>
+              <Text bg={"white"} color={"black"} p={3} borderRadius={"lg"}>
+                {student?.profile_summaries.best_ways_to_help}
+              </Text>
             </Box>
 
             <Box>
@@ -124,7 +124,9 @@ const StudentPageCard = ({
                 <Image src={longTermGoalIcon} height="40px" />
                 <Text fontWeight="bold">After college I want to:</Text>
               </HStack>
-              <Text>{student?.profile_summaries.long_term_goals}</Text>
+              <Text bg={"white"} color={"black"} p={3} borderRadius={"lg"}>
+                {student?.profile_summaries.long_term_goals}
+              </Text>
             </Box>
 
             <Box>
@@ -132,7 +134,9 @@ const StudentPageCard = ({
                 <Image src={visionIcon} height="40px" />
                 <Text fontWeight="bold">Currently I want to achieve:</Text>
               </HStack>
-              <Text>{student?.profile_summaries.short_term_goals}</Text>
+              <Text bg={"white"} color={"black"} p={3} borderRadius={"lg"}>
+                {student?.profile_summaries.short_term_goals}
+              </Text>
             </Box>
           </SimpleGrid>
         </VStack>

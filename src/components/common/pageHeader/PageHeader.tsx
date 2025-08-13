@@ -1,22 +1,20 @@
 import {
   HStack,
   Spacer,
-  AvatarGroup,
-  Avatar,
   Image,
   Separator,
 } from "@chakra-ui/react";
 
 import CreateNewDropdown from "./CreateNewDropdown";
 import TextButton from "../universal/TextButton";
-import useAuth from "../../../contexts/useAuth";
 
-import profileDefaultIcon from "../../../assets/default_profile_picture.jpg";
 import myChoiceText from "../../../assets/myChoice.png";
 import { useNavigate } from "react-router-dom";
+import LogoutMenu from "./LogoutMenu";
 
 const PageHeader = () => {
-  const { profilePictureUrl } = useAuth();
+
+
 
   const navigate = useNavigate();
 
@@ -34,15 +32,14 @@ const PageHeader = () => {
 
       <Spacer />
       <HStack gap={4}>
-        <TextButton onClick={onHomeClick}>Home</TextButton>
+        <TextButton fontSize="lg" onClick={onHomeClick}>
+          Home
+        </TextButton>
         <CreateNewDropdown />
-        <AvatarGroup>
-          <Avatar.Root>
-            <Avatar.Fallback />
-            <Avatar.Image src={profilePictureUrl ?? profileDefaultIcon} />
-          </Avatar.Root>
-        </AvatarGroup>
+        <LogoutMenu
+        />
       </HStack>
+
       <Separator my={6} />
     </HStack>
   );
