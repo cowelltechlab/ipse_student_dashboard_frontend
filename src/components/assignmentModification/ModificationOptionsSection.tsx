@@ -84,27 +84,44 @@ const ModificationOptionsSection = ({
           <Image src={thinkingIcon} height="50px" />
           <Heading>Learning Pathways</Heading>
         </Flex>
-        <Box px={4} py={3} bg="white">
+        <Box
+          px={4}
+          py={6}
+          bg="white"
+          textAlign="center"
+          borderRadius="md"
+          boxShadow="sm"
+        >
           {versionOptionsLoading ? (
-            // Use a solid loading block
-          
-            <>  <DotLottieReact
-              src="https://lottie.host/104be41c-8b93-4940-8401-cc1aa0de874e/8XCNDsALKV.lottie"
-              loop
-              autoplay
-            />
-            <Text>Hang on! Generating the Perfect Learning Pathways...</Text>
-            </>
-          ) : // <Skeleton height="220px" borderRadius="md" />
-          versionOptions?.learning_pathways &&
-            versionOptions.learning_pathways.length > 0 ? (
+            <VStack gap={4}>
+              <Box w="400px">
+                <DotLottieReact
+                  src="https://lottie.host/104be41c-8b93-4940-8401-cc1aa0de874e/8XCNDsALKV.lottie"
+                  loop
+                  autoplay
+                />
+              </Box>
+              <Text fontSize="lg" fontWeight="semibold" color="gray.700">
+                Hang on!
+              </Text>
+              <Text fontSize="md" color="gray.500" maxW="sm">
+                Generating the{" "}
+                <Text as="span" fontWeight="medium" color="blue.500">
+                  Perfect Learning Pathways
+                </Text>{" "}
+                just for you...
+              </Text>
+            </VStack>
+          ) : Array.isArray(versionOptions?.learning_pathways) && versionOptions.learning_pathways.length > 0 ? (
             <LearningPathwaysSection
-              learningPathways={versionOptions.learning_pathways}
+              learningPathways={versionOptions!.learning_pathways}
               selectedLearningPaths={selectedLearningPathways}
               setSelectedLearningPaths={setSelectedLearningPathways}
             />
           ) : (
-            <Text color="gray.400">No learning pathways available.</Text>
+            <Text color="gray.400" textAlign="center">
+              No learning pathways available.
+            </Text>
           )}
         </Box>
       </Box>

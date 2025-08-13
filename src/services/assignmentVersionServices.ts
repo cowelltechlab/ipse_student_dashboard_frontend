@@ -1,3 +1,4 @@
+import type { AssignmentJson } from "../components/assignmentModification/JsonAssignmentEditor";
 import apiClient from "./apiClient";
 
 //  For Version Generation
@@ -26,19 +27,18 @@ export const postAssignmentVersion = async (
   return response.data;
 };
 
+
 export const putAssignmentVersion = async (
   assignment_version_id: string,
-  updated_html_content: string
+  updated_json_content: AssignmentJson
 ) => {
-  const payload = { updated_html_content };
-
+  const payload = { updated_json_content };
   const response = await apiClient.put(
     `/assignment-generation/${assignment_version_id}`,
     payload,
     { headers: { "Content-Type": "application/json" } }
   );
-
-  return response.data;
+  return response.data as { json_content: AssignmentJson };
 };
 
 // For versions vieweing

@@ -1,23 +1,21 @@
 import { useState } from "react";
-import type { ErrorType } from "../../types/ErrorType";
 import { putAssignmentVersion } from "../../services/assignmentVersionServices";
+import type { AssignmentJson } from "../../components/assignmentModification/JsonAssignmentEditor";
 
 const usePutAssignmentVersion = () => {
   const [loading, setLoading] = useState<boolean>(false);
 
   const handlePutAssignmentVersion = async (
     assignmentVersionId: string,
-    updatedHTMLContent: string
+    updatedJsonContent: AssignmentJson
   ) => {
     try {
       setLoading(true);
       const response = await putAssignmentVersion(
         assignmentVersionId,
-        updatedHTMLContent
+        updatedJsonContent
       );
       return response;
-    } catch (e) {
-      throw e as ErrorType;
     } finally {
       setLoading(false);
     }

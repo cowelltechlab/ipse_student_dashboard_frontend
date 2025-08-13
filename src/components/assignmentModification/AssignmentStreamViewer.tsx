@@ -1,7 +1,6 @@
 // components/AssignmentStreamViewer.tsx
-import { Box, Flex, Heading, Stack, Text, Image } from "@chakra-ui/react";
+import { Box, Heading, Stack, Text } from "@chakra-ui/react";
 // import DOMPurify from 'dompurify'; // optional
-import modifiedAssignmentIcon from "../../assets/icons/note.png";
 import { DotLottieReact } from "@lottiefiles/dotlottie-react";
 
 type Props = {
@@ -58,18 +57,21 @@ export default function AssignmentStreamViewer({ sections, isLoading }: Props) {
         w={"100%"}
       >
         {isLoading && (
-          <Box textAlign="center" py={10}>
+          <Box textAlign="center" py={8} px={4}>
             <DotLottieReact
               src="https://lottie.host/749207af-f4b1-47e3-8768-449bb1d7e5c5/66y1ECtWZR.lottie"
               loop
               autoplay
-              height={"100px"}
+              height="100px"
             />
-            <Text>Generating The Ideal Modified Assignment</Text>
+            <Text fontSize="lg" fontWeight="semibold" color="gray.700" mt={4}>
+              Generating the Ideal Modified Assignment
+            </Text>
+            <Text fontSize="sm" color="gray.500" mt={1}>
+              This may take a few moments...
+            </Text>
           </Box>
-
         )}
-
         <HtmlBlock html={assignmentInstructionsHtml} />
         <HtmlBlock html={stepByStepPlanHtml} />
         <HtmlBlock html={myPlanChecklistHtml} />

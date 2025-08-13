@@ -24,7 +24,9 @@ import AssignmentModificationCompletionDialog from "./AssignmentModificationComp
 import AssignmentModificationVisibilityButtons from "./AssignmentModificationVisibilityButtons";
 import AssignmentStreamViewer from "./AssignmentStreamViewer";
 import { useAssignmentStreamSections } from "../../hooks/assignmentVersions/useAssignmentStreamSections";
-import UpdatedAssignmentSection from "./UpdatedAssignmentSection";
+import UpdatedAssignmentStructuredEditors, {
+  type AssignmentJson,
+} from "./JsonAssignmentEditor";
 
 interface AssignmentDetailsPageContentProps {
   assignment: AssignmentDetailType | null;
@@ -47,7 +49,9 @@ const AssignmentDetailsPageContent = ({
     string[]
   >([]);
 
-  const [updatedAssignment, setUpdatedAssignment] = useState<string>("");
+  // NEW: JSON state for the editable assignment
+  const [updatedJson, setUpdatedJson] = useState<AssignmentJson | null>(null);
+
   const [isCompletionModalOpen, setIsCompletionModalOpen] =
     useState<boolean>(false);
 
@@ -71,29 +75,8 @@ const AssignmentDetailsPageContent = ({
     cancel: cancelStream,
   } = useAssignmentStreamSections();
 
-  // const handleAssignmentGenerationClick = async () => {
-  //   if (!versionOptions?.version_document_id) return;
-
-  //   try {
-  //     const response = await handlePostAssignmentVersion(
-  //       selectedLearningPathways,
-  //       versionOptions.version_document_id,
-  //       ideasForChange
-  //     );
-
-  //     if (response) {
-  //       const { html_content } = response;
-
-  //       setUpdatedAssignment(html_content);
-  //     }
-  //   } catch (error) {
-  //     console.error("Error generating assignment version:", error);
-  //   }
-  // };
-
   const handleAssignmentGenerationClick = async () => {
     if (!versionOptions?.version_document_id) return;
-    setUpdatedAssignment(""); // clear old concat so the editor doesn’t flash stale content
     try {
       await startStream(
         versionOptions.version_document_id,
@@ -121,36 +104,38 @@ const AssignmentDetailsPageContent = ({
       const {
         assignmentInstructionsHtml,
         stepByStepPlanHtml,
-        myPlanChecklistHtml,
-        motivationalMessageHtml,
         promptsHtml,
-        template,
-        supportTools,
+        supportTools, // now includes toolsHtml, aiPromptingHtml, aiPolicyHtml
+        motivationalMessageHtml,
       } = sections;
 
-      const concat = [
-        assignmentInstructionsHtml,
-        stepByStepPlanHtml,
-        myPlanChecklistHtml,
-        motivationalMessageHtml,
-        promptsHtml,
-        template ? `<h2>${template.title}</h2>${template.bodyHtml}` : undefined,
-        supportTools
-          ? [
-              supportTools.toolsHtml,
-              supportTools.aiPromptingHtml,
-              supportTools.aiPolicyHtml,
-            ]
-              .filter(Boolean)
-              .join("")
-          : undefined,
-      ]
-        .filter(Boolean)
-        .join("\n");
+      // Build the JSON object the PUT endpoint expects
+      const obj = {
+        assignmentInstructionsHtml: assignmentInstructionsHtml ?? "",
+        stepByStepPlanHtml: stepByStepPlanHtml ?? "",
+        promptsHtml: promptsHtml ?? "",
+        supportTools: {
+          toolsHtml: supportTools?.toolsHtml ?? "",
+          aiPromptingHtml: supportTools?.aiPromptingHtml ?? "",
+          aiPolicyHtml: supportTools?.aiPolicyHtml ?? "",
+        },
+        motivationalMessageHtml: motivationalMessageHtml ?? "",
+      };
 
-      if (concat) setUpdatedAssignment(concat);
+      // Only set if all required sections exist
+      if (
+        obj.assignmentInstructionsHtml &&
+        obj.stepByStepPlanHtml &&
+        obj.promptsHtml &&
+        obj.supportTools.toolsHtml !== undefined &&
+        obj.supportTools.aiPromptingHtml !== undefined &&
+        obj.supportTools.aiPolicyHtml !== undefined &&
+        obj.motivationalMessageHtml
+      ) {
+        setUpdatedJson(obj);
+      }
     }
-  }, [streaming]); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [streaming, sections]);
 
   useEffect(() => {
     return () => {
@@ -160,30 +145,55 @@ const AssignmentDetailsPageContent = ({
 
   //  For Updating Assignment
   const handleSaveChangesClick = async () => {
-    if (!versionOptions?.version_document_id) return;
+    console.debug("[Save] clicked", { versionOptions, updatedJson });
+
+    if (!versionOptions?.version_document_id) {
+      toaster.create({
+        description: "No version_document_id available yet.",
+        type: "warning",
+      });
+      return;
+    }
+    if (!updatedJson) {
+      toaster.create({
+        description: "Nothing to save yet (updatedJson is empty).",
+        type: "warning",
+      });
+      return;
+    }
 
     try {
+      console.debug("[Save] calling handlePutAssignmentVersion", {
+        version_document_id: versionOptions.version_document_id,
+      });
+
       const response = await handlePutAssignmentVersion(
         versionOptions.version_document_id,
-        updatedAssignment
+        updatedJson
       );
-      if (response) {
-        const { html_content } = response;
 
-        setUpdatedAssignment(html_content);
+      console.debug("[Save] response", response);
+
+      if (response?.json_content) {
+        setUpdatedJson(response.json_content);
+        toaster.create({ description: "Saved.", type: "success" });
+        setIsCompletionModalOpen(true);
+      } else {
+        toaster.create({
+          description: "Save completed, but no json_content returned.",
+          type: "info",
+        });
       }
-
-      setIsCompletionModalOpen(true);
     } catch (e) {
-      console.error(e);
-      const error = e as {
+      console.error("[Save] error", e);
+      const err = e as {
         message: string;
-        response?: { data: { message: string } };
+        response?: { data?: { message?: string } };
       };
-
-      const errorMessage = error.response?.data.message || error.message;
+      const errorMessage =
+        err.response?.data?.message || err.message || "Unknown error";
       toaster.create({
-        description: `Error creating class: ${errorMessage}`,
+        description: `Save failed: ${errorMessage}`,
         type: "error",
       });
     }
@@ -238,29 +248,6 @@ const AssignmentDetailsPageContent = ({
           </Box>
         )}
 
-        {/* {isNewVisible && (
-          <Box flex="1">
-            <UpdatedAssignmentSection
-              updatedAssignment={updatedAssignment}
-              setUpdatedAssignment={setUpdatedAssignment}
-              loadingAssignmentGeneration={loadingAssignmentGeneration}
-            />
-            <Button
-              borderRadius="xl"
-              mt={4}
-              bg="#bd4f23"
-              color="white"
-              w="100%"
-              disabled={!updatedAssignment}
-              loading={loadingAssignmentUpdate}
-              onClick={handleSaveChangesClick}
-            >
-              Save Changes
-              <Icon as={FaCircleCheck} />
-            </Button>
-          </Box>
-        )} */}
-
         {isNewVisible && (
           <Box flex="1">
             <Box
@@ -283,7 +270,7 @@ const AssignmentDetailsPageContent = ({
                 <Heading>Modified Assignment</Heading>
               </Flex>
             </Box>
-            {!streaming && !updatedAssignment && (
+            {!streaming && !updatedJson && (
               <Textarea
                 pt={4}
                 height="75vh"
@@ -296,17 +283,16 @@ const AssignmentDetailsPageContent = ({
             {/* Live streaming preview */}
             {streaming && (
               <AssignmentStreamViewer
-
                 sections={sections}
                 isLoading={streaming}
               />
             )}
 
             {/* Once complete, allow editing in your existing editor */}
-            {!streaming && updatedAssignment && (
-              <UpdatedAssignmentSection
-                updatedAssignment={updatedAssignment}
-                setUpdatedAssignment={setUpdatedAssignment}
+            {!streaming && updatedJson && (
+              <UpdatedAssignmentStructuredEditors
+                value={updatedJson}
+                onChange={setUpdatedJson}
               />
             )}
 
@@ -316,7 +302,7 @@ const AssignmentDetailsPageContent = ({
               bg="#bd4f23"
               color="white"
               w="100%"
-              disabled={!updatedAssignment}
+              disabled={!updatedJson}
               loading={loadingAssignmentUpdate}
               onClick={handleSaveChangesClick}
             >
