@@ -6,11 +6,14 @@ import {
   Heading,
   HStack,
   Box,
+  Text,
 } from "@chakra-ui/react";
 import type { StudentProfileType } from "../../../types/StudentTypes";
 
 import defaultProfileImage from "../../../assets/default_profile_picture.jpg";
 // import { FaEdit } from "react-icons/fa";
+
+import visionIcon from "../../../assets/map.png";
 
 interface StudentSummaryHeaderCardProps {
   student: StudentProfileType | null;
@@ -22,7 +25,15 @@ const StudentSummaryHeaderCard = ({
   profileLoading,
 }: StudentSummaryHeaderCardProps) => {
   return (
-    <Stack direction={{ base: "column", md: "row" }} mt={6} align={"end"}>
+    <Stack
+      direction={{ base: "column", md: "row" }}
+      mt={6}
+      align={"end"}
+      m={3}
+      p={6}
+      borderRadius="lg"
+      color="white"
+    >
       <Skeleton loading={profileLoading} borderRadius="md">
         <Box
           alignSelf={{ base: "center", md: "flex-start" }}
@@ -38,7 +49,7 @@ const StudentSummaryHeaderCard = ({
         </Box>
       </Skeleton>
 
-      <VStack align="start" w="100%">
+      <VStack align="start" w="100%" bg={"#244D8A"} p={6} borderRadius={"md"}>
         <Skeleton
           loading={profileLoading}
           borderRadius="xl"
@@ -52,6 +63,11 @@ const StudentSummaryHeaderCard = ({
           </Box>
         </Skeleton>
 
+        <HStack align={"center"}>
+          <Image src={visionIcon} h={"40px"} />
+          <Text>{student?.profile_summaries.vision}</Text>
+        </HStack>
+
         <HStack
           flexWrap={{ base: "wrap", md: "nowrap" }}
           align="start"
@@ -63,7 +79,7 @@ const StudentSummaryHeaderCard = ({
             w={{ base: "100%", sm: "auto" }}
           >
             <HStack
-              bg="#244d8a"
+              bg="#BD4F23"
               color="white"
               px={3}
               py={1}
@@ -83,7 +99,7 @@ const StudentSummaryHeaderCard = ({
             w={{ base: "100%", sm: "auto" }}
           >
             <HStack
-              bg="#244d8a"
+              bg="#BD4F23"
               color="white"
               px={3}
               py={1}

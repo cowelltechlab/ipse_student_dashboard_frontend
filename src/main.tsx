@@ -5,6 +5,8 @@ import { Provider } from "./components/ui/provider";
 import { AuthProvider } from "./contexts/authContext";
 
 import "@fontsource-variable/comme/index.css";
+
+
 import "./index.css";
 import { Toaster } from "./components/ui/toaster";
 import { Theme } from "@chakra-ui/react";

@@ -25,6 +25,8 @@ const StudentDocumentBody = ({studentId}: StudentDocumentBodyProps) => {
   });
   const [filterByNeedsRating, setFilterByNeedsRating] =
     useState<boolean>(false);
+  const [filterByNotFinalized, setFilterByNotFinalized] =
+    useState<boolean>(false);
 
   const navigate = useNavigate();
 
@@ -63,6 +65,7 @@ const StudentDocumentBody = ({studentId}: StudentDocumentBodyProps) => {
         dateRange={dateRange}
         setDateRange={setDateRange}
         setFilterByNeedsRating={setFilterByNeedsRating}
+        setFilterByNotFinalized={setFilterByNotFinalized}
       />
 
       <AssignmentsTable
@@ -73,6 +76,7 @@ const StudentDocumentBody = ({studentId}: StudentDocumentBodyProps) => {
         searchTerm={searchTerm}
         onAssignmentClick={handleNavigateAssignmentPage}
         filterByNeedsRating={filterByNeedsRating}
+        filterByNotFinalized={filterByNotFinalized}
       />
     </Box>
   );

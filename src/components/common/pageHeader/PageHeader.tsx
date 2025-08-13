@@ -1,12 +1,18 @@
-import { Heading, HStack, Spacer, AvatarGroup, Avatar, Image } from "@chakra-ui/react";
-
-import { IoIosNotifications } from "react-icons/io";
+import {
+  HStack,
+  Spacer,
+  AvatarGroup,
+  Avatar,
+  Image,
+  Separator,
+} from "@chakra-ui/react";
 
 import CreateNewDropdown from "./CreateNewDropdown";
 import TextButton from "../universal/TextButton";
 import useAuth from "../../../contexts/useAuth";
 
 import profileDefaultIcon from "../../../assets/default_profile_picture.jpg";
+import myChoiceText from "../../../assets/myChoice.png";
 import { useNavigate } from "react-router-dom";
 
 const PageHeader = () => {
@@ -21,13 +27,15 @@ const PageHeader = () => {
 
   return (
     <HStack p={4}>
-      <Image src="/app_icon.svg" alt="MyChoice" boxSize="40px" />
-      <Heading>MyChoice</Heading>
+      <HStack gap={1} onClick={onHomeClick} cursor="pointer">
+        <Image src={myChoiceText} alt="MyChoice" />
+        <Image src="/app_icon.svg" alt="MyChoice" boxSize="65px" />
+      </HStack>
+
       <Spacer />
       <HStack gap={4}>
         <TextButton onClick={onHomeClick}>Home</TextButton>
         <CreateNewDropdown />
-        <IoIosNotifications color="#bd4f23" size={24} />
         <AvatarGroup>
           <Avatar.Root>
             <Avatar.Fallback />
@@ -35,6 +43,7 @@ const PageHeader = () => {
           </Avatar.Root>
         </AvatarGroup>
       </HStack>
+      <Separator my={6} />
     </HStack>
   );
 };

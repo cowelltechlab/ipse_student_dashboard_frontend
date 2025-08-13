@@ -7,13 +7,15 @@ interface AssignmentsFilterButtonsProps {
   setDateRange: React.Dispatch<
     React.SetStateAction<{ from: Date | undefined; to?: Date | undefined }>
   >;
-  setFilterByNeedsRating: (filter: boolean) => void
+  setFilterByNeedsRating: (filter: boolean) => void;
+  setFilterByNotFinalized: (filter: boolean) => void;
 }
 
-const AssignmetsFilterButtons = ({
+const AssignmentsFilterButtons = ({
   dateRange,
   setDateRange,
-  setFilterByNeedsRating
+  setFilterByNeedsRating,
+  setFilterByNotFinalized,
 }: AssignmentsFilterButtonsProps) => {
   const [open, setOpen] = useState(false);
   const [activeButton, setActiveButton] = useState<string>("allAssignments");
@@ -36,21 +38,35 @@ const AssignmetsFilterButtons = ({
         onClick={() => {
           setActiveButton("allAssignments");
           setDateRange({ from: undefined, to: undefined });
-          setFilterByNeedsRating(false)
+          setFilterByNotFinalized(false);
+          setFilterByNeedsRating(false);
         }}
       >
         All Assignments
       </Button>
 
       <Button
+        
         {...getButtonStyles("needsRating")}
         onClick={() => {
           setActiveButton("needsRating");
           setDateRange({ from: undefined, to: undefined });
-          setFilterByNeedsRating(true)
+          setFilterByNotFinalized(false);
+          setFilterByNeedsRating(true);
         }}
       >
         Needs Rating
+      </Button>
+
+      <Button
+        {...getButtonStyles("notFinalized")}
+        onClick={() => {
+          setActiveButton("notFinalized");
+          setDateRange({ from: undefined, to: undefined });
+          setFilterByNotFinalized(true);
+        }}
+      >
+        Not Finalized
       </Button>
 
       <Popover.Root open={open} onOpenChange={(e) => setOpen(e.open)}>
@@ -59,11 +75,11 @@ const AssignmetsFilterButtons = ({
             {...getButtonStyles("dateFilter")}
             onClick={() => {
               setActiveButton("dateFilter");
-              setFilterByNeedsRating(false)
+              setFilterByNeedsRating(false);
+              setFilterByNotFinalized(false);
             }}
-
           >
-            Filter By Date
+            Filter By Modified Date
           </Button>
         </Popover.Trigger>
         <Portal>
@@ -89,4 +105,4 @@ const AssignmetsFilterButtons = ({
   );
 };
 
-export default AssignmetsFilterButtons;
+export default AssignmentsFilterButtons;

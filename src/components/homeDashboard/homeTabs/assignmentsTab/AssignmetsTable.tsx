@@ -8,12 +8,16 @@ import {
   VStack,
   Heading,
   Box,
+  Image,
 } from "@chakra-ui/react";
-import { IoDocumentText } from "react-icons/io5";
 import { useState } from "react";
 import AssignmentsTableRowButtons from "../../../common/assignments/AssignmentsTableRowButtons";
 import type { AssignmentBasicType } from "../../../../types/AssignmentTypes";
 import type { ErrorType } from "../../../../types/ErrorType";
+
+import assignmentIcon from "../../../../assets/contract.png";
+
+import { DotLottieReact } from "@lottiefiles/dotlottie-react";
 
 interface AssignmentsTableProps {
   assignments: AssignmentBasicType[];
@@ -24,6 +28,7 @@ interface AssignmentsTableProps {
   searchTerm: string | null;
   onAssignmentClick?: (studentId: number, assignmentId: number) => void;
   filterByNeedsRating: boolean;
+  filterByNotFinalized: boolean;
 }
 const AssignmentsTable = ({
   assignments,
@@ -34,6 +39,7 @@ const AssignmentsTable = ({
   searchTerm,
   onAssignmentClick,
   filterByNeedsRating,
+  filterByNotFinalized,
 }: AssignmentsTableProps) => {
   const [visibleCount, setVisibleCount] = useState(10);
 
@@ -63,14 +69,30 @@ const AssignmentsTable = ({
 
     const needsRating =
       !filterByNeedsRating ||
-      assignment.rating_status === "Pending" ||
+      (assignment.rating_status === "Pending" && assignment.finalized) ||
       assignment.rating_status === "Partially Rated";
 
-    return inDateRange && matchesSearch && needsRating;
+    const isNotFinalized = !filterByNotFinalized || !assignment.finalized;
+
+    console.log(isNotFinalized)
+
+    return inDateRange && matchesSearch && needsRating && isNotFinalized;
   });
 
   const visibleAssignments = filteredAssignments.slice(0, visibleCount);
   const hasMore = visibleCount < filteredAssignments.length;
+
+  if (assignmentsLoading && assignments.length === 0) {
+    return (
+      <Box maxW={"500px"} mx="auto" textAlign="center" py={10}>
+        <DotLottieReact
+          src="https://lottie.host/98a15e88-6a70-437b-b3c0-4b273bf74d78/plJFoXlfNX.json"
+          loop
+          autoplay
+        />
+      </Box>
+    );
+  }
 
   if (assignmentsError) {
     return (
@@ -87,8 +109,17 @@ const AssignmentsTable = ({
     );
   }
   return (
-    <Stack gap="10" p={4}>
-      <Table.Root size="sm">
+    <Stack gap="10" p={4} maxW="1800px" mx="auto">
+      <Table.Root size="sm" tableLayout="fixed" width="100%">
+        <colgroup>
+          {/* Title + meta column flexes */}
+          <col style={{ width: "auto" }} />
+          {/* Finalized pill column fixed */}
+          <col style={{ width: "200px" }} />
+          {/* Actions column fixed */}
+          <col style={{ width: "160px" }} />
+        </colgroup>
+
         <Table.Body>
           {assignmentsLoading
             ? Array.from({ length: 10 }).map((_, index) => (
@@ -96,67 +127,101 @@ const AssignmentsTable = ({
                   <Table.Cell>
                     <Skeleton height="20px" />
                   </Table.Cell>
+                  <Table.Cell />
+                  <Table.Cell />
                 </Table.Row>
               ))
-            : visibleAssignments.map((assignment) => (
-                <Table.Row
-                  key={assignment.id}
-                  cursor="pointer"
-                  _hover={{ bg: "gray.100" }}
-                  onClick={() => {
-                    if (
-                      assignment.student_id !== undefined &&
-                      assignment.id !== undefined
-                    ) {
-                      onAssignmentClick?.(assignment.student_id, assignment.id);
-                    }
-                  }}
-                >
-                  <Table.Cell>
-                    <HStack align="start" spaceX={3}>
-                      <IoDocumentText size={"25px"} style={{ marginTop: 4 }} />
-                      <VStack align="start" spaceX={0}>
-                        <HStack>
-                          {" "}
-                          <Heading fontSize={"md"} fontWeight="bold">
+            : visibleAssignments.map((assignment) => {
+                const displayDate =
+                  assignment.date_modified ?? assignment.date_created ?? "";
+                const formattedDate = displayDate
+                  ? new Date(displayDate).toLocaleDateString()
+                  : "";
+
+                return (
+                  <Table.Row
+                    key={assignment.id}
+                    cursor="pointer"
+                    _hover={{ bg: "gray.100" }}
+                    onClick={() => {
+                      if (
+                        assignment.student_id !== undefined &&
+                        assignment.id !== undefined
+                      ) {
+                        onAssignmentClick?.(
+                          assignment.student_id,
+                          assignment.id
+                        );
+                      }
+                    }}
+                  >
+                    {/* Column 1: icon + title + meta */}
+                    <Table.Cell>
+                      <HStack align="start">
+                        <Image
+                          src={assignmentIcon}
+                          h="40px"
+                          alt="Assignment icon"
+                        />
+                        <VStack align="start" flex="1" minW={0}>
+                          <Heading fontSize="md" fontWeight="bold">
                             {assignment.title}
                           </Heading>
-                          {assignment.finalized && (
+                          <Text fontSize="sm" color="gray.500">
+                            Student: {assignment.first_name}{" "}
+                            {assignment.last_name}
+                          </Text>
+                          <Text fontSize="sm" color="gray.500">
+                            Date Modified: {formattedDate}
+                          </Text>
+                        </VStack>
+                      </HStack>
+                    </Table.Cell>
+
+                    {/* Column 2: Finalized pill (fixed width) */}
+                    <Table.Cell textAlign="right">
+                      <HStack justifyContent={"right"}>
+                        {assignment.finalized && (
+                          <Box
+                            bg="#244D8A"
+                            px={3}
+                            py={1}
+                            borderRadius="full"
+                            color="white"
+                            fontSize="xs"
+                            fontWeight="semibold"
+                            whiteSpace="nowrap"
+                            display="inline-block"
+                          >
+                            Finalized
+                          </Box>
+                        )}
+                        {assignment.rating_status === "Pending" &&
+                          assignment.finalized && (
                             <Box
-                              bg={"#fbde8e"}
+                              bg="#BD4F23"
                               px={3}
                               py={1}
                               borderRadius="full"
+                              color="white"
+                              fontSize="xs"
+                              fontWeight="semibold"
+                              whiteSpace="nowrap"
+                              display="inline-block"
                             >
-                              Final Version
+                              Needs Rating
                             </Box>
                           )}
-                        </HStack>
+                      </HStack>
+                    </Table.Cell>
 
-                        <Text fontSize="sm" color="gray.500">
-                          Student: {assignment.first_name}{" "}
-                          {assignment.last_name}
-                        </Text>
-                        <Text fontSize="sm" color="gray.500">
-                          Date Modified:{" "}
-                          {assignment.date_modified
-                            ? new Date(
-                                assignment.date_modified
-                              ).toLocaleDateString()
-                            : new Date(
-                                assignment.date_modified ??
-                                  assignment.date_created ??
-                                  ""
-                              ).toLocaleDateString()}
-                        </Text>
-                      </VStack>
-                    </HStack>
-                  </Table.Cell>
-                  <Table.Cell>
-                    <AssignmentsTableRowButtons />
-                  </Table.Cell>
-                </Table.Row>
-              ))}
+                    {/* Column 3: Actions (fixed width) */}
+                    <Table.Cell textAlign="right">
+                      <AssignmentsTableRowButtons />
+                    </Table.Cell>
+                  </Table.Row>
+                );
+              })}
         </Table.Body>
       </Table.Root>
 
@@ -166,7 +231,7 @@ const AssignmentsTable = ({
           alignSelf="center"
           color="#bd4f23"
           cursor="pointer"
-          style={{ textDecoration: "underline" }}
+          textDecoration="underline"
         >
           Load More
         </Text>

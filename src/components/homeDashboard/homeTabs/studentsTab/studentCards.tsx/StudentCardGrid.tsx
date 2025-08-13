@@ -1,12 +1,6 @@
 // StudentCardGrid.tsx
 import { useState, useRef, useEffect } from "react";
-import {
-  Box,
-  Text,
-  VStack,
-  useBreakpointValue,
-  Wrap,
-} from "@chakra-ui/react";
+import { Box, Text, VStack, useBreakpointValue, Wrap } from "@chakra-ui/react";
 import { motion } from "framer-motion";
 import StudentCard from "./StudentCard";
 import TextButton from "../../../../common/universal/TextButton";
@@ -46,11 +40,16 @@ const StudentCardGrid = ({
     }
   }, [loading, students]);
 
+  const hasFetchedRef = useRef(false);
+  useEffect(() => {
+    if (!loading) hasFetchedRef.current = true;
+  }, [loading]);
+
   // Match grid columns to compute rowIndex
   const columns =
     useBreakpointValue({ base: 1, sm: 2, md: 3, lg: 4, xl: 5 }) || 1;
 
-  if (loading) {
+  if (loading || !hasFetchedRef.current || !Array.isArray(students)) {
     return (
       <Box textAlign="center" py={10}>
         <DotLottieReact
