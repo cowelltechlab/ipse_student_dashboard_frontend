@@ -2,6 +2,7 @@
 import { Box, Flex, Heading, Stack, Text, Image } from "@chakra-ui/react";
 // import DOMPurify from 'dompurify'; // optional
 import modifiedAssignmentIcon from "../../assets/icons/note.png";
+import { DotLottieReact } from "@lottiefiles/dotlottie-react";
 
 type Props = {
   sections: {
@@ -56,20 +57,18 @@ export default function AssignmentStreamViewer({ sections, isLoading }: Props) {
         borderColor={"#244d8a"}
         w={"100%"}
       >
-        <Flex
-          bg="#244d8a"
-          color="white"
-          px={4}
-          py={2}
-          align="center"
-          justify="space-between"
-          borderTopRadius="md"
-        >
-          <Image src={modifiedAssignmentIcon} height={"50px"} />
-          <Heading>Modified Assignment</Heading>
-        </Flex>
-        <Heading size="md">Streaming Preview</Heading>
-        {isLoading && <Text color="gray.600">Generating live…</Text>}
+        {isLoading && (
+          <Box textAlign="center" py={10}>
+            <DotLottieReact
+              src="https://lottie.host/749207af-f4b1-47e3-8768-449bb1d7e5c5/66y1ECtWZR.lottie"
+              loop
+              autoplay
+              height={"100px"}
+            />
+            <Text>Generating The Ideal Modified Assignment</Text>
+          </Box>
+
+        )}
 
         <HtmlBlock html={assignmentInstructionsHtml} />
         <HtmlBlock html={stepByStepPlanHtml} />
