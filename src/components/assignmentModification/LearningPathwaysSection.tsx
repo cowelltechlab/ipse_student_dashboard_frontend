@@ -60,7 +60,7 @@ const LearningPathwaysSection = ({
             </Accordion.ItemTrigger>
 
             <Accordion.ItemContent>
-              <Accordion.ItemBody>
+              <Accordion.ItemBody alignContent={"left"}>
                 <Text fontWeight="bold" color={"#244d8a"}>
                   {learningPathway.description}
                 </Text>
@@ -70,20 +70,18 @@ const LearningPathwaysSection = ({
                       <IoMdArrowRoundForward />
                     </List.Indicator>
                     {learningPathway.why_good_existing}
-                    
+                  </List.Item>
+                  <List.Item color={"black"}>
+                    <List.Indicator asChild color="#244d8a">
+                      <IoMdArrowRoundForward />
+                    </List.Indicator>
+                    {learningPathway.why_challenge}
                   </List.Item>
                   <List.Item color={"black"}>
                     <List.Indicator asChild color="#244d8a">
                       <IoMdArrowRoundForward />
                     </List.Indicator>
                     {learningPathway.why_good_growth}
-                  </List.Item>
-                  <List.Item color={"black"}>
-                    <List.Indicator asChild color="#244d8a">
-                      <IoMdArrowRoundForward />
-                    </List.Indicator>
-                    <strong>Challenge:</strong> {learningPathway.why_challenge}
-
                   </List.Item>
                 </List.Root>
               </Accordion.ItemBody>

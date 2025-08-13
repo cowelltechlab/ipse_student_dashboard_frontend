@@ -1,14 +1,16 @@
+import apiClient from "../../services/apiClient";
+
 // hooks/useAssignmentStreamSections.ts
-import { useCallback, useMemo, useRef, useState } from 'react';
+import { useCallback, useMemo, useRef, useState } from "react";
 
 type SectionKey =
-  | 'assignmentInstructionsHtml'
-  | 'stepByStepPlanHtml'
-  | 'myPlanChecklistHtml'
-  | 'motivationalMessageHtml'
-  | 'promptsHtml'
-  | 'supportTools' 
-  | 'template';    
+  | "assignmentInstructionsHtml"
+  | "stepByStepPlanHtml"
+  | "myPlanChecklistHtml"
+  | "motivationalMessageHtml"
+  | "promptsHtml"
+  | "supportTools"
+  | "template";
 
 type SectionsState = {
   assignmentInstructionsHtml?: string;
@@ -35,20 +37,20 @@ function parseEventBlocks(buffer: string): { blocks: string[]; rest: string } {
   const parts = buffer.split(delimiter);
   // If the buffer ends with delimiter, the last part is "", which is a full block end.
   // If not, the last part is an incomplete remainder.
-  const rest = parts.pop() ?? '';
+  const rest = parts.pop() ?? "";
   return { blocks: parts, rest };
 }
 
 export function useAssignmentStreamSections() {
   const [sections, setSections] = useState<SectionsState>({});
-  const [rawLog, setRawLog] = useState<string>(''); // optional: for debugging/visibility
+  const [rawLog, setRawLog] = useState<string>(""); // optional: for debugging/visibility
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const abortRef = useRef<AbortController | null>(null);
 
   const reset = useCallback(() => {
     setSections({});
-    setRawLog('');
+    setRawLog("");
     setError(null);
   }, []);
 
@@ -58,38 +60,49 @@ export function useAssignmentStreamSections() {
   }, []);
 
   const start = useCallback(
-    async (assignmentId: string, selectedOptions: string[], additionalIdeas: string) => {
+    async (
+      assignmentId: string,
+      selectedOptions: string[],
+      additionalIdeas: string
+    ) => {
       reset();
       setIsLoading(true);
       const controller = new AbortController();
       abortRef.current = controller;
 
       try {
-        const res = await fetch(`http://localhost:8000/assignment-generation/${assignmentId}/stream`, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            'Accept': 'text/event-stream',
-          },
-          body: JSON.stringify({
-            selected_options: selectedOptions,
-            additional_edit_suggestions: additionalIdeas ?? '',
-          }),
-          signal: controller.signal,
-        });
+        const res = await fetch(
+          `${apiClient.defaults.baseURL}assignment-generation/${assignmentId}/stream`,
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              Accept: "text/event-stream",
+              Authorization: `Bearer ${
+                localStorage.getItem("authToken") ?? ""
+              }`,
+            },
+            body: JSON.stringify({
+              selected_options: selectedOptions,
+              additional_edit_suggestions: additionalIdeas ?? "",
+            }),
+            signal: controller.signal,
+          }
+        );
 
-        if (!res.ok || !res.body) throw new Error(`HTTP ${res.status}`);
+        if (res.status < 200 || res.status >= 300 || !res.body)
+          throw new Error(`HTTP ${res.status}`);
 
         const reader = res.body.getReader();
         const decoder = new TextDecoder();
-        let buffer = '';
+        let buffer = "";
 
         while (true) {
           const { value, done } = await reader.read();
           if (done) break;
 
           buffer += decoder.decode(value, { stream: true });
-          setRawLog(prev => prev + decoder.decode(value, { stream: false })); // optional
+          setRawLog((prev) => prev + decoder.decode(value, { stream: false })); // optional
 
           // Extract complete SSE event blocks
           const { blocks, rest } = parseEventBlocks(buffer);
@@ -99,12 +112,12 @@ export function useAssignmentStreamSections() {
             // A block has lines like "event: section" and "data: {...}"
             // There can be multiple data: lines; here we assume one.
             let eventType: string | null = null;
-            let dataJson = '';
+            let dataJson = "";
 
             for (const line of block.split(/\r?\n/)) {
-              if (line.startsWith('event:')) {
+              if (line.startsWith("event:")) {
                 eventType = line.slice(6).trim();
-              } else if (line.startsWith('data:')) {
+              } else if (line.startsWith("data:")) {
                 // everything after "data:" (trim left space)
                 dataJson += line.slice(5).trim();
               }
@@ -112,15 +125,23 @@ export function useAssignmentStreamSections() {
 
             if (!eventType) continue;
 
-            if (eventType === 'section') {
+            if (eventType === "section") {
               // { "key": "...", "html": "..." } OR nested payloads if needed
               const payload = JSON.parse(dataJson) as
-                | { key: Exclude<SectionKey, 'supportTools' | 'template'>; html: string }
-                | { key: 'supportTools'; toolsHtml: string; aiPolicyHtml: string; aiPromptingHtml?: string }
-                | { key: 'template'; title: string; bodyHtml: string };
+                | {
+                    key: Exclude<SectionKey, "supportTools" | "template">;
+                    html: string;
+                  }
+                | {
+                    key: "supportTools";
+                    toolsHtml: string;
+                    aiPolicyHtml: string;
+                    aiPromptingHtml?: string;
+                  }
+                | { key: "template"; title: string; bodyHtml: string };
 
-              setSections(prev => {
-                if (payload.key === 'supportTools') {
+              setSections((prev) => {
+                if (payload.key === "supportTools") {
                   const { toolsHtml, aiPolicyHtml, aiPromptingHtml } = payload;
                   return {
                     ...prev,
@@ -131,7 +152,7 @@ export function useAssignmentStreamSections() {
                     },
                   };
                 }
-                if (payload.key === 'template') {
+                if (payload.key === "template") {
                   const { title, bodyHtml } = payload;
                   return {
                     ...prev,
@@ -141,33 +162,42 @@ export function useAssignmentStreamSections() {
                 // simple key -> html
                 return { ...prev, [payload.key]: payload.html };
               });
-            } else if (eventType === 'complete') {
+            } else if (eventType === "complete") {
               // Optional: backend sends the full object; you can merge to be safe
               try {
                 const doneObj = JSON.parse(dataJson) as {
                   object?: Partial<SectionsState> & Record<string, unknown>;
                 };
                 if (doneObj?.object) {
-                  setSections(prev => ({ ...prev, ...doneObj.object }));
+                  setSections((prev) => ({ ...prev, ...doneObj.object }));
                 }
               } catch {
                 // ignore
               }
               setIsLoading(false);
-            } else if (eventType === 'error') {
+            } else if (eventType === "error") {
               try {
                 const e = JSON.parse(dataJson);
-                setError(e?.message ?? 'Stream error');
+                setError(e?.message ?? "Stream error");
               } catch {
-                setError('Stream error');
+                setError("Stream error");
               }
               setIsLoading(false);
             }
           }
         }
-      } catch (e: any) {
-        if (e?.name !== 'AbortError') {
-          setError(e?.message || 'Stream failed');
+      } catch (e: unknown) {
+        if (
+          typeof e === "object" &&
+          e !== null &&
+          "name" in e &&
+          (e as { name?: string }).name !== "AbortError"
+        ) {
+          setError((e as { message?: string }).message || "Stream failed");
+        } else if (typeof e === "string") {
+          setError(e);
+        } else {
+          setError("Stream failed");
         }
       } finally {
         setIsLoading(false);
