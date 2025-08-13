@@ -96,9 +96,6 @@ const AssignmentsTable = ({
                   <Table.Cell>
                     <Skeleton height="20px" />
                   </Table.Cell>
-                  <Table.Cell>
-                    <Skeleton height="20px" />
-                  </Table.Cell>
                 </Table.Row>
               ))
             : visibleAssignments.map((assignment) => (

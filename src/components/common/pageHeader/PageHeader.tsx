@@ -1,4 +1,4 @@
-import { Heading, HStack, Spacer, AvatarGroup, Avatar } from "@chakra-ui/react";
+import { Heading, HStack, Spacer, AvatarGroup, Avatar, Image } from "@chakra-ui/react";
 
 import { IoIosNotifications } from "react-icons/io";
 
@@ -21,7 +21,8 @@ const PageHeader = () => {
 
   return (
     <HStack p={4}>
-      <Heading>IPSE Student Dashboard</Heading>
+      <Image src="/app_icon.svg" alt="MyChoice" boxSize="40px" />
+      <Heading>MyChoice</Heading>
       <Spacer />
       <HStack gap={4}>
         <TextButton onClick={onHomeClick}>Home</TextButton>

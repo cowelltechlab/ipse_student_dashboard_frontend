@@ -1,0 +1,5 @@
+/* This targets the actual text area inside React Quill */
+.ql-editor {
+  font-size: 1.1rem;   /* change as needed */
+  line-height: 1.6;    /* optional for better readability */
+}

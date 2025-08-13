@@ -1,6 +1,6 @@
-"use client"
+"use client";
 
-import { createSystem, defaultConfig, defineStyle } from "@chakra-ui/react"
+import { createSystem, defaultConfig, defineStyle } from "@chakra-ui/react";
 
 export const system = createSystem(defaultConfig, {
   theme: {
@@ -11,7 +11,7 @@ export const system = createSystem(defaultConfig, {
       },
     },
   },
-})
+});
 
 export const floatingStyles = defineStyle({
   pos: "absolute",
@@ -32,4 +32,4 @@ export const floatingStyles = defineStyle({
     top: "-3",
     insetStart: "2",
   },
-})
+});

@@ -65,13 +65,14 @@ const LearningPathwaysSection = ({
                   {learningPathway.description}
                 </Text>
                 <List.Root mt={2}>
-                  <List.Item>
+                  <List.Item color={"black"}>
                     <List.Indicator asChild color="#244d8a">
                       <IoMdArrowRoundForward />
                     </List.Indicator>
                     {learningPathway.why_good_existing}
+                    
                   </List.Item>
-                  <List.Item>
+                  <List.Item color={"black"}>
                     <List.Indicator asChild color="#244d8a">
                       <IoMdArrowRoundForward />
                     </List.Indicator>

@@ -1,18 +1,19 @@
-import { Box, HStack, Button, Icon } from "@chakra-ui/react";
+import { Box, HStack, Button, Icon, Text } from "@chakra-ui/react";
 import type { AssignmentDetailType } from "../../types/AssignmentTypes";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 import { FaCircleCheck } from "react-icons/fa6";
 import useAssignmentVersionOptions from "../../hooks/assignmentVersions/useAssignmentVersionOptions";
 import OriginalAssignmentSection from "./OriginalAssignmentSection";
 import ModificationOptionsSection from "./ModificationOptionsSection";
 import { IoArrowForwardCircle } from "react-icons/io5";
-import usePostAssignmentVersion from "../../hooks/assignmentVersions/usePostAssignmentVerstion";
 import usePutAssignmentVersion from "../../hooks/assignmentVersions/usePutAssignmentVersion";
 import { toaster } from "../ui/toaster";
 import AssignmentModificationCompletionDialog from "./AssignmentModificationCompletionDialog";
-import UpdatedAssignmentSection from "./UpdatedAssignmentSection";
 import AssignmentModificationVisibilityButtons from "./AssignmentModificationVisibilityButtons";
+import AssignmentStreamViewer from "./AssignmentStreamViewer";
+import RichTextEditor from "../common/universal/EditableHTMLContentBox";
+import { useAssignmentStreamSections } from "../../hooks/assignmentVersions/useAssignmentStreamSections";
 
 interface AssignmentDetailsPageContentProps {
   assignment: AssignmentDetailType | null;
@@ -39,37 +40,112 @@ const AssignmentDetailsPageContent = ({
   const [isCompletionModalOpen, setIsCompletionModalOpen] =
     useState<boolean>(false);
 
-    const { versionOptions, loading: versionsLoading } =
-      useAssignmentVersionOptions(assignment?.assignment_id);
+  const { versionOptions, loading: versionsLoading } =
+    useAssignmentVersionOptions(assignment?.assignment_id);
 
-//   const { versionOptions, loading: versionsLoading } =
-//     useAssignmentVersionOptions();
+  //   const { versionOptions, loading: versionsLoading } =
+  //     useAssignmentVersionOptions();
 
-  const { handlePostAssignmentVersion, loading: loadingAssignmentGeneration } =
-    usePostAssignmentVersion();
+  // const { handlePostAssignmentVersion, loading: loadingAssignmentGeneration } =
+  //   usePostAssignmentVersion();
 
   const { handlePutAssignmentVersion, loading: loadingAssignmentUpdate } =
     usePutAssignmentVersion();
 
+  const {
+    sections,
+    isLoading: streaming,
+    error: streamError,
+    start: startStream,
+    cancel: cancelStream,
+  } = useAssignmentStreamSections();
+
+  // const handleAssignmentGenerationClick = async () => {
+  //   if (!versionOptions?.version_document_id) return;
+
+  //   try {
+  //     const response = await handlePostAssignmentVersion(
+  //       selectedLearningPathways,
+  //       versionOptions.version_document_id,
+  //       ideasForChange
+  //     );
+
+  //     if (response) {
+  //       const { html_content } = response;
+
+  //       setUpdatedAssignment(html_content);
+  //     }
+  //   } catch (error) {
+  //     console.error("Error generating assignment version:", error);
+  //   }
+  // };
+
   const handleAssignmentGenerationClick = async () => {
     if (!versionOptions?.version_document_id) return;
-
+    setUpdatedAssignment(""); // clear old concat so the editor doesn’t flash stale content
     try {
-      const response = await handlePostAssignmentVersion(
-        selectedLearningPathways,
+      await startStream(
         versionOptions.version_document_id,
+        selectedLearningPathways,
         ideasForChange
       );
+    } catch (e) {
+      console.error(e);
+      const error = e as {
+        message: string;
+        response?: { data: { message: string } };
+      };
 
-      if (response) {
-        const { html_content } = response;
-
-        setUpdatedAssignment(html_content);
-      }
-    } catch (error) {
-      console.error("Error generating assignment version:", error);
+      const errorMessage = error.response?.data.message || error.message;
+      toaster.create({
+        description: `Error creating class: ${errorMessage}`,
+        type: "error",
+      });
     }
   };
+
+  // Optional: when streaming is done, stitch everything into one HTML for editing
+  useEffect(() => {
+    if (!streaming) {
+      const {
+        assignmentInstructionsHtml,
+        stepByStepPlanHtml,
+        myPlanChecklistHtml,
+        motivationalMessageHtml,
+        promptsHtml,
+        template,
+        supportTools,
+      } = sections;
+
+      const concat = [
+        assignmentInstructionsHtml,
+        stepByStepPlanHtml,
+        myPlanChecklistHtml,
+        motivationalMessageHtml,
+        promptsHtml,
+        template ? `<h2>${template.title}</h2>${template.bodyHtml}` : undefined,
+        supportTools
+          ? [
+              supportTools.toolsHtml,
+              supportTools.aiPromptingHtml,
+              supportTools.aiPolicyHtml,
+            ]
+              .filter(Boolean)
+              .join("")
+          : undefined,
+      ]
+        .filter(Boolean)
+        .join("\n");
+
+      if (concat) setUpdatedAssignment(concat);
+    }
+  }, [streaming]); // eslint-disable-line react-hooks/exhaustive-deps
+
+  useEffect(() => {
+    return () => {
+      cancelStream();
+    };
+  }, [cancelStream]);
 
   //  For Updating Assignment
   const handleSaveChangesClick = async () => {
@@ -142,7 +218,7 @@ const AssignmentDetailsPageContent = ({
               bg="#bd4f23"
               color="white"
               w="100%"
-              disabled={selectedLearningPathways.length < 1}
+              disabled={selectedLearningPathways.length < 1 || streaming}
               onClick={handleAssignmentGenerationClick}
             >
               Generate Assignment
@@ -151,7 +227,7 @@ const AssignmentDetailsPageContent = ({
           </Box>
         )}
 
-        {isNewVisible && (
+        {/* {isNewVisible && (
           <Box flex="1">
             <UpdatedAssignmentSection
               updatedAssignment={updatedAssignment}
@@ -171,6 +247,46 @@ const AssignmentDetailsPageContent = ({
               Save Changes
               <Icon as={FaCircleCheck} />
             </Button>
+          </Box>
+        )} */}
+
+        {isNewVisible && (
+          <Box flex="1">
+            {/* Live streaming preview */}
+            {streaming && (
+              <AssignmentStreamViewer
+                sections={sections}
+                isLoading={streaming}
+              />
+            )}
+
+            {/* Once complete, allow editing in your existing editor */}
+            {!streaming && updatedAssignment && (
+              <RichTextEditor
+                value={updatedAssignment}
+                onChange={(newHtml) => setUpdatedAssignment(newHtml)}
+              />
+            )}
+
+            <Button
+              borderRadius="xl"
+              mt={4}
+              bg="#bd4f23"
+              color="white"
+              w="100%"
+              disabled={!updatedAssignment}
+              loading={loadingAssignmentUpdate}
+              onClick={handleSaveChangesClick}
+            >
+              Save Changes
+              <Icon as={FaCircleCheck} />
+            </Button>
+
+            {streamError && (
+              <Text color="red.500" mt={2}>
+                {streamError}
+              </Text>
+            )}
           </Box>
         )}
       </HStack>
