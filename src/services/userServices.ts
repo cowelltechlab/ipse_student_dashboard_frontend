@@ -27,6 +27,7 @@ export const postUserInvite = async (userData: {
   google_email: string;
   school_email: string;
   role_ids: string[];
+  student_type?: "A" | "B";
 }): Promise<UserType> => {
   const response = await apiClient.post("/users/invite", userData);
   return response.data;

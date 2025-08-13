@@ -78,6 +78,13 @@ const LearningPathwaysSection = ({
                     </List.Indicator>
                     {learningPathway.why_good_growth}
                   </List.Item>
+                  <List.Item color={"black"}>
+                    <List.Indicator asChild color="#244d8a">
+                      <IoMdArrowRoundForward />
+                    </List.Indicator>
+                    <strong>Challenge:</strong> {learningPathway.why_challenge}
+
+                  </List.Item>
                 </List.Root>
               </Accordion.ItemBody>
             </Accordion.ItemContent>

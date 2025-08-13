@@ -27,7 +27,7 @@ const CreateUserDialog = ({
   open,
   setOpen,
   refetchTrigger = 0,
-  setRefetchTrigger= () =>  refetchTrigger + 1,
+  setRefetchTrigger = () => refetchTrigger + 1,
 }: DisplayCreateUserDialogProps) => {
   const { roles } = useRoles();
   const { handlePostUserInvite } = usePostUserInvite();
@@ -35,13 +35,15 @@ const CreateUserDialog = ({
   const [newUserRoleIds, setNewUserRoleIds] = useState<string[]>([]);
   const [newUserGoogleEmail, setNewUserGoogleEmail] = useState<string>("");
   const [newUserGTEmail, setNewUserGTEmail] = useState<string>("");
+  const [studentType, setStudentType] = useState<"A" | "B" | "">("");
 
   const handleCreateUser = async () => {
     try {
       await handlePostUserInvite(
         newUserGoogleEmail,
         newUserGTEmail,
-        newUserRoleIds
+        newUserRoleIds,
+        studentType
       );
       toaster.create({
         description: `User invited successfully.`,
@@ -102,6 +104,8 @@ const CreateUserDialog = ({
                 newUserRoleIds={newUserRoleIds}
                 setNewUserRoleIds={setNewUserRoleIds}
                 roles={roles}
+                studentType={studentType}
+                setStudentType={setStudentType}
               />
             </Dialog.Body>
             <Dialog.Footer m={4}>

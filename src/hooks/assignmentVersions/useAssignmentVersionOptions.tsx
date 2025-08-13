@@ -17,6 +17,8 @@ const useAssignmentVersionOptions = (assignmentId?: number) => {
       try {
         setLoading(true);
         const response = await getAssignmentVersionOptions(assignmentId);
+        console.log(response);
+
         setsetVersionOptions(response);
       } catch (e) {
         console.error(e);

@@ -1,6 +1,17 @@
-import { Box, HStack, Button, Icon, Text } from "@chakra-ui/react";
+import {
+  Box,
+  HStack,
+  Button,
+  Icon,
+  Text,
+  Flex,
+  Image,
+  Heading,
+  Textarea,
+} from "@chakra-ui/react";
 import type { AssignmentDetailType } from "../../types/AssignmentTypes";
 import { useState, useEffect } from "react";
+import modifiedAssignmentIcon from "../../assets/icons/note.png";
 
 import { FaCircleCheck } from "react-icons/fa6";
 import useAssignmentVersionOptions from "../../hooks/assignmentVersions/useAssignmentVersionOptions";
@@ -12,8 +23,8 @@ import { toaster } from "../ui/toaster";
 import AssignmentModificationCompletionDialog from "./AssignmentModificationCompletionDialog";
 import AssignmentModificationVisibilityButtons from "./AssignmentModificationVisibilityButtons";
 import AssignmentStreamViewer from "./AssignmentStreamViewer";
-import RichTextEditor from "../common/universal/EditableHTMLContentBox";
 import { useAssignmentStreamSections } from "../../hooks/assignmentVersions/useAssignmentStreamSections";
+import UpdatedAssignmentSection from "./UpdatedAssignmentSection";
 
 interface AssignmentDetailsPageContentProps {
   assignment: AssignmentDetailType | null;
@@ -252,9 +263,40 @@ const AssignmentDetailsPageContent = ({
 
         {isNewVisible && (
           <Box flex="1">
+            <Box
+              borderWidth="1px"
+              borderRadius="md"
+              borderColor={"#244d8a"}
+              w={"100%"}
+            >
+              <Flex
+                bg="#244d8a"
+                color="white"
+                px={4}
+                py={2}
+                align="center"
+                justify="space-between"
+                borderTopRadius="md"
+              >
+                {" "}
+                <Image src={modifiedAssignmentIcon} height={"50px"} />
+                <Heading>Modified Assignment</Heading>
+              </Flex>
+            </Box>
+            {!streaming && !updatedAssignment && (
+              <Textarea
+                pt={4}
+                height="75vh"
+                value="Select Changes to Generate Modified Assignment"
+                fontSize={"md"}
+                disabled
+              />
+            )}
+
             {/* Live streaming preview */}
             {streaming && (
               <AssignmentStreamViewer
+
                 sections={sections}
                 isLoading={streaming}
               />
@@ -262,9 +304,9 @@ const AssignmentDetailsPageContent = ({
 
             {/* Once complete, allow editing in your existing editor */}
             {!streaming && updatedAssignment && (
-              <RichTextEditor
-                value={updatedAssignment}
-                onChange={(newHtml) => setUpdatedAssignment(newHtml)}
+              <UpdatedAssignmentSection
+                updatedAssignment={updatedAssignment}
+                setUpdatedAssignment={setUpdatedAssignment}
               />
             )}
 

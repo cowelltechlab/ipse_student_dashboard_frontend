@@ -7,12 +7,12 @@ import {
   Textarea,
   Flex,
   SkeletonText,
-  Skeleton,
 } from "@chakra-ui/react";
 import LearningPathwaysSection from "./LearningPathwaysSection";
 import thinkingIcon from "../../assets/icons/design-thinking.png";
 import skillsIcon from "../../assets/icons/logical-thinking.png";
 import type { AssignmentVersionData } from "../../types/AssignmentModificationTypes";
+import { DotLottieReact } from "@lottiefiles/dotlottie-react";
 
 interface ModificationOptionsSectionProps {
   versionOptions: AssignmentVersionData | null;
@@ -87,8 +87,16 @@ const ModificationOptionsSection = ({
         <Box px={4} py={3} bg="white">
           {versionOptionsLoading ? (
             // Use a solid loading block
-            <Skeleton height="220px" borderRadius="md" />
-          ) : versionOptions?.learning_pathways &&
+          
+            <>  <DotLottieReact
+              src="https://lottie.host/104be41c-8b93-4940-8401-cc1aa0de874e/8XCNDsALKV.lottie"
+              loop
+              autoplay
+            />
+            <Text>Hang on! Generating the Perfect Learning Pathways...</Text>
+            </>
+          ) : // <Skeleton height="220px" borderRadius="md" />
+          versionOptions?.learning_pathways &&
             versionOptions.learning_pathways.length > 0 ? (
             <LearningPathwaysSection
               learningPathways={versionOptions.learning_pathways}
