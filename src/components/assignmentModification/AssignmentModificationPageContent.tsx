@@ -27,6 +27,7 @@ import { useAssignmentStreamSections } from "../../hooks/assignmentVersions/useA
 import UpdatedAssignmentStructuredEditors, {
   type AssignmentJson,
 } from "./JsonAssignmentEditor";
+import LoadingGenerationLottie from "./LoadingGenerationLottie";
 
 interface AssignmentDetailsPageContentProps {
   assignment: AssignmentDetailType | null;
@@ -49,6 +50,9 @@ const AssignmentDetailsPageContent = ({
     string[]
   >([]);
 
+  const [hasGenerated, setHasGenerated] = useState(false);
+  const [generationKey, setGenerationKey] = useState(0);
+
   // NEW: JSON state for the editable assignment
   const [updatedJson, setUpdatedJson] = useState<AssignmentJson | null>(null);
 
@@ -57,12 +61,6 @@ const AssignmentDetailsPageContent = ({
 
   const { versionOptions, loading: versionsLoading } =
     useAssignmentVersionOptions(assignment?.assignment_id);
-
-  //   const { versionOptions, loading: versionsLoading } =
-  //     useAssignmentVersionOptions();
-
-  // const { handlePostAssignmentVersion, loading: loadingAssignmentGeneration } =
-  //   usePostAssignmentVersion();
 
   const { handlePutAssignmentVersion, loading: loadingAssignmentUpdate } =
     usePutAssignmentVersion();
@@ -75,8 +73,14 @@ const AssignmentDetailsPageContent = ({
     cancel: cancelStream,
   } = useAssignmentStreamSections();
 
+  const hydrating = hasGenerated && !streaming && updatedJson === null;
+
   const handleAssignmentGenerationClick = async () => {
     if (!versionOptions?.version_document_id) return;
+
+    setHasGenerated(true);
+    setUpdatedJson(null);
+
     try {
       await startStream(
         versionOptions.version_document_id,
@@ -98,18 +102,17 @@ const AssignmentDetailsPageContent = ({
     }
   };
 
-  // Optional: when streaming is done, stitch everything into one HTML for editing
+  // When streaming is done, stitch everything into one HTML for editing
   useEffect(() => {
-    if (!streaming) {
+    if (!streaming && hasGenerated) {
       const {
         assignmentInstructionsHtml,
         stepByStepPlanHtml,
         promptsHtml,
-        supportTools, // now includes toolsHtml, aiPromptingHtml, aiPolicyHtml
+        supportTools,
         motivationalMessageHtml,
       } = sections;
 
-      // Build the JSON object the PUT endpoint expects
       const obj = {
         assignmentInstructionsHtml: assignmentInstructionsHtml ?? "",
         stepByStepPlanHtml: stepByStepPlanHtml ?? "",
@@ -122,20 +125,10 @@ const AssignmentDetailsPageContent = ({
         motivationalMessageHtml: motivationalMessageHtml ?? "",
       };
 
-      // Only set if all required sections exist
-      if (
-        obj.assignmentInstructionsHtml &&
-        obj.stepByStepPlanHtml &&
-        obj.promptsHtml &&
-        obj.supportTools.toolsHtml !== undefined &&
-        obj.supportTools.aiPromptingHtml !== undefined &&
-        obj.supportTools.aiPolicyHtml !== undefined &&
-        obj.motivationalMessageHtml
-      ) {
-        setUpdatedJson(obj);
-      }
+      setUpdatedJson(obj);
+      setGenerationKey((k) => k + 1);
     }
-  }, [streaming, sections]);
+  }, [streaming, sections, hasGenerated]);
 
   useEffect(() => {
     return () => {
@@ -249,13 +242,18 @@ const AssignmentDetailsPageContent = ({
         )}
 
         {isNewVisible && (
-          <Box flex="1">
+          <Box flex="1" display="flex" flexDir="column">
+            {/* Card shell */}
             <Box
               borderWidth="1px"
               borderRadius="md"
-              borderColor={"#244d8a"}
-              w={"100%"}
+              borderColor="#244d8a"
+              w="100%"
+              display="flex"
+              flexDir="column"
+              h="80vh"
             >
+              {/* Header */}
               <Flex
                 bg="#244d8a"
                 color="white"
@@ -264,57 +262,70 @@ const AssignmentDetailsPageContent = ({
                 align="center"
                 justify="space-between"
                 borderTopRadius="md"
+                flexShrink={0}
               >
-                {" "}
-                <Image src={modifiedAssignmentIcon} height={"50px"} />
-                <Heading>Modified Assignment</Heading>
+                <Image src={modifiedAssignmentIcon} height="50px" />
+                <Heading size="md">Modified Assignment</Heading>
               </Flex>
+
+              {/* Scrollable body */}
+              <Box flex="1"  p={3} >
+                {streaming && (
+                  <AssignmentStreamViewer
+                    sections={sections}
+                    isLoading={streaming}
+                  />
+                )}
+
+                {!streaming && hydrating && <LoadingGenerationLottie />}
+
+                {!streaming && !hydrating && !updatedJson && (
+                  <Textarea
+                    pt={4}
+                    // remove fixed 75vh — the container controls height now
+                    value="Select Changes to Generate Modified Assignment"
+                    fontSize="md"
+                    disabled
+                  />
+                )}
+
+                {!streaming && !hydrating && updatedJson && (
+                  <UpdatedAssignmentStructuredEditors
+                    key={`gen-${generationKey}`}
+                    value={updatedJson}
+                    onChange={setUpdatedJson}
+                  />
+                )}
+
+                {streamError && (
+                  <Text color="red.500" mt={2}>
+                    {streamError}
+                  </Text>
+                )}
+              </Box>
+
+              {/* Footer */}
+              <Box
+                p={3}
+                borderTopWidth="1px"
+                borderColor="#eaeef4"
+                flexShrink={0}
+              >
+                <Button
+                  borderRadius="xl"
+                  mt={4}
+                  bg="#bd4f23"
+                  color="white"
+                  w="100%"
+                  disabled={!updatedJson}
+                  loading={loadingAssignmentUpdate}
+                  onClick={handleSaveChangesClick}
+                >
+                  Save Changes
+                  <Icon as={FaCircleCheck} />
+                </Button>
+              </Box>
             </Box>
-            {!streaming && !updatedJson && (
-              <Textarea
-                pt={4}
-                height="75vh"
-                value="Select Changes to Generate Modified Assignment"
-                fontSize={"md"}
-                disabled
-              />
-            )}
-
-            {/* Live streaming preview */}
-            {streaming && (
-              <AssignmentStreamViewer
-                sections={sections}
-                isLoading={streaming}
-              />
-            )}
-
-            {/* Once complete, allow editing in your existing editor */}
-            {!streaming && updatedJson && (
-              <UpdatedAssignmentStructuredEditors
-                value={updatedJson}
-                onChange={setUpdatedJson}
-              />
-            )}
-
-            <Button
-              borderRadius="xl"
-              mt={4}
-              bg="#bd4f23"
-              color="white"
-              w="100%"
-              disabled={!updatedJson}
-              loading={loadingAssignmentUpdate}
-              onClick={handleSaveChangesClick}
-            >
-              Save Changes
-              <Icon as={FaCircleCheck} />
-            </Button>
-
-            {streamError && (
-              <Text color="red.500" mt={2}>
-                {streamError}
-              </Text>
-            )}
           </Box>
         )}
       </HStack>

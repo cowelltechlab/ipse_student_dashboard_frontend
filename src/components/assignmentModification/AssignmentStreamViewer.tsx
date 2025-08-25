@@ -1,7 +1,5 @@
-// components/AssignmentStreamViewer.tsx
-import { Box, Heading, Stack, Text } from "@chakra-ui/react";
-// import DOMPurify from 'dompurify'; // optional
-import { DotLottieReact } from "@lottiefiles/dotlottie-react";
+import { Box, Heading, Stack } from "@chakra-ui/react";
+import LoadingGenerationLottie from "./LoadingGenerationLottie";
 
 type Props = {
   sections: {
@@ -23,11 +21,42 @@ type Props = {
   isLoading: boolean;
 };
 
+const ProseBox = (props: React.ComponentProps<typeof Box>) => (
+  <Box
+    css={{
+      "& h1": {
+        fontSize: "4xl",
+        fontWeight: "bold",
+        lineHeight: "short",
+        mt: 6,
+        mb: 3,
+      },
+      "& h2": { fontSize: "3xl", fontWeight: "semibold", mt: 5, mb: 2 },
+      "& h3": { fontSize: "2xl", fontWeight: "semibold", mt: 4, mb: 2 },
+      "& h4": { fontSize: "xl", fontWeight: "semibold", mt: 3, mb: 2 },
+      "& p": { mt: 2, mb: 2 },
+      "& ul": { pl: 6, listStyle: "disc", my: 2 },
+      "& ol": { pl: 6, listStyle: "decimal", my: 2 },
+      "& li": { my: 1 },
+      "& a": { color: "blue.600", textDecoration: "underline" },
+      "& code": { px: 1, py: 0.5, borderRadius: "md", bg: "gray.100" },
+      "& pre": {
+        p: 3,
+        borderRadius: "md",
+        bg: "gray.800",
+        color: "white",
+        overflowX: "auto",
+        my: 3,
+      },
+    }}
+    {...props}
+  />
+);
+
 const HtmlBlock = ({ html }: { html?: string }) => {
   if (!html) return null;
-  // const safe = DOMPurify.sanitize(html);
   return (
-    <Box
+    <ProseBox
       px={4}
       py={3}
       borderWidth="1px"
@@ -51,27 +80,16 @@ export default function AssignmentStreamViewer({ sections, isLoading }: Props) {
   return (
     <Stack spaceY={6}>
       <Box
-        borderWidth="1px"
-        borderRadius="md"
-        borderColor={"#244d8a"}
+        // borderWidth="1px"
+        // borderRadius="md"
+        // borderColor={"#244d8a"}
         w={"100%"}
+        h={"66vh"
+          
+        }
+        overflow={"auto"}
       >
-        {isLoading && (
-          <Box textAlign="center" py={8} px={4}>
-            <DotLottieReact
-              src="https://lottie.host/749207af-f4b1-47e3-8768-449bb1d7e5c5/66y1ECtWZR.lottie"
-              loop
-              autoplay
-              height="100px"
-            />
-            <Text fontSize="lg" fontWeight="semibold" color="gray.700" mt={4}>
-              Generating the Ideal Modified Assignment
-            </Text>
-            <Text fontSize="sm" color="gray.500" mt={1}>
-              This may take a few moments...
-            </Text>
-          </Box>
-        )}
+        {isLoading && <LoadingGenerationLottie />}
         <HtmlBlock html={assignmentInstructionsHtml} />
         <HtmlBlock html={stepByStepPlanHtml} />
         <HtmlBlock html={myPlanChecklistHtml} />

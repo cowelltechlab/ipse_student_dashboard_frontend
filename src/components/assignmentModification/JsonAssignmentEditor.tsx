@@ -32,7 +32,7 @@ export default function UpdatedAssignmentStructuredEditors({
 
   return (
     // Set a max height for the whole section and make it scrollable
-    <Box maxH="78vh" overflowY="auto" pr={2}>
+    <Box maxH="66vh" overflowY="auto" pr={2}>
       <VStack align="stretch" gap={6}>
         <Box>
           <Heading size="sm" mb={2}>Assignment Instructions</Heading>

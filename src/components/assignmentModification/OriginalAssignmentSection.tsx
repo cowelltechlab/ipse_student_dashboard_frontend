@@ -20,8 +20,8 @@ const OriginalAssignmentSection = ({
   assignmentLoading,
 }: OriginalAssignmentSectionProps) => {
   return (
-    <VStack >
-      <Box borderWidth="1px" borderRadius="md" borderColor="#244d8a" w={"100%"}>
+    <VStack>
+      <Box borderWidth="1px" borderRadius="md" borderColor="#244d8a" w={"100%"}  h={"80vh"}>
         <Flex
           bg="#244d8a"
           color="white"
