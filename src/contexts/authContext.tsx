@@ -1,137 +1,134 @@
-import { createContext, useState, useEffect, type ReactNode } from "react";
-import apiClient from "../services/apiClient";
+import {
+  createContext,
+  useState,
+  useEffect,
+  type ReactNode,
+  useRef,
+} from "react";
+import { jwtDecode } from "jwt-decode";
 
-interface AuthContextType {
-  userId: number | null;
-  studentId: number | null;
-  email: string | null;
-  first_name: string | null;
-  last_name: string | null;
-  roles: string[];
-  profilePictureUrl: string | null;
-  isAuthenticated: boolean;
-  loading: boolean;
-  loginWithGoogle: () => Promise<void>;
-  loginWithEmail: (email: string, password: string) => Promise<boolean>;
-  logout: (navigate: (path: string) => void) => void;
-  handleCallback: (
-    code: string,
-    navigate: (path: string) => void
-  ) => Promise<void>;
-}
+import apiClient from "../services/apiClient";
+import type { AuthContextType, JwtPayload } from "../types/AuthTypes";
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
+  const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
+
   const [userId, setUserId] = useState<number | null>(null);
   const [studentId, setStudentId] = useState<number | null>(null);
   const [email, setEmail] = useState<string | null>(null);
   const [firstName, setFirstName] = useState<string | null>(null);
   const [lastName, setLastName] = useState<string | null>(null);
   const [roles, setRoles] = useState<string[]>([]);
-  const [profilePictureUrl, setProfilePictureUrl] = useState<string | null>(null);
+  const [profilePictureUrl, setProfilePictureUrl] = useState<string | null>(
+    null
+  );
   const [loading, setLoading] = useState(true);
 
+  // Guards to prevent duplicate callback exchange
+  const callbackInFlightRef = useRef(false);
+  const lastProcessedCodeRef = useRef<string | null>(null);
 
-  const setTokenAndUserInfo = async (accessToken: string) => {
-    localStorage.setItem("authToken", accessToken);
-    apiClient.defaults.headers["Authorization"] = `Bearer ${accessToken}`;
+  const clearAuth = () => {
+    setIsAuthenticated(false);
+    localStorage.removeItem("authToken");
+    delete apiClient.defaults.headers["Authorization"];
+    setUserId(null);
+    setStudentId(null);
+    setEmail(null);
+    setFirstName(null);
+    setLastName(null);
+    setRoles([]);
+    setProfilePictureUrl(null);
+  };
 
+  const isExpired = (expSeconds?: number) => {
+    if (!expSeconds) return true;
+    const nowSeconds = Math.floor(Date.now() / 1000);
+    return expSeconds <= nowSeconds;
+  };
+
+  const setAuthFromToken = (accessToken: string): JwtPayload | null => {
     try {
-      const userResponse = await apiClient.get("/auth/me");
-      
-      console.log("User response:", userResponse.data);
-      
-
-      if (userResponse.data.roles?.includes("Student")) {
-        // Retrieve student ID from userID via API call
-        const studentResponse = await apiClient.get(
-          `/students/user/${userResponse.data.id}`
-        );
-        const student = studentResponse.data;
-        if (student) {
-          setStudentId(student.id);
-        }
-      } else {
-        setStudentId(null);
+      const decoded = jwtDecode<JwtPayload>(accessToken);
+      if (isExpired(decoded.exp)) {
+        clearAuth();
+        return null;
       }
 
-      setUserId(userResponse.data.id);
-      setFirstName(userResponse.data.first_name);
-      setLastName(userResponse.data.last_name);
-      setRoles(userResponse.data.roles || []);
-      setEmail(userResponse.data.email);
-      setProfilePictureUrl(userResponse.data.profile_picture_url || null);
-    } catch (error) {
-      console.error("Error retrieving user info:", error);
-      localStorage.removeItem("authToken");
-      setUserId(null);
-      setFirstName(null);
-      setLastName(null);
-      setEmail(null);
-      setRoles([]);
-      setStudentId(null);
-      setProfilePictureUrl(null);
+      // Persist + auth header
+      localStorage.setItem("authToken", accessToken);
+      apiClient.defaults.headers["Authorization"] = `Bearer ${accessToken}`;
+
+      // Populate state from claims
+      setIsAuthenticated(true);
+
+      setUserId(decoded.user_id);
+      setStudentId(decoded.student_id ?? null);
+      setEmail(decoded.email ?? null);
+      setFirstName(decoded.first_name ?? null);
+      setLastName(decoded.last_name ?? null);
+      setRoles(decoded.role_names ?? []);
+      setProfilePictureUrl(decoded.profile_picture_url ?? null);
+
+      console.log("Decoded token:", decoded);
+
+      return decoded;
+    } catch (e) {
+      console.error("Failed to decode token:", e);
+      clearAuth();
+      return null;
     }
   };
 
-  // 1. Capture access_token from URL if redirected after Google login
+  // Handle token present in URL after redirects
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
     const tokenFromURL = params.get("access_token");
-
     if (tokenFromURL) {
-      localStorage.setItem("authToken", tokenFromURL);
-      apiClient.defaults.headers["Authorization"] = `Bearer ${tokenFromURL}`;
+      setAuthFromToken(tokenFromURL);
+      // Clean the URL
       window.history.replaceState({}, document.title, "/");
-      setTokenAndUserInfo(tokenFromURL);
     }
   }, []);
 
-  // 2. On app load, restore session from localStorage
+  // Restore session on app load
   useEffect(() => {
-    const token = localStorage.getItem("authToken");
-    if (!token) {
-      setLoading(false);
-      return;
-    }
+    const hydrate = async () => {
+      const token = localStorage.getItem("authToken");
+      if (!token) {
+        setLoading(false);
+        return;
+      }
 
-    apiClient.defaults.headers["Authorization"] = `Bearer ${token}`;
-    apiClient
-      .get("/auth/me")
-      .then(async (response) => {
-        setFirstName(response.data.first_name);
-        setLastName(response.data.last_name);
-        setRoles(response.data.roles || []);
-        setEmail(response.data.email);
-        setUserId(response.data.id);
-        setProfilePictureUrl(response.data.profile_picture_url || null);
+      const decoded = setAuthFromToken(token);
+      if (!decoded) {
+        setLoading(false);
+        return;
+      }
 
-        if ((response.data.roles || []).includes("Student")) {
-          try {
-            const studentResponse = await apiClient.get(
-              `/students/user/${response.data.id}`
-            );
-            const student = studentResponse.data;
-            if (student) {
-              setStudentId(student.id);
-            }
-          } catch (err) {
-            console.error("Failed to fetch student ID:", err);
-          }
+      // If Student role but token lacks student_id, fetch it
+      const roleNames = decoded.role_names ?? [];
+      const looksLikeStudent = roleNames.includes("Student");
+      const hasStudentId = decoded.student_id != null;
+
+      if (looksLikeStudent && !hasStudentId) {
+        try {
+          const me = await apiClient.get("/auth/me");
+          // Expect your API to return student_id here
+          setStudentId(me.data?.student_id ?? null);
+        } catch (e) {
+          console.error("/auth/me failed", e);
+          // If we can't hydrate the ID, treat as signed out to avoid false unauthorized
+          clearAuth();
         }
-      })
-      .catch(() => {
-        localStorage.removeItem("authToken");
-        setFirstName(null);
-        setLastName(null);
-        setEmail(null);
-        setRoles([]);
-        setUserId(null);
-        setStudentId(null);
-        setProfilePictureUrl(null);
-      })
-      .finally(() => setLoading(false));
+      }
+
+      setLoading(false);
+    };
+
+    hydrate();
   }, []);
 
   const loginWithGoogle = async () => {
@@ -143,68 +140,116 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     }
   };
 
+  // Google OAuth callback handler
   const handleCallback = async (
-    code: string,
-    navigate: (path: string) => void
-  ) => {
+    code: string
+  ): Promise<{ isStudent: boolean; studentId: number | null } | null> => {
+    // 1) If we've already processed this code in this tab, skip
+    if (lastProcessedCodeRef.current === code) {
+      return null;
+    }
+
+    // 2) If another call is in flight, skip
+    if (callbackInFlightRef.current) {
+      return null;
+    }
+
+    // 3) If this code was processed earlier in this session (e.g., StrictMode double run), skip
+    const processedKey = "oauth_code_processed";
+    const previouslyProcessed = sessionStorage.getItem(processedKey);
+    if (previouslyProcessed === code) {
+      return null;
+    }
+
+    callbackInFlightRef.current = true;
+    lastProcessedCodeRef.current = code;
+    sessionStorage.setItem(processedKey, code);
+
     try {
+      setLoading(true);
       const response = await apiClient.get(
-        `/auth/google/callback?code=${code}`
+        `/auth/google/callback?code=${encodeURIComponent(code)}`
       );
-      const accessToken = response.data.access_token;
+      const accessToken: string = response.data.access_token;
 
-      await setTokenAndUserInfo(accessToken); // sets token + user info + studentId
-
-      // Use current state instead of refetching
-      const currentRoles = roles; // already set by setTokenAndUserInfo
-      const currentUserId = userId;
-
-      if (currentRoles.includes("Student") && currentUserId !== null) {
-        const studentResponse = await apiClient.get(
-          `/students/user/${currentUserId}`
-        );
-        const student = studentResponse.data;
-        if (student) {
-          navigate(`/student/${student.id}`);
-        } else {
-          console.error("No student found for user ID:", currentUserId);
-        }
-      } else {
-        navigate("/dashboard");
+      const decoded = setAuthFromToken(accessToken);
+      if (!decoded) {
+        throw new Error("Invalid or expired token");
       }
 
-      window.history.replaceState(null, "", "/");
+      const isStudent =
+        (decoded.role_names ?? []).includes("Student") && !!decoded.student_id;
+      const studentId = isStudent ? decoded.student_id : null;
+
+      return { isStudent, studentId };
     } catch (error) {
       console.error("Authentication failed", error);
+      throw error;
+    } finally {
+      setLoading(false);
+      callbackInFlightRef.current = false;
+      // Clean URL immediately so a rerender can’t re-trigger the effect
+      window.history.replaceState(null, "", "/");
     }
   };
 
-  const loginWithEmail = async (
-    email: string,
-    password: string
-  ): Promise<boolean> => {
-    try {
-      const response = await apiClient.post("/auth/login/email", {
-        email,
-        password,
-      });
-      await setTokenAndUserInfo(response.data.access_token);
-      return true;
-    } catch (error) {
-      console.error("Email login failed", error);
+  const loginWithEmail = async (emailArg: string, password: string): Promise<boolean> => {
+  try {
+    setLoading(true);
+
+    const { data } = await apiClient.post("/auth/login/email", { email: emailArg, password });
+    const accessToken: string = data.access_token;
+
+    const decoded = setAuthFromToken(accessToken);
+    if (!decoded) {
+      setLoading(false);
       return false;
     }
-  };
+
+    // Normalize possible claim keys
+    const rolesFromToken = (decoded.role_names ?? []) as string[];
+    const sidFromToken = (decoded.student_id ?? null) as number | null;
+
+    // If roles missing OR Student without student_id, fetch /auth/me before finishing
+    const needsMe =
+      rolesFromToken.length === 0 ||
+      (rolesFromToken.includes("Student") && sidFromToken == null);
+
+    if (needsMe) {
+      try {
+        const me = await apiClient.get("/auth/me");
+        // Expecting { roles: string[], student_id: number, ... } – adjust to your shape
+        if (Array.isArray(me.data?.roles)) setRoles(me.data.roles);
+        if (me.data?.student_id != null) setStudentId(me.data.student_id);
+        if (me.data?.first_name) setFirstName(me.data.first_name);
+        if (me.data?.last_name) setLastName(me.data.last_name);
+        if (me.data?.email) setEmail(me.data.email);
+      } catch (e) {
+        console.error("/auth/me failed", e);
+        // If we can't hydrate required claims, sign out to avoid bad state
+        clearAuth();
+        setLoading(false);
+        return false;
+      }
+    } else {
+      // If token already had roles/student_id, ensure state is set from normalized values
+      setRoles(rolesFromToken);
+      setStudentId(sidFromToken);
+    }
+
+    setLoading(false);
+    return true;
+  } catch (error) {
+    console.error("Email login failed", error);
+    clearAuth();
+    setLoading(false);
+    return false;
+  }
+};
+
 
   const logout = (navigate: (path: string) => void) => {
-    localStorage.removeItem("authToken");
-    delete apiClient.defaults.headers["Authorization"];
-    setFirstName(null);
-    setLastName(null);
-    setEmail(null);
-    setRoles([]);
-    setUserId(null);
-    setProfilePictureUrl(null);
+    clearAuth();
     navigate("/login");
   };
 
@@ -218,7 +263,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         last_name: lastName,
         roles,
         profilePictureUrl,
-        isAuthenticated: !!email,
+        isAuthenticated: isAuthenticated,
         loading,
         loginWithGoogle,
         loginWithEmail,

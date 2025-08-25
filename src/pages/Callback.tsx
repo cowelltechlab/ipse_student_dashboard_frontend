@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import useAuth from "../contexts/useAuth";
 
@@ -30,13 +30,63 @@ const spinnerKeyframes = `
 const OAuthCallbackHandler = () => {
   const { handleCallback } = useAuth();
   const navigate = useNavigate();
+  const processedRef = useRef(false);
 
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
     const code = params.get("code");
-    if (code) {
-      handleCallback(code, navigate);
+    const oauthError = params.get("error");
+
+    if (processedRef.current) return;
+    processedRef.current = true;
+
+    if (oauthError) {
+      queueMicrotask(() => {
+        window.history.replaceState({}, document.title, "/");
+        navigate("/login", {
+          replace: true,
+          state: {
+            error: `Google sign-in was canceled or denied (${oauthError}).`,
+          },
+        });
+      });
+      return;
     }
+
+    if (!code) {
+      queueMicrotask(() => {
+        window.history.replaceState({}, document.title, "/");
+        navigate("/login", {
+          replace: true,
+          state: { error: "Missing authorization code. Please try again." },
+        });
+      });
+      return;
+    }
+
+    (async () => {
+      try {
+        const result = await handleCallback(code);
+        queueMicrotask(() => {
+          // strip the code immediately so nothing can re-trigger
+          window.history.replaceState({}, document.title, "/");
+
+          if (result?.isStudent && result.studentId) {
+            navigate(`/student/${result.studentId}`, { replace: true });
+          } else {
+            navigate("/dashboard", { replace: true });
+          }
+        });
+      } catch {
+        queueMicrotask(() => {
+          window.history.replaceState({}, document.title, "/");
+          navigate("/login", {
+            replace: true,
+            state: { error: "Authentication failed. Please try again." },
+          });
+        });
+      }
+    })();
   }, [handleCallback, navigate]);
 
   return (

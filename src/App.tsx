@@ -1,5 +1,5 @@
 import React from "react";
-import { Routes, Route } from "react-router-dom";
+import { Routes, Route, Navigate } from "react-router-dom";
 import ProtectedRoute from "./routing/ProtectedRoute";
 
 // Pages
@@ -15,66 +15,46 @@ import StudentProfile from "./pages/StudentProfile";
 import StudentDocuments from "./pages/StudentDocument";
 import StudentAchievements from "./pages/StudentAchievements";
 import AssignmentModifications from "./pages/AssignmentModification";
+import AuthGate from "./routing/AuthGate";
 
 const App: React.FC = () => {
   return (
     <Routes>
-      {/* Public Routes */}
+      {/* Public routes */}
       <Route path="/login" element={<Login />} />
       <Route path="/auth/callback" element={<OAuthCallbackHandler />} />
       <Route path="/complete-invite" element={<Register />} />
-      <Route
-        path="/unauthorized"
-        element={<div>You are not authorized to view this page.</div>}
-      />
+      <Route path="/unauthorized" element={<div>You are not authorized to view this page.</div>} />
 
-      {/* Protected Routes - Admin, Advisor, Peer Tutor */}
-      <Route
-        element={
-          <ProtectedRoute requiredRoles={["Admin", "Advisor", "Peer Tutor"]} />
-        }
-      >
-        <Route path="/dashboard" element={<Home />} />
+      {/* Everything below this line requires authentication */}
+      <Route element={<ProtectedRoute />}>
+        {/* Smart landing: sends staff to /dashboard, students to /student/:id */}
+        <Route path="/" element={<AuthGate />} />
+
+        {/* Student pages (Students restricted to their own id by ProtectedRoute) */}
+        <Route path="/student/:student_id" element={<Student />} />
+        <Route path="/student/:student_id/profile" element={<StudentProfile />} />
+        <Route path="/student/:student_id/documents" element={<StudentDocuments />} />
+        <Route path="/student/:student_id/achievements" element={<StudentAchievements />} />
+        <Route path="/student/:student_id/assignment/:assignment_id" element={<AssignmentDetails />} />
+        <Route path="/student/:student_id/assignment/:assignment_id/modification" element={<AssignmentModifications />} />
+
+        {/* Student profile creation (authenticated) */}
+        <Route path="/profile-creation/:user_id" element={<StudentProfileCreation />} />
+
+        {/* Staff-only sections */}
+        <Route element={<ProtectedRoute requiredRoles={["Admin", "Advisor", "Peer Tutor"]} />}>
+          <Route path="/dashboard" element={<Home />} />
+        </Route>
+
+        <Route element={<ProtectedRoute requiredRoles={["Admin", "Advisor"]} />}>
+          <Route path="/create-assignment" element={<CreateNewAssignment />} />
+        </Route>
       </Route>
 
-      {/* Student Routes */}
-      {/* TODO: Update student routes so students cannot access other students' pages */}
-      <Route path="/student/:student_id" element={<Student />} />
-      <Route path="/student/:student_id/profile" element={<StudentProfile />} />
-      <Route
-        path="/student/:student_id/documents"
-        element={<StudentDocuments />}
-      />
-      <Route
-        path="/student/:student_id/achievements"
-        element={<StudentAchievements />}
-      />
-
-      <Route
-        path="/student/:student_id/assignment/:assignment_id"
-        element={<AssignmentDetails />}
-      />
-      <Route
-        path="/student/:student_id/assignment/:assignment_id/modification"
-        element={<AssignmentModifications />}
-      />
-
-      {/* Student Profile Creation */}
-      <Route
-        path="/profile-creation/:user_id"
-        element={<StudentProfileCreation />}
-      />
-
-      {/* Protected Routes - Admin, Advisor Only */}
-      <Route element={<ProtectedRoute requiredRoles={["Admin", "Advisor"]} />}>
-        <Route path="/create-assignment" element={<CreateNewAssignment />} />
-      </Route>
-
-      {/* Default/Fallback Route */}
-      <Route path="/dashboard" element={<Home />} />
-      <Route path="*" element={<Login />} />
-
-  
+      {/* Fallbacks */}
+      <Route path="/dashboard" element={<Navigate to="/" replace />} /> {/* avoid duplicate unprotected path */}
+      <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>
   );
 };

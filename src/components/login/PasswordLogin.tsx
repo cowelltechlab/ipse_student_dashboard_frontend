@@ -2,6 +2,8 @@ import { Box, Flex, Text, Button, Input, Stack } from "@chakra-ui/react";
 import { PasswordInput } from "../ui/password-input";
 import useAuth from "../../contexts/useAuth";
 import { useState } from "react";
+import { toaster } from "../ui/toaster";
+import { useNavigate } from "react-router-dom";
 
 interface PasswordLoginProps {
   setFormDisplay: React.Dispatch<
@@ -10,6 +12,8 @@ interface PasswordLoginProps {
 }
 
 const PasswordLogin = ({ setFormDisplay }: PasswordLoginProps) => {
+  const navigate = useNavigate();
+
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
@@ -18,10 +22,30 @@ const PasswordLogin = ({ setFormDisplay }: PasswordLoginProps) => {
   const onEmailLoginSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     try {
-      await loginWithEmail(email, password);
-      // Let the redirect happen via useEffect once roles are available
+      const ok = await loginWithEmail(email, password);
+      if (ok) {
+        navigate("/", {replace: true});
+      }
+
+      if (!ok) {
+        // If loginWithEmail resolves false on bad credentials
+        toaster.create({
+          title: "Invalid credentials",
+          description: "Please check your email and password and try again.",
+          type: "error",
+          duration: 6000,
+        });
+      }
     } catch (err) {
-      console.error("Email login failed:", err);
+      console.error(err);
+      // If loginWithEmail throws on failure
+      toaster.create({
+        title: "Login failed",
+        description: "There was a problem signing you in. Please try again.",
+        type: "error",
+        duration: 6000,
+      });
+      console.error(err);
     }
   };
 
