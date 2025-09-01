@@ -1,8 +1,9 @@
 import axios from "axios";
 
 const apiClient = axios.create({
+  // For development
   // baseURL: "http://localhost:8000/",
-  // TODO: Update with live backend URL when available
+  // For production
   baseURL: "https://ipse-dashboard-backend-adcpeuexeuf8fvf4.centralus-01.azurewebsites.net/"
 });
 

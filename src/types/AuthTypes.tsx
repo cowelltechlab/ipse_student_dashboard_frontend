@@ -23,6 +23,7 @@ export interface AuthContextType {
   isAuthenticated: boolean;
   loading: boolean;
   loginWithGoogle: () => Promise<void>;
+  loginWithGT: () => void;
   loginWithEmail: (email: string, password: string) => Promise<boolean>;
   logout: (navigate: (path: string) => void) => void;
   handleCallback: (

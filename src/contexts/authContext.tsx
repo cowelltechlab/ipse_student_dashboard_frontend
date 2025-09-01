@@ -140,6 +140,12 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     }
   };
 
+const loginWithGT = () => {
+  window.location.assign(
+    "https://ipse-dashboard-backend-adcpeuexeuf8fvf4.centralus-01.azurewebsites.net/auth/login/gatech"
+  );
+};
+
   // Google OAuth callback handler
   const handleCallback = async (
     code: string
@@ -193,60 +199,65 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     }
   };
 
-  const loginWithEmail = async (emailArg: string, password: string): Promise<boolean> => {
-  try {
-    setLoading(true);
+  const loginWithEmail = async (
+    emailArg: string,
+    password: string
+  ): Promise<boolean> => {
+    try {
+      setLoading(true);
 
-    const { data } = await apiClient.post("/auth/login/email", { email: emailArg, password });
-    const accessToken: string = data.access_token;
+      const { data } = await apiClient.post("/auth/login/email", {
+        email: emailArg,
+        password,
+      });
+      const accessToken: string = data.access_token;
 
-    const decoded = setAuthFromToken(accessToken);
-    if (!decoded) {
-      setLoading(false);
-      return false;
-    }
-
-    // Normalize possible claim keys
-    const rolesFromToken = (decoded.role_names ?? []) as string[];
-    const sidFromToken = (decoded.student_id ?? null) as number | null;
-
-    // If roles missing OR Student without student_id, fetch /auth/me before finishing
-    const needsMe =
-      rolesFromToken.length === 0 ||
-      (rolesFromToken.includes("Student") && sidFromToken == null);
-
-    if (needsMe) {
-      try {
-        const me = await apiClient.get("/auth/me");
-        // Expecting { roles: string[], student_id: number, ... } – adjust to your shape
-        if (Array.isArray(me.data?.roles)) setRoles(me.data.roles);
-        if (me.data?.student_id != null) setStudentId(me.data.student_id);
-        if (me.data?.first_name) setFirstName(me.data.first_name);
-        if (me.data?.last_name) setLastName(me.data.last_name);
-        if (me.data?.email) setEmail(me.data.email);
-      } catch (e) {
-        console.error("/auth/me failed", e);
-        // If we can't hydrate required claims, sign out to avoid bad state
-        clearAuth();
+      const decoded = setAuthFromToken(accessToken);
+      if (!decoded) {
         setLoading(false);
         return false;
       }
-    } else {
-      // If token already had roles/student_id, ensure state is set from normalized values
-      setRoles(rolesFromToken);
-      setStudentId(sidFromToken);
+
+      // Normalize possible claim keys
+      const rolesFromToken = (decoded.role_names ?? []) as string[];
+      const sidFromToken = (decoded.student_id ?? null) as number | null;
+
+      // If roles missing OR Student without student_id, fetch /auth/me before finishing
+      const needsMe =
+        rolesFromToken.length === 0 ||
+        (rolesFromToken.includes("Student") && sidFromToken == null);
+
+      if (needsMe) {
+        try {
+          const me = await apiClient.get("/auth/me");
+          // Expecting { roles: string[], student_id: number, ... } – adjust to your shape
+          if (Array.isArray(me.data?.roles)) setRoles(me.data.roles);
+          if (me.data?.student_id != null) setStudentId(me.data.student_id);
+          if (me.data?.first_name) setFirstName(me.data.first_name);
+          if (me.data?.last_name) setLastName(me.data.last_name);
+          if (me.data?.email) setEmail(me.data.email);
+        } catch (e) {
+          console.error("/auth/me failed", e);
+          // If we can't hydrate required claims, sign out to avoid bad state
+          clearAuth();
+          setLoading(false);
+          return false;
+        }
+      } else {
+        // If token already had roles/student_id, ensure state is set from normalized values
+        setRoles(rolesFromToken);
+        setStudentId(sidFromToken);
+      }
+
+      setLoading(false);
+      return true;
+    } catch (error) {
+      console.error("Email login failed", error);
+      clearAuth();
+      setLoading(false);
+      return false;
     }
-
-    setLoading(false);
-    return true;
-  } catch (error) {
-    console.error("Email login failed", error);
-    clearAuth();
-    setLoading(false);
-    return false;
-  }
-};
-
+  };
 
   const logout = (navigate: (path: string) => void) => {
     clearAuth();
@@ -266,6 +277,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         isAuthenticated: isAuthenticated,
         loading,
         loginWithGoogle,
+        loginWithGT,
         loginWithEmail,
         logout,
         handleCallback,
