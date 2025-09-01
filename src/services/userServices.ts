@@ -67,4 +67,3 @@ export const deleteUser = async (userId: number): Promise<void> => {
   return response.data;
 };
 
-
