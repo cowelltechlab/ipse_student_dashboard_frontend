@@ -15,6 +15,7 @@ const useRoles = () => {
         const response = await getRoles();
         setRoles(response);
       } catch (e) {
+        console.error("Failed to fetch roles:", e);
         const error = e as ErrorType;
         setError(error);
         setRoles([]);
