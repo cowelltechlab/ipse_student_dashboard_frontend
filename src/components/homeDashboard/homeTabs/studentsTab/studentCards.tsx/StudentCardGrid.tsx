@@ -26,7 +26,8 @@ const StudentCardGrid = ({
   onStudentClick?: (
     studentId: number | null,
     userId: number,
-    profileTag: string | null
+    profileTag: string | null,
+    userInviteUrl: string | null
   ) => void;
 }) => {
   const [visibleCount, setVisibleCount] = useState(15);
@@ -110,12 +111,13 @@ const StudentCardGrid = ({
                 firstName={student.first_name}
                 lastName={student.last_name}
                 classYear={student.student_profile?.year_name || null}
+                schoolEmail={student.school_email || ""}
                 profilePictureUrl={student.profile_picture_url}
                 profile_tag={student.profile_tag || null}
                 onClick={() => {
                   const sid = student.student_profile?.student_id ?? null;
                   const tag = student.profile_tag ?? null;
-                  onStudentClick?.(sid, student.id, tag);
+                  onStudentClick?.(sid, student.id, tag, student.invite_url ?? null);
                 }}
               />
             </MotionDiv>

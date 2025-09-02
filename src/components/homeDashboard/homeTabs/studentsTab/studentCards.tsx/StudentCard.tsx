@@ -18,6 +18,7 @@ interface StudentCardProps {
   firstName: string;
   lastName: string;
   classYear: string | null;
+  schoolEmail?: string;
   profilePictureUrl?: string;
   profile_tag?: string | null;
   onClick?: () => void;
@@ -27,6 +28,7 @@ const StudentCard = ({
   firstName,
   lastName,
   classYear,
+  schoolEmail = "",
   profilePictureUrl,
   profile_tag,
   onClick,
@@ -66,14 +68,19 @@ const StudentCard = ({
                 />
               </Avatar.Root>
               <Stack gap="0" align="center">
-                <Text fontWeight="semibold" textStyle="md" color={"#BD4F23"}>
-                  {firstName} {lastName}
-                </Text>
+               {firstName ? (
+                 <Text fontWeight="semibold" textStyle="md" color={"#BD4F23"}>
+                   {firstName} {lastName}
+                 </Text>
+               ) : <Text fontWeight="semibold" textStyle="md" color={"#BD4F23"}>
+                   {schoolEmail}
+                </Text>}
                 <Text color="fg.muted" textStyle="md">
                   {classYear}
                 </Text>
               </Stack>
             </HStack>
+           
             {profile_tag && (
               <Box
                 bg="#244D8A"

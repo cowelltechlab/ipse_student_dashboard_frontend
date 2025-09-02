@@ -45,8 +45,15 @@ const StudentsTab = () => {
   const handleNavigateStudentPage = (
     studentId: number | null,
     userId: number,
-    profileTag: string | null
+    profileTag: string | null,
+    userInviteUrl: string | null
   ) => {
+    if (userInviteUrl) {
+      console.log(userInviteUrl);
+      // Open link
+      window.open(userInviteUrl, "_blank");
+      // navigate(userInviteUrl);
+    }
     if (profileTag === "Profile Incomplete") {
       setProfileCreateUserId(userId);
       setIsCreateProfileDialogOpen(true);

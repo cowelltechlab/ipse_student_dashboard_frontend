@@ -15,6 +15,7 @@ const useUsers = (refetchTrigger: number, roleId?: number) => {
       try {
         setLoading(true);
         const response = await getUsers(roleId);
+        console.log(response)
         setUsers(response);
       } catch (e) {
         const error = e as ErrorType;
