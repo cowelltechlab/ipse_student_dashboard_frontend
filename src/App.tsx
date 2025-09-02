@@ -16,6 +16,7 @@ import StudentDocuments from "./pages/StudentDocument";
 import StudentAchievements from "./pages/StudentAchievements";
 import AssignmentModifications from "./pages/AssignmentModification";
 import AuthGate from "./routing/AuthGate";
+import ResetPassword from "./pages/ResetPassword";
 
 const App: React.FC = () => {
   return (
@@ -24,6 +25,7 @@ const App: React.FC = () => {
       <Route path="/login" element={<Login />} />
       <Route path="/auth/callback" element={<OAuthCallbackHandler />} />
       <Route path="/complete-invite" element={<Register />} />
+      <Route path="/reset-password" element={<ResetPassword />} />
       <Route path="/unauthorized" element={<div>You are not authorized to view this page.</div>} />
 
       {/* Everything below this line requires authentication */}
