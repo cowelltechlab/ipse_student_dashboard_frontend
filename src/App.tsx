@@ -17,6 +17,7 @@ import StudentAchievements from "./pages/StudentAchievements";
 import AssignmentModifications from "./pages/AssignmentModification";
 import AuthGate from "./routing/AuthGate";
 import ResetPassword from "./pages/ResetPassword";
+import InactiveStudentHome from "./pages/InactiveStudentHome";
 
 const App: React.FC = () => {
   return (
@@ -43,6 +44,9 @@ const App: React.FC = () => {
 
         {/* Student profile creation (authenticated) */}
         <Route path="/profile-creation/:user_id" element={<StudentProfileCreation />} />
+        
+        {/* Students without student ID - complete account setup */}
+        <Route path="/complete-account/:user_id" element={<InactiveStudentHome />} />
 
         {/* Staff-only sections */}
         <Route element={<ProtectedRoute requiredRoles={["Admin", "Advisor", "Peer Tutor"]} />}>

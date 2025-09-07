@@ -2,6 +2,7 @@ import {
   createContext,
   useState,
   useEffect,
+  useCallback,
   type ReactNode,
   useRef,
 } from "react";
@@ -116,8 +117,10 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       if (looksLikeStudent && !hasStudentId) {
         try {
           const me = await apiClient.get("/auth/me");
-          // Expect your API to return student_id here
-          setStudentId(me.data?.student_id ?? null);
+          console.log("/auth/me response 1:", me.data);
+          // Extract student_id from student_profile if it exists
+          const studentId = me.data?.student_profile?.student_id ?? me.data?.student_id ?? null;
+          setStudentId(studentId);
         } catch (e) {
           console.error("/auth/me failed", e);
           // If we can't hydrate the ID, treat as signed out to avoid false unauthorized
@@ -230,9 +233,13 @@ const loginWithGT = () => {
       if (needsMe) {
         try {
           const me = await apiClient.get("/auth/me");
+          console.log("/auth/me response 2:", me.data);
           // Expecting { roles: string[], student_id: number, ... } – adjust to your shape
           if (Array.isArray(me.data?.roles)) setRoles(me.data.roles);
-          if (me.data?.student_id != null) setStudentId(me.data.student_id);
+          
+          // Extract student_id from student_profile if it exists
+          const studentId = me.data?.student_profile?.student_id ?? me.data?.student_id ?? null;
+          if (studentId != null) setStudentId(studentId);
           if (me.data?.first_name) setFirstName(me.data.first_name);
           if (me.data?.last_name) setLastName(me.data.last_name);
           if (me.data?.email) setEmail(me.data.email);
@@ -264,6 +271,25 @@ const loginWithGT = () => {
     navigate("/login");
   };
 
+  const refreshAuth = useCallback(async () => {
+    try {
+      const me = await apiClient.get("/auth/me");
+      console.log("/auth/me response 3 (refreshAuth):", me.data);
+      
+      // Extract student_id from student_profile if it exists
+      const studentId = me.data?.student_profile?.student_id ?? me.data?.student_id ?? null;
+      if (studentId != null) setStudentId(studentId);
+      
+      if (me.data?.first_name) setFirstName(me.data.first_name);
+      if (me.data?.last_name) setLastName(me.data.last_name);
+      if (me.data?.email) setEmail(me.data.email);
+
+      if (Array.isArray(me.data?.roles)) setRoles(me.data.roles);
+    } catch (e) {
+      console.error("Failed to refresh auth", e);
+    }
+  }, []);
+
   return (
     <AuthContext.Provider
       value={{
@@ -281,6 +307,7 @@ const loginWithGT = () => {
         loginWithEmail,
         logout,
         handleCallback,
+        refreshAuth,
       }}
     >
       {children}

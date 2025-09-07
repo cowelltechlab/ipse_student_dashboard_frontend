@@ -29,4 +29,5 @@ export interface AuthContextType {
   handleCallback: (
     code: string
   ) => Promise<{ isStudent: boolean; studentId: number | null } | null>;
+  refreshAuth: () => Promise<void>;
 }

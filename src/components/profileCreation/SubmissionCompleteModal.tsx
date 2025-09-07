@@ -14,6 +14,7 @@ import CreateProfileImage from "../../assets/Create New Profile_FinalModal.svg";
 import { useNavigate } from "react-router-dom";
 import useGetStudentByUserId from "../../hooks/students/useGetStudentByUserId";
 import useAuth from "../../contexts/useAuth";
+import { useEffect } from "react";
 
 interface SubmissionCompletedModalProps {
   open: boolean;
@@ -27,18 +28,28 @@ const SubmissionCompletedModal = ({
   userId,
 }: SubmissionCompletedModalProps) => {
   const navigate = useNavigate();
-  const { roles } = useAuth();
+  const { roles, refreshAuth, studentId } = useAuth();
   const { student, loading } = useGetStudentByUserId(userId);
 
   const isOnlyStudent = roles.length === 1 && roles[0] === "Student";
+
+  // Refresh auth when success modal opens to get the new student_id
+  useEffect(() => {
+    if (open) {
+      refreshAuth();
+    }
+  }, [open, refreshAuth]);
 
   const handleHomeClick = () => {
     navigate("/dashboard");
   };
 
   const handleViewProfile = () => {
-    if (student) {
-      navigate(`/student/${student.id}`);
+    // Use studentId from auth context first (refreshed after profile creation)
+    // Fall back to student.id from the API call
+    const idToUse = studentId || student?.id;
+    if (idToUse) {
+      navigate(`/student/${idToUse}`);
     }
   };
 
@@ -68,7 +79,7 @@ const SubmissionCompletedModal = ({
                       color: "white",
                     }}
                     loading={loading}
-                    disabled={!student}
+                    disabled={!studentId && !student}
                   >
                     View Profile
                   </Button>

@@ -1,7 +1,7 @@
 import { Menu, Portal, HStack, Box } from "@chakra-ui/react";
 import { RiArrowDropDownLine } from "react-icons/ri";
 import TextButton from "../universal/TextButton";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import CreateUserDialog from "../../homeDashboard/createUserDialog/CreateUserDialog";
 import { useNavigate } from "react-router-dom";
 import useAuth from "../../../contexts/useAuth";
@@ -11,10 +11,6 @@ const CreateNewDropdown = () => {
     useState<boolean>(false);
 
   const { roles } = useAuth();
-
-  useEffect(() => {
-    console.log("Roles in CreateNewDropdown:", roles);
-  }, [roles]);
 
   const navigate = useNavigate();
 
