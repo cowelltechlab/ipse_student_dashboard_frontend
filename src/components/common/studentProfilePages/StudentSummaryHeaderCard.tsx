@@ -12,7 +12,6 @@ import type { StudentProfileType } from "../../../types/StudentTypes";
 
 import defaultProfileImage from "../../../assets/default_profile_picture.jpg";
 
-
 interface StudentSummaryHeaderCardProps {
   student: StudentProfileType | null;
   profileLoading: boolean;
@@ -30,7 +29,7 @@ const StudentSummaryHeaderCard = ({
       p={6}
       borderRadius="lg"
       color="white"
-       align="stretch"
+      align="stretch"
     >
       <Skeleton loading={profileLoading} borderRadius="md">
         <Box
@@ -54,15 +53,15 @@ const StudentSummaryHeaderCard = ({
           w={{ base: "100%", sm: "200px" }}
           h="40px"
         >
-          <Box>
-            <Heading size="2xl">
-              {student?.first_name} {student?.last_name}
-            </Heading>
-          </Box>
+          <Heading size="2xl" w={"100%"} color="white" whiteSpace="nowrap">
+            {student?.first_name} {student?.last_name}
+          </Heading>
         </Skeleton>
 
         <HStack align={"center"}>
-          {!profileLoading && <Text>"{student?.profile_summaries.vision}"</Text>}
+          {!profileLoading && (
+            <Text>"{student?.profile_summaries.vision}"</Text>
+          )}
         </HStack>
 
         <HStack
