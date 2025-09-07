@@ -35,10 +35,11 @@ const CreateUserDialog = ({
   const [newUserRoleIds, setNewUserRoleIds] = useState<string[]>([]);
   const [newUserGoogleEmail, setNewUserGoogleEmail] = useState<string>("");
   const [newUserGTEmail, setNewUserGTEmail] = useState<string>("");
-  const [studentType, setStudentType] = useState<"A" | "B" | "">("");
+  const [studentType, setStudentType] = useState<"A" | "B">("A");
 
   const handleCreateUser = async () => {
     try {
+      console.log("Inviting user...");
       await handlePostUserInvite(
         newUserGoogleEmail,
         newUserGTEmail,

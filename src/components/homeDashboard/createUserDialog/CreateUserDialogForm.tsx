@@ -19,8 +19,8 @@ interface CreateUserDialogFormProps {
   newUserRoleIds: string[];
   setNewUserRoleIds: (roleIds: string[]) => void;
   roles: RoleType[];
-  studentType: "A" | "B" | "";
-  setStudentType: (type: "A" | "B" | "") => void;
+  studentType: "A" | "B";
+  setStudentType: (type: "A" | "B") => void;
 }
 
 const CreateUserDialogForm = ({

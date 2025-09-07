@@ -9,10 +9,10 @@ const usePostUserInvite = () => {
     google_email: string,
     school_email: string,
     role_ids: string[],
-    studentType?: "A" | "B" | ""
+    studentType?: "A" | "B" 
   ) => {
     try {
-      if (studentType) {
+      console.log("entered invite hook");
         setLoading(true);
         const response = await postUserInvite({
           google_email,
@@ -21,7 +21,7 @@ const usePostUserInvite = () => {
           student_type: studentType,
         });
         return response;
-      }
+      
     } catch (e) {
       throw e as ErrorType;
     } finally {
