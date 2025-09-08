@@ -60,7 +60,7 @@ const AssignmentsTableRowButtons = ({
           </Icon>
         </Button>
       </Tooltip>
-      <Tooltip content="Modify Assignment" positioning={{ placement: "top" }}>
+      <Tooltip content="Change Assignment" positioning={{ placement: "top" }}>
         <Button
           variant={"ghost"}
           padding={0}

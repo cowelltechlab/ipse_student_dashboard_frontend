@@ -27,7 +27,6 @@ export const postAssignmentVersion = async (
   return response.data;
 };
 
-
 export const putAssignmentVersion = async (
   assignment_version_id: string,
   updated_json_content: AssignmentJson
@@ -57,5 +56,13 @@ export const postFinalizeAssignmentVersion = async (
     `/versions/assignment/finalize/${document_version_id}`
   );
 
+  return response.data;
+};
+
+export const getAssignmentVersionDownload = async (document_version_id: string) => {
+  const response = await apiClient.get(
+    `/versions/assignment/download/${document_version_id}`,
+    { responseType: 'blob' }
+  );
   return response.data;
 };

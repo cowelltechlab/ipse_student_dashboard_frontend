@@ -4,7 +4,7 @@ import type { AssignmentVersionData } from "../../types/AssignmentModificationTy
 import { getAssignmentVersionOptions } from "../../services/assignmentVersionServices";
 
 const useAssignmentVersionOptions = (assignmentId?: number) => {
-  const [versionOptions, setsetVersionOptions] =
+  const [versionOptions, setVersionOptions] =
     useState<AssignmentVersionData | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<ErrorType | null>(null);
@@ -17,14 +17,12 @@ const useAssignmentVersionOptions = (assignmentId?: number) => {
       try {
         setLoading(true);
         const response = await getAssignmentVersionOptions(assignmentId);
-        console.log(response);
-
-        setsetVersionOptions(response);
+        setVersionOptions(response);
       } catch (e) {
         console.error(e);
         const error = e as ErrorType;
         setError(error);
-        setsetVersionOptions(null);
+        setVersionOptions(null);
       } finally {
         setLoading(false);
       }

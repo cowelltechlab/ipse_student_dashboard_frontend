@@ -32,6 +32,7 @@ import { FaStar } from "react-icons/fa";
 import { BsStars } from "react-icons/bs";
 import { useNavigate } from "react-router-dom";
 import { buildModifiedHtml } from "../../../utils/assignmentHtml";
+import useDownloadAssignmentVersion from "../../../hooks/assignmentVersions/useDownloadAssignmentVersion";
 
 interface AssignmentDetailsBodyProps {
   assignment: AssignmentDetailType | null;
@@ -57,6 +58,8 @@ const AssignmentDetailsBody = ({
     useGetAssignmentVersionByDocId(activeVersion);
 
   const { handleFinalizeAssignmentVersion } = useFinalizeAssignmentVerstion();
+
+  const { getDownloadBlob } = useDownloadAssignmentVersion()
 
   const handleSelectVersionClick = (selectedVersionId: string) => {
     setActiveVersion(selectedVersionId);
@@ -112,7 +115,33 @@ const AssignmentDetailsBody = ({
         setActiveVersion(finalizedVersion.document_id);
       }
     }
-  }, [assignment]);
+  }, [assignment, finalVersion]);
+
+
+  const originalAssignmentData = async () => {
+    console.log(assignment?.blob_url);
+    if (!assignment?.blob_url) {
+      throw new Error("No blob_url provided for assignment.");
+    }
+    const res = await fetch(assignment.blob_url);
+    return res.blob();
+  };
+
+
+  const getFinalVersionDocx = async () => {
+    if (!finalVersion?.document_id) {
+      throw new Error("No document_id provided for final version.");
+    }
+    
+    try {
+      const blob = await getDownloadBlob(finalVersion.document_id);
+      return blob;
+    } catch (error) {
+      console.error("Error downloading final version:", error);
+      throw new Error("Failed to download final version document.");
+    }
+  };
+  
 
   
 
@@ -138,10 +167,9 @@ const AssignmentDetailsBody = ({
               content="Download Assignment"
               positioning={{ placement: "top" }}
             >
-              {/* TODO: Complete download trigger */}
               <DownloadTrigger
-                data={assignment?.html_content ?? ""}
-                fileName={"Test Download"}
+                data={getFinalVersionDocx}
+                fileName={assignment?.title + "_final_version"}
                 mimeType={""}
                 asChild
               >
@@ -181,11 +209,10 @@ const AssignmentDetailsBody = ({
             content="Download Assignment"
             positioning={{ placement: "top" }}
           >
-            {/* TODO: Complete download trigger */}
             <DownloadTrigger
-              data={assignment?.html_content ?? ""}
-              fileName={assignment?.title + "." + assignment?.source_format}
-              mimeType={""}
+              data={originalAssignmentData}
+              fileName={assignment?.title + "_original.docx"}
+              mimeType="application/vnd.openxmlformats-officedocument.wordprocessingml.document"
               asChild
             >
               <Button variant={"ghost"} padding={0}>
@@ -196,7 +223,7 @@ const AssignmentDetailsBody = ({
             </DownloadTrigger>
           </Tooltip>
           <Tooltip
-            content="Modify Assignment"
+            content="Change Assignment"
             positioning={{ placement: "top" }}
           >
             <Button variant={"ghost"} padding={0}>

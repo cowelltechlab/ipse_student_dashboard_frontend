@@ -4,6 +4,7 @@ import { Box, Table, Text } from "@chakra-ui/react";
 import type { AssignmentDetailType } from "../../../types/AssignmentTypes";
 import AssignmentDetailsDocLine from "./AssignmentDetailsDocLine";
 import AssignmentsVersionHistoryTableRowButtons from "./AssignmentVersionHistoryTableButtons";
+import useDownloadAssignmentVersion from "../../../hooks/assignmentVersions/useDownloadAssignmentVersion";
 
 interface AssignmentVersionHistoryTableProps {
   assignment: AssignmentDetailType | null;
@@ -17,6 +18,31 @@ const AssignmentVersionHistoryTable = ({
   handleSelectVersionClick,
   finalizeVersion,
 }: AssignmentVersionHistoryTableProps) => {
+  const { getDownloadBlob } = useDownloadAssignmentVersion();
+
+  const handleDownload = async (version_document_id: string, fileName: string) => {
+    if (!version_document_id) {
+      throw new Error("No document_id provided for version.");
+    }
+
+    try {
+      const blob = await getDownloadBlob(version_document_id);
+      
+      // Create download link
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = fileName;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      URL.revokeObjectURL(url);
+    } catch (error) {
+      console.error("Error downloading version:", error);
+      throw new Error("Failed to download version document.");
+    }
+  };
+
   if (!assignment) {
     return <Text>No assignment data</Text>;
   }
@@ -38,6 +64,8 @@ const AssignmentVersionHistoryTable = ({
                 <AssignmentsVersionHistoryTableRowButtons
                   fileName={assignment.title}
                   fileType={assignment.source_format}
+                  onDownload={() => handleDownload(version.document_id, assignment.title)}
+                  
                   handleVersionFinalization={() =>
                     version.version_number
                       ? finalizeVersion(version.document_id)

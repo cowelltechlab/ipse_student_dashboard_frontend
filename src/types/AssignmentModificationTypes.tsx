@@ -12,3 +12,9 @@ export interface AssignmentVersionData {
   skills_for_success: string;
   learning_pathways: LearningPathwayOption[];
 }
+
+export interface AssignmentVersionDownloadData {
+  file_name: string;
+  file_type: string;
+  file_content: string;
+}
