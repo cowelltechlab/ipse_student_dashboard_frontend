@@ -10,6 +10,7 @@ import useRoles from "../../../../hooks/roles/useRoles";
 import useUsers from "../../../../hooks/users/useUsers";
 import { IoIosAddCircle } from "react-icons/io";
 import ProfileCreationDialog from "../../../profileCreation/ProfileCreationDialog";
+import useAuth from "../../../../contexts/useAuth";
 
 const StudentsTab = () => {
   const [searchTerm, setSearchTerm] = useState<string>("");
@@ -29,6 +30,8 @@ const StudentsTab = () => {
   const navigate = useNavigate();
 
   const { roles } = useRoles();
+
+  const { roles: currentUserRoles} = useAuth()
 
   const studentRole = roles.find((role) => role.role_name === "Student");
 
@@ -72,12 +75,14 @@ const StudentsTab = () => {
         />
         <Spacer />
 
-        <TextButton color="#bd4f23" onClick={handleCreateStudent}>
-          <HStack gap={1}>
-            <IoIosAddCircle color="#bd4f23" />
-            Create new Student
-          </HStack>
-        </TextButton>
+        {(currentUserRoles.includes("Admin") || currentUserRoles.includes("Advisor")) && (
+          <TextButton color="#bd4f23" onClick={handleCreateStudent}>
+            <HStack gap={1}>
+              <IoIosAddCircle color="#bd4f23" />
+              Create new Student
+            </HStack>
+          </TextButton>
+        )}
       </HStack>
 
       <StudentYearButtons

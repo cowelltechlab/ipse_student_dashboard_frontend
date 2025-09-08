@@ -4,6 +4,7 @@ import CreateAssignmentStudentCardGrid from "./selectStudents/CreateAssignmentSt
 import StudentYearButtons from "../common/filterButtons/StudentYearButtons";
 import SearchBar from "../common/searchBar/SearchBar";
 import useStudents from "../../hooks/students/useStudents";
+import useAuth from "../../contexts/useAuth";
 
 interface SelectStudentsSectionProps {
   selectedStudentIds: Set<number>; // number[];
@@ -20,6 +21,8 @@ const SelectStudentsSection = ({
   const {
     students, loading, error
     }  = useStudents()
+
+  const {roles} = useAuth();
 
   const handleOnStudentClick = (clickedStudentId: number | null) => {
 

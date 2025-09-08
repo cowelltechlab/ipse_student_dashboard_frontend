@@ -55,7 +55,7 @@ const App: React.FC = () => {
           <Route path="/dashboard" element={<Home />} />
         </Route>
 
-        <Route element={<ProtectedRoute requiredRoles={["Admin", "Advisor"]} />}>
+        <Route element={<ProtectedRoute requiredRoles={["Admin", "Advisor", "Peer Tutor"]} />}>
           <Route path="/create-assignment" element={<CreateNewAssignment />} />
         </Route>
       </Route>
