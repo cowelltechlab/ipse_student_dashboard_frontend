@@ -43,6 +43,7 @@ const App: React.FC = () => {
         <Route path="/student/:student_id/achievements" element={<StudentAchievements />} />
         <Route path="/student/:student_id/assignment/:assignment_id" element={<AssignmentDetails />} />
         <Route path="/student/:student_id/assignment/:assignment_id/modification" element={<AssignmentModifications />} />
+        <Route path="/student/:student_id/assignment/:assignment_id/rating-and-feedback" element={<div>Rating and Feedback Page (to be implemented)</div>} />
 
         {/* Student profile creation (authenticated) */}
         <Route path="/profile-creation/:user_id" element={<StudentProfileCreation />} />

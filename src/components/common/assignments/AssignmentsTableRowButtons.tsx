@@ -5,6 +5,7 @@ import { IoCloudDownload } from "react-icons/io5";
 import { Tooltip } from "../../ui/tooltip";
 
 interface AssignmentsTableRowButtonsProps {
+  assignment_id: number;
   fileName?: string;
   fileType?: string;
   downloadUrl?: string;

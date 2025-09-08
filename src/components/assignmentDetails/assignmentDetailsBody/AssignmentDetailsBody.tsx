@@ -114,10 +114,12 @@ const AssignmentDetailsBody = ({
     }
   }, [assignment]);
 
+  
+
   return (
     <Box m={4}>
       <AssignmentDetailsHeaderCard assignment={assignment} />
-      
+
       <AssignmentPreviews
         assignment={assignment}
         assignmentLoading={assignmentLoading}
@@ -137,7 +139,12 @@ const AssignmentDetailsBody = ({
               positioning={{ placement: "top" }}
             >
               {/* TODO: Complete download trigger */}
-              <DownloadTrigger data={""} fileName={""} mimeType={""} asChild>
+              <DownloadTrigger
+                data={assignment?.html_content ?? ""}
+                fileName={"Test Download"}
+                mimeType={""}
+                asChild
+              >
                 <Button variant={"ghost"} padding={0}>
                   <Icon size="md">
                     <IoCloudDownload />
@@ -175,7 +182,12 @@ const AssignmentDetailsBody = ({
             positioning={{ placement: "top" }}
           >
             {/* TODO: Complete download trigger */}
-            <DownloadTrigger data={""} fileName={""} mimeType={""} asChild>
+            <DownloadTrigger
+              data={assignment?.html_content ?? ""}
+              fileName={assignment?.title + "." + assignment?.source_format}
+              mimeType={""}
+              asChild
+            >
               <Button variant={"ghost"} padding={0}>
                 <Icon size="md">
                   <IoCloudDownload />
