@@ -31,7 +31,7 @@ const StudentDocumentBody = ({studentId}: StudentDocumentBodyProps) => {
   const navigate = useNavigate();
 
   const handleCreateAssignment = () => {
-    navigate("/create-assignment");
+    navigate(`/student/${studentId}/create-assignment`);
   };
 
   const handleNavigateAssignmentPage = (

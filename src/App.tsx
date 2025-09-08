@@ -18,6 +18,7 @@ import AssignmentModifications from "./pages/AssignmentModification";
 import AuthGate from "./routing/AuthGate";
 import ResetPassword from "./pages/ResetPassword";
 import InactiveStudentHome from "./pages/InactiveStudentHome";
+import StudentCreateNewAssignment from "./pages/StudentCreateNewAssignment";
 
 const App: React.FC = () => {
   return (
@@ -38,6 +39,7 @@ const App: React.FC = () => {
         <Route path="/student/:student_id" element={<Student />} />
         <Route path="/student/:student_id/profile" element={<StudentProfile />} />
         <Route path="/student/:student_id/documents" element={<StudentDocuments />} />
+        <Route path="/student/:student_id/create-assignment" element={<StudentCreateNewAssignment />} />
         <Route path="/student/:student_id/achievements" element={<StudentAchievements />} />
         <Route path="/student/:student_id/assignment/:assignment_id" element={<AssignmentDetails />} />
         <Route path="/student/:student_id/assignment/:assignment_id/modification" element={<AssignmentModifications />} />

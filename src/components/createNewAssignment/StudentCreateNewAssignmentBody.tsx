@@ -1,20 +1,23 @@
-import { Box, Separator, Flex } from "@chakra-ui/react";
-import CreateNewAssignmentIcon from "../assets/Create New Assignment.svg";
-import PageHeader from "../components/common/pageHeader/PageHeader";
-import HeaderCard from "../components/common/pageHeader/HeaderCard";
-import UploadAssignmentBox from "../components/createNewAssignment/UploadAssignmentBox";
-import DocumentForm from "../components/createNewAssignment/DocumentForm";
-import SelectStudentsSection from "../components/createNewAssignment/SelectStudentsSection";
-import SubmitForm from "../components/createNewAssignment/SubmitForm";
+import { Box, Flex, Separator } from "@chakra-ui/react";
+import HeaderCard from "../common/pageHeader/HeaderCard";
+
+import CreateNewAssignmentIcon from "../../assets/Create New Assignment.svg";
 import { useState } from "react";
-import ClassSelectionDialog from "../components/common/classDropdown/ClassSelectionDialog";
-import SubmitModal from "../components/createNewAssignment/SubmitModal";
+import SubmitForm from "./SubmitForm";
+import { useParams } from "react-router-dom";
+import UploadAssignmentBox from "./UploadAssignmentBox";
+import DocumentForm from "./DocumentForm";
+import ClassSelectionDialog from "../common/classDropdown/ClassSelectionDialog";
+import SubmitModal from "./SubmitModal";
+import useStudent from "../../hooks/students/useStudent";
+import StudentSummaryHeaderCard from "../common/studentProfilePages/StudentSummaryHeaderCard";
 
-const CreateNewAssignment = () => {
+const StudentCreateNewAssignmentBody = () => {
+  const { student_id } = useParams<{ student_id: string }>();
+
   const cardText = `Create an assignment that adapts and grows to support every
-                     student's needs. Let's make learning accessible for all!`;
+                         student's needs. Let's make learning accessible for all!`;
 
-  const [studentIds, setStudentIds] = useState<Set<number>>(new Set<number>());
   const [title, setTitle] = useState<string>("");
   const [classId, setClassId] = useState<number | null>(null);
   const [classRefetch, setClassRefetch] = useState<number>(0);
@@ -24,16 +27,20 @@ const CreateNewAssignment = () => {
 
   const [openSuccessDialog, setOpenSuccessDialog] = useState<boolean>(false);
 
+  const { student, loading: profileLoading } = useStudent(student_id);
+
   return (
     <Box>
-      <PageHeader />
-      <Box>
-        <HeaderCard
-          cardHeading="Create Assignment"
-          cardText={cardText}
-          cardImageUrl={CreateNewAssignmentIcon}
-        />
-      </Box>
+      <StudentSummaryHeaderCard
+        student={student}
+        profileLoading={profileLoading}
+      />
+
+      <HeaderCard
+        cardHeading="Create Assignment"
+        cardText={cardText}
+        cardImageUrl={CreateNewAssignmentIcon}
+      />
 
       <Separator variant="solid" mx={6} />
 
@@ -54,18 +61,13 @@ const CreateNewAssignment = () => {
           setClassId={setClassId}
           classRefetch={classRefetch}
           setAddClassModalOpen={setAddClassModalOpen}
-        />
-      </Flex>
-      <Flex p={6}>
-        <SelectStudentsSection
-          selectedStudentIds={studentIds}
-          setSelectedStudentIds={setStudentIds}
+          studentId={student_id ? Number(student_id) : null}
         />
       </Flex>
 
       <Flex>
         <SubmitForm
-          studentIds={studentIds}
+          studentIds={student_id ? new Set([Number(student_id)]) : new Set()}
           title={title}
           classId={classId}
           file={file}
@@ -90,4 +92,4 @@ const CreateNewAssignment = () => {
   );
 };
 
-export default CreateNewAssignment;
+export default StudentCreateNewAssignmentBody;
