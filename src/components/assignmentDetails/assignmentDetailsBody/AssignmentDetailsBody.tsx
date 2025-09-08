@@ -69,7 +69,7 @@ const AssignmentDetailsBody = ({
     const student_id = assignment?.student.id;
 
     navigate(
-      `/student/${student_id}/assignment/${assignment_id}/rating-and-feedback`
+      `/student/${student_id}/assignment/${assignment_id}/rating-and-feedback/${assignmentVersion?.id}`
     );
   };
 

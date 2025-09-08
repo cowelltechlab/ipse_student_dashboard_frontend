@@ -1,30 +1,44 @@
 import { Box, Button, Text } from "@chakra-ui/react";
-import { FaCheckCircle } from "react-icons/fa";
+import { FaCheckCircle, FaSpinner } from "react-icons/fa";
 
-// TODO: Implement. Must take in form info and error check everything. 
-// Good reference: createNewAssignment/SubmitForm.tsx
+interface SubmitFinalRatingButtonProps {
+    onSubmit: () => void;
+    loading: boolean;
+    disabled: boolean;
+}
 
-// interface SubmitFinalRatingButtonProps {
-
-// }
-
-const SubmitFinalRatingButton = () => {
-    const handleReturnToHomeClick = () => {
-        console.log("Submitting Final Rating...")
+const SubmitFinalRatingButton = ({ onSubmit, loading, disabled }: SubmitFinalRatingButtonProps) => {
+    const handleSubmitClick = () => {
+        if (!disabled && !loading) {
+            onSubmit();
+        }
     };
 
     return (
         <Button 
             color="white" 
             borderRadius={8}
-            backgroundColor="#BD4F23"
-            onClick={handleReturnToHomeClick}
-            >
+            backgroundColor={disabled ? "#999999" : "#BD4F23"}
+            onClick={handleSubmitClick}
+            disabled={disabled || loading}
+            cursor={disabled ? "not-allowed" : "pointer"}
+            opacity={disabled ? 0.6 : 1}
+            _hover={{
+                backgroundColor: disabled ? "#999999" : "#A43A1F"
+            }}
+            size="lg"
+            px={6}
+            py={4}
+        >
             <Text fontWeight="bold">
-                Submit Final Rating
+                {loading ? "Submitting..." : "Submit Final Rating"}
             </Text>
             <Box ml={2}>
-                <FaCheckCircle color="white" />
+                {loading ? (
+                    <FaSpinner className="spinner" />
+                ) : (
+                    <FaCheckCircle color="white" />
+                )}
             </Box>
         </Button>
     );

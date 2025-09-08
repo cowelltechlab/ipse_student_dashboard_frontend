@@ -6,6 +6,7 @@ import { Tooltip } from "../../ui/tooltip";
 
 interface AssignmentsTableRowButtonsProps {
   assignment_id: number;
+  final_version_id?: string | null;
   student_id: number;
   fileName?: string;
   fileType?: string;
@@ -15,6 +16,7 @@ interface AssignmentsTableRowButtonsProps {
 const AssignmentsTableRowButtons = ({
   student_id,
   assignment_id,
+  final_version_id = null,
   downloadUrl = "",
   fileName = "",
   fileType = "",
@@ -26,7 +28,12 @@ const AssignmentsTableRowButtons = ({
   };
 
   const handleRatingNavigateClick = () => {
-    window.location.href = `/student/${student_id}/assignment/${assignment_id}/rating-and-feedback`;
+    const assignment_version_id = final_version_id;
+    if (!assignment_version_id) {
+      console.error("Final version ID is not available.");
+      return;
+    }
+    window.location.href = `/student/${student_id}/assignment/${assignment_id}/rating-and-feedback/${assignment_version_id}`;
   };
 
   const handleModificationNavigateClick = () => {
@@ -54,6 +61,7 @@ const AssignmentsTableRowButtons = ({
           variant={"ghost"}
           padding={0}
           onClick={handleRatingNavigateClick}
+          disabled={!final_version_id}
         >
           <Icon size="md">
             <FaStar />

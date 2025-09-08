@@ -55,8 +55,9 @@ const AssignmentPreviews = ({
           <Spacer />
           {isFinalizedVersion && (
             <Box
-              bg="#fbde8e"
-              color="black"
+              bg={"#244D8A"}
+              color="white"
+              fontWeight="bold"
               fontSize="sm"
               px={2}
               py={1}

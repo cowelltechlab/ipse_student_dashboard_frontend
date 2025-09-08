@@ -1,56 +1,66 @@
-import { Box, VStack, Text, Separator, Accordion } from "@chakra-ui/react";
+import { Box, Skeleton } from "@chakra-ui/react";
 import PageHeader from "../components/common/pageHeader/PageHeader";
 import BreadcrumbNav from "../components/common/breadcrumb/BreadcrumbNav";
-import ViewDocumentInfo from "../components/ratingsAndFeedback/ViewDocumentInfo";
-import Goals from "../components/ratingsAndFeedback/Goals";
-import RateMyOptions from "../components/ratingsAndFeedback/RateMyOptions";
-import PlanningForTheFuture from "../components/ratingsAndFeedback/PlanningForTheFuture";
-import SubmitFinalRatingButton from "../components/ratingsAndFeedback/SubmitFinalRatingButton";
 
-interface BreadcrumbItem {
-  label: string;
-  href?: string;
-}
+import { useParams } from "react-router-dom";
+import useStudent from "../hooks/students/useStudent";
+import useAssignment from "../hooks/assignments/useAssignment";
+import HeaderCard from "../components/common/pageHeader/HeaderCard";
 
-// TODO: Refer to Figma for details, including styling
-// TODO: Make accordian arrow match Figma
-// TODO: Connect to backend to automatically retrieve form info
+import HeaderCardImage from "../assets/Student Profile_Document_No change summary.svg";
+import RatingAndFeedbackBody from "../components/ratingsAndFeedback/RatingAndFeedbackBody";
 
 const AssignmentRatingAndFeedback = () => {
-    const breadcrumbItems: BreadcrumbItem[] = [
-        {label: "studentName", href: "studentProfileLink"}
-    ]
+  const { student_id, assignment_id, assignment_version_id } = useParams<{
+    student_id: string;
+    assignment_id: string;
+    assignment_version_id: string;
+  }>();
 
-    return (
-        <Box
-            margin={2}
-        >
-            <PageHeader />
-            <BreadcrumbNav 
-                items={breadcrumbItems} 
-                // TODO: Fix. Doesn't appear properly
-            />
-            <VStack>
-                <Box justifyContent="left" width="100%">
-                    <Text
-                        alignContent="left" 
-                        fontSize="lg"
-                        fontWeight="bold"
-                    >
-                        Feedback & Rating
-                    </Text>
-                </Box>
-                <Separator variant="solid" />
-                <Accordion.Root collapsible>
-                    <ViewDocumentInfo />
-                    <Goals />
-                    <RateMyOptions />
-                    <PlanningForTheFuture />
-                </Accordion.Root>
-                <SubmitFinalRatingButton />
-            </VStack>
-        </Box>
-    );
-}
+  const { student, loading: StudentLoading } = useStudent(student_id);
+  const { assignment, loading: AssignmentLoading } = useAssignment(
+    Number(assignment_id)
+  );
+
+  let nameLabel;
+  let assignmentLabel;
+
+  if (!student_id) {
+    nameLabel = "Student";
+  } else if (StudentLoading) {
+    nameLabel = <Skeleton height="20px" width="100px" />;
+  } else {
+    nameLabel =
+      `${student?.first_name ?? ""} ${student?.last_name ?? ""}`.trim() ||
+      "Student";
+  }
+
+  const breadcrumbItems = [
+    { label: "Home", href: "/dashboard" },
+    { label: nameLabel, href: `/student/${student_id}` },
+    { label: "Documents", href: `/student/${student_id}/documents` },
+    { label: assignmentLabel, href: `/student/${student_id}/documents` },
+    { label: "Rating and Feedback" },
+  ];
+
+  return (
+    <Box margin={2}>
+      <PageHeader />
+      <BreadcrumbNav items={breadcrumbItems} />
+      <HeaderCard
+        cardHeading="Assignment Rating & Feedback"
+        cardText="Provide your feedback and rate the assignment based on various criteria to help improve future submissions."
+        cardImageUrl={HeaderCardImage}
+      />
+      <RatingAndFeedbackBody
+        assignment={assignment}
+        assignmentLoading={AssignmentLoading}
+        student={student}
+        studentLoading={StudentLoading}
+        assignmentVersionId={assignment_version_id || ""}
+      />
+    </Box>
+  );
+};
 
 export default AssignmentRatingAndFeedback;

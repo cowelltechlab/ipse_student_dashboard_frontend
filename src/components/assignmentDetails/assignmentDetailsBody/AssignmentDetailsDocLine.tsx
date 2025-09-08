@@ -62,6 +62,9 @@ const AssignmentDetailsDocLine = ({
           fileName={fileName}
           fileType={assignment?.source_format}
           downloadUrl={downloadUrl}
+          final_version_id={assignment?.final_version_id || null}
+          assignment_id={assignment?.id ?? 0}
+          student_id={assignment?.student.id ?? 0}
         />
       )}
     </HStack>
