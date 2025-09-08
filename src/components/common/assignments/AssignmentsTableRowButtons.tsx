@@ -6,12 +6,15 @@ import { Tooltip } from "../../ui/tooltip";
 
 interface AssignmentsTableRowButtonsProps {
   assignment_id: number;
+  student_id: number;
   fileName?: string;
   fileType?: string;
   downloadUrl?: string;
 }
 
 const AssignmentsTableRowButtons = ({
+  student_id,
+  assignment_id,
   downloadUrl = "",
   fileName = "",
   fileType = "",
@@ -20,6 +23,14 @@ const AssignmentsTableRowButtons = ({
     console.log(downloadUrl);
     const res = await fetch(downloadUrl);
     return res.blob();
+  };
+
+  const handleRatingNavigateClick = () => {
+    window.location.href = `/student/${student_id}/assignment/${assignment_id}/rating-and-feedback`;
+  };
+
+  const handleModificationNavigateClick = () => {
+    window.location.href = `/student/${student_id}/assignment/${assignment_id}/modification`;
   };
 
   return (
@@ -39,14 +50,22 @@ const AssignmentsTableRowButtons = ({
         </DownloadTrigger>
       </Tooltip>
       <Tooltip content="Rate Assignment" positioning={{ placement: "top" }}>
-        <Button variant={"ghost"} padding={0}>
+        <Button
+          variant={"ghost"}
+          padding={0}
+          onClick={handleRatingNavigateClick}
+        >
           <Icon size="md">
             <FaStar />
           </Icon>
         </Button>
       </Tooltip>
       <Tooltip content="Modify Assignment" positioning={{ placement: "top" }}>
-        <Button variant={"ghost"} padding={0}>
+        <Button
+          variant={"ghost"}
+          padding={0}
+          onClick={handleModificationNavigateClick}
+        >
           <Icon size="md">
             <BsStars />
           </Icon>

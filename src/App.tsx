@@ -11,7 +11,6 @@ import Student from "./pages/Student";
 import Register from "./pages/Register";
 import CreateNewAssignment from "./pages/CreateNewAssignment";
 import StudentProfileCreation from "./pages/StudentProfileCreation";
-import RatingsAndFeedbackPage from "./pages/RatingsAndFeedbackPage";
 import StudentProfile from "./pages/StudentProfile";
 import StudentDocuments from "./pages/StudentDocument";
 import StudentAchievements from "./pages/StudentAchievements";
@@ -20,6 +19,7 @@ import AuthGate from "./routing/AuthGate";
 import ResetPassword from "./pages/ResetPassword";
 import InactiveStudentHome from "./pages/InactiveStudentHome";
 import StudentCreateNewAssignment from "./pages/StudentCreateNewAssignment";
+import AssignmentRatingAndFeedback from "./pages/AssignmentRatingAndFeedback";
 
 const App: React.FC = () => {
   return (
@@ -44,7 +44,7 @@ const App: React.FC = () => {
         <Route path="/student/:student_id/achievements" element={<StudentAchievements />} />
         <Route path="/student/:student_id/assignment/:assignment_id" element={<AssignmentDetails />} />
         <Route path="/student/:student_id/assignment/:assignment_id/modification" element={<AssignmentModifications />} />
-        <Route path="/student/:student_id/assignment/:assignment_id/rating-and-feedback" element={<div>Rating and Feedback Page (to be implemented)</div>} />
+        <Route path="/student/:student_id/assignment/:assignment_id/rating-and-feedback" element={<AssignmentRatingAndFeedback />} />
 
         {/* Student profile creation (authenticated) */}
         <Route path="/profile-creation/:user_id" element={<StudentProfileCreation />} />

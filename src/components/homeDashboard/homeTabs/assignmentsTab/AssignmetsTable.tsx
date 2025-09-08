@@ -218,6 +218,7 @@ const AssignmentsTable = ({
                     {/* Column 3: Actions (fixed width) */}
                     <Table.Cell textAlign="right">
                       <AssignmentsTableRowButtons
+                        student_id={assignment.student_id!}
                         assignment_id={assignment.id}
                         downloadUrl={assignment.blob_url}
                         fileType={assignment.source_format}

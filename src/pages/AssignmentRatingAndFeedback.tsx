@@ -16,7 +16,7 @@ interface BreadcrumbItem {
 // TODO: Make accordian arrow match Figma
 // TODO: Connect to backend to automatically retrieve form info
 
-const RatingsAndFeedbackPage = () => {
+const AssignmentRatingAndFeedback = () => {
     const breadcrumbItems: BreadcrumbItem[] = [
         {label: "studentName", href: "studentProfileLink"}
     ]
@@ -53,4 +53,4 @@ const RatingsAndFeedbackPage = () => {
     );
 }
 
-export default RatingsAndFeedbackPage;
+export default AssignmentRatingAndFeedback;
