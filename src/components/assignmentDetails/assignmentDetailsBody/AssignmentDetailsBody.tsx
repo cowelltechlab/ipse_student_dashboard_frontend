@@ -31,6 +31,7 @@ import { IoCloudDownload } from "react-icons/io5";
 import { FaStar } from "react-icons/fa";
 import { BsStars } from "react-icons/bs";
 import { useNavigate } from "react-router-dom";
+import { buildModifiedHtml } from "../../../utils/assignmentHtml";
 
 interface AssignmentDetailsBodyProps {
   assignment: AssignmentDetailType | null;
@@ -113,19 +114,19 @@ const AssignmentDetailsBody = ({
     }
   }, [assignment]);
 
+  
+
   return (
     <Box m={4}>
       <AssignmentDetailsHeaderCard assignment={assignment} />
+
       <AssignmentPreviews
         assignment={assignment}
         assignmentLoading={assignmentLoading}
-        selectedVersionHTML={
-          assignmentVersion?.final_generated_content?.html_content
-        }
+        selectedVersionHTML={buildModifiedHtml(assignmentVersion)} // <- stitched HTML
         selectedVersionLoading={AssignmentVersionLoading}
         isFinalizedVersion={activeVersion === finalVersion?.document_id}
       />
-
       {assignment?.finalized && (
         <AssignmentSection
           tagContent="Final Version"
@@ -138,7 +139,12 @@ const AssignmentDetailsBody = ({
               positioning={{ placement: "top" }}
             >
               {/* TODO: Complete download trigger */}
-              <DownloadTrigger data={""} fileName={""} mimeType={""} asChild>
+              <DownloadTrigger
+                data={assignment?.html_content ?? ""}
+                fileName={"Test Download"}
+                mimeType={""}
+                asChild
+              >
                 <Button variant={"ghost"} padding={0}>
                   <Icon size="md">
                     <IoCloudDownload />
@@ -176,7 +182,12 @@ const AssignmentDetailsBody = ({
             positioning={{ placement: "top" }}
           >
             {/* TODO: Complete download trigger */}
-            <DownloadTrigger data={""} fileName={""} mimeType={""} asChild>
+            <DownloadTrigger
+              data={assignment?.html_content ?? ""}
+              fileName={assignment?.title + "." + assignment?.source_format}
+              mimeType={""}
+              asChild
+            >
               <Button variant={"ghost"} padding={0}>
                 <Icon size="md">
                   <IoCloudDownload />
@@ -196,14 +207,12 @@ const AssignmentDetailsBody = ({
           </Tooltip>
         </HStack>
       </AssignmentSection>
-
       {!assignment?.finalized && (
         <VStack mt={5} gap={3}>
           <Image src={noDraftImage} height={40} />
           <Text fontWeight={"bold"}>No assignment has been finalized yet.</Text>
         </VStack>
       )}
-
       <Button
         w={"100%"}
         borderRadius={"md"}
@@ -218,7 +227,6 @@ const AssignmentDetailsBody = ({
           as={showHistory ? IoIosArrowDropupCircle : IoIosArrowDropdownCircle}
         />
       </Button>
-
       {showHistory && (
         <AssignmentVersionHistoryTable
           assignment={assignment}

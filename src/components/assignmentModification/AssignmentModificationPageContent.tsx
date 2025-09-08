@@ -1,18 +1,33 @@
-import { Box, HStack, Button, Icon } from "@chakra-ui/react";
+import {
+  Box,
+  HStack,
+  Button,
+  Icon,
+  Text,
+  Flex,
+  Image,
+  Heading,
+  Textarea,
+} from "@chakra-ui/react";
 import type { AssignmentDetailType } from "../../types/AssignmentTypes";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import modifiedAssignmentIcon from "../../assets/icons/note.png";
 
 import { FaCircleCheck } from "react-icons/fa6";
 import useAssignmentVersionOptions from "../../hooks/assignmentVersions/useAssignmentVersionOptions";
 import OriginalAssignmentSection from "./OriginalAssignmentSection";
 import ModificationOptionsSection from "./ModificationOptionsSection";
 import { IoArrowForwardCircle } from "react-icons/io5";
-import usePostAssignmentVersion from "../../hooks/assignmentVersions/usePostAssignmentVerstion";
 import usePutAssignmentVersion from "../../hooks/assignmentVersions/usePutAssignmentVersion";
 import { toaster } from "../ui/toaster";
 import AssignmentModificationCompletionDialog from "./AssignmentModificationCompletionDialog";
-import UpdatedAssignmentSection from "./UpdatedAssignmentSection";
 import AssignmentModificationVisibilityButtons from "./AssignmentModificationVisibilityButtons";
+import AssignmentStreamViewer from "./AssignmentStreamViewer";
+import { useAssignmentStreamSections } from "../../hooks/assignmentVersions/useAssignmentStreamSections";
+import UpdatedAssignmentStructuredEditors, {
+  type AssignmentJson,
+} from "./JsonAssignmentEditor";
+import LoadingGenerationLottie from "./LoadingGenerationLottie";
 
 interface AssignmentDetailsPageContentProps {
   assignment: AssignmentDetailType | null;
@@ -35,58 +50,43 @@ const AssignmentDetailsPageContent = ({
     string[]
   >([]);
 
-  const [updatedAssignment, setUpdatedAssignment] = useState<string>("");
+  const [hasGenerated, setHasGenerated] = useState(false);
+  const [generationKey, setGenerationKey] = useState(0);
+
+  // NEW: JSON state for the editable assignment
+  const [updatedJson, setUpdatedJson] = useState<AssignmentJson | null>(null);
+
   const [isCompletionModalOpen, setIsCompletionModalOpen] =
     useState<boolean>(false);
 
-    const { versionOptions, loading: versionsLoading } =
-      useAssignmentVersionOptions(assignment?.assignment_id);
-
-//   const { versionOptions, loading: versionsLoading } =
-//     useAssignmentVersionOptions();
-
-  const { handlePostAssignmentVersion, loading: loadingAssignmentGeneration } =
-    usePostAssignmentVersion();
+  const { versionOptions, loading: versionsLoading } =
+    useAssignmentVersionOptions(assignment?.assignment_id);
 
   const { handlePutAssignmentVersion, loading: loadingAssignmentUpdate } =
     usePutAssignmentVersion();
 
+  const {
+    sections,
+    isLoading: streaming,
+    error: streamError,
+    start: startStream,
+    cancel: cancelStream,
+  } = useAssignmentStreamSections();
+
+  const hydrating = hasGenerated && !streaming && updatedJson === null;
+
   const handleAssignmentGenerationClick = async () => {
     if (!versionOptions?.version_document_id) return;
 
+    setHasGenerated(true);
+    setUpdatedJson(null);
+
     try {
-      const response = await handlePostAssignmentVersion(
-        selectedLearningPathways,
+      await startStream(
         versionOptions.version_document_id,
+        selectedLearningPathways,
         ideasForChange
       );
-
-      if (response) {
-        const { html_content } = response;
-
-        setUpdatedAssignment(html_content);
-      }
-    } catch (error) {
-      console.error("Error generating assignment version:", error);
-    }
-  };
-
-  //  For Updating Assignment
-  const handleSaveChangesClick = async () => {
-    if (!versionOptions?.version_document_id) return;
-
-    try {
-      const response = await handlePutAssignmentVersion(
-        versionOptions.version_document_id,
-        updatedAssignment
-      );
-      if (response) {
-        const { html_content } = response;
-
-        setUpdatedAssignment(html_content);
-      }
-
-      setIsCompletionModalOpen(true);
     } catch (e) {
       console.error(e);
       const error = e as {
@@ -97,6 +97,96 @@ const AssignmentDetailsPageContent = ({
       const errorMessage = error.response?.data.message || error.message;
       toaster.create({
         description: `Error creating class: ${errorMessage}`,
+        type: "error",
+      });
+    }
+  };
+
+  // When streaming is done, stitch everything into one HTML for editing
+  useEffect(() => {
+    if (!streaming && hasGenerated) {
+      const {
+        assignmentInstructionsHtml,
+        stepByStepPlanHtml,
+        promptsHtml,
+        supportTools,
+        motivationalMessageHtml,
+      } = sections;
+
+      const obj = {
+        assignmentInstructionsHtml: assignmentInstructionsHtml ?? "",
+        stepByStepPlanHtml: stepByStepPlanHtml ?? "",
+        promptsHtml: promptsHtml ?? "",
+        supportTools: {
+          toolsHtml: supportTools?.toolsHtml ?? "",
+          aiPromptingHtml: supportTools?.aiPromptingHtml ?? "",
+          aiPolicyHtml: supportTools?.aiPolicyHtml ?? "",
+        },
+        motivationalMessageHtml: motivationalMessageHtml ?? "",
+      };
+
+      setUpdatedJson(obj);
+      setGenerationKey((k) => k + 1);
+    }
+  }, [streaming, sections, hasGenerated]);
+
+  useEffect(() => {
+    return () => {
+      cancelStream();
+    };
+  }, [cancelStream]);
+
+  //  For Updating Assignment
+  const handleSaveChangesClick = async () => {
+    console.debug("[Save] clicked", { versionOptions, updatedJson });
+
+    if (!versionOptions?.version_document_id) {
+      toaster.create({
+        description: "No version_document_id available yet.",
+        type: "warning",
+      });
+      return;
+    }
+    if (!updatedJson) {
+      toaster.create({
+        description: "Nothing to save yet (updatedJson is empty).",
+        type: "warning",
+      });
+      return;
+    }
+
+    try {
+      console.debug("[Save] calling handlePutAssignmentVersion", {
+        version_document_id: versionOptions.version_document_id,
+      });
+
+      const response = await handlePutAssignmentVersion(
+        versionOptions.version_document_id,
+        updatedJson
+      );
+
+      console.debug("[Save] response", response);
+
+      if (response?.json_content) {
+        setUpdatedJson(response.json_content);
+        toaster.create({ description: "Saved.", type: "success" });
+        setIsCompletionModalOpen(true);
+      } else {
+        toaster.create({
+          description: "Save completed, but no json_content returned.",
+          type: "info",
+        });
+      }
+    } catch (e) {
+      console.error("[Save] error", e);
+      const err = e as {
+        message: string;
+        response?: { data?: { message?: string } };
+      };
+      const errorMessage =
+        err.response?.data?.message || err.message || "Unknown error";
+      toaster.create({
+        description: `Save failed: ${errorMessage}`,
         type: "error",
       });
     }
@@ -142,7 +232,7 @@ const AssignmentDetailsPageContent = ({
               bg="#bd4f23"
               color="white"
               w="100%"
-              disabled={selectedLearningPathways.length < 1}
+              disabled={selectedLearningPathways.length < 1 || streaming}
               onClick={handleAssignmentGenerationClick}
             >
               Generate Assignment
@@ -152,25 +242,90 @@ const AssignmentDetailsPageContent = ({
         )}
 
         {isNewVisible && (
-          <Box flex="1">
-            <UpdatedAssignmentSection
-              updatedAssignment={updatedAssignment}
-              setUpdatedAssignment={setUpdatedAssignment}
-              loadingAssignmentGeneration={loadingAssignmentGeneration}
-            />
-            <Button
-              borderRadius="xl"
-              mt={4}
-              bg="#bd4f23"
-              color="white"
+          <Box flex="1" display="flex" flexDir="column">
+            {/* Card shell */}
+            <Box
+              borderWidth="1px"
+              borderRadius="md"
+              borderColor="#244d8a"
               w="100%"
-              disabled={!updatedAssignment}
-              loading={loadingAssignmentUpdate}
-              onClick={handleSaveChangesClick}
+              display="flex"
+              flexDir="column"
+              h="80vh"
             >
-              Save Changes
-              <Icon as={FaCircleCheck} />
-            </Button>
+              {/* Header */}
+              <Flex
+                bg="#244d8a"
+                color="white"
+                px={4}
+                py={2}
+                align="center"
+                justify="space-between"
+                borderTopRadius="md"
+                flexShrink={0}
+              >
+                <Image src={modifiedAssignmentIcon} height="50px" />
+                <Heading size="md">Modified Assignment</Heading>
+              </Flex>
+
+              {/* Scrollable body */}
+              <Box flex="1"  p={3} >
+                {streaming && (
+                  <AssignmentStreamViewer
+                    sections={sections}
+                    isLoading={streaming}
+                  />
+                )}
+
+                {!streaming && hydrating && <LoadingGenerationLottie />}
+
+                {!streaming && !hydrating && !updatedJson && (
+                  <Textarea
+                    pt={4}
+                    // remove fixed 75vh — the container controls height now
+                    value="Select Changes to Generate Modified Assignment"
+                    fontSize="md"
+                    disabled
+                  />
+                )}
+
+                {!streaming && !hydrating && updatedJson && (
+                  <UpdatedAssignmentStructuredEditors
+                    key={`gen-${generationKey}`}
+                    value={updatedJson}
+                    onChange={setUpdatedJson}
+                  />
+                )}
+
+                {streamError && (
+                  <Text color="red.500" mt={2}>
+                    {streamError}
+                  </Text>
+                )}
+              </Box>
+
+              {/* Footer */}
+              <Box
+                p={3}
+                borderTopWidth="1px"
+                borderColor="#eaeef4"
+                flexShrink={0}
+              >
+                <Button
+                  borderRadius="xl"
+                  mt={4}
+                  bg="#bd4f23"
+                  color="white"
+                  w="100%"
+                  disabled={!updatedJson}
+                  loading={loadingAssignmentUpdate}
+                  onClick={handleSaveChangesClick}
+                >
+                  Save Changes
+                  <Icon as={FaCircleCheck} />
+                </Button>
+              </Box>
+            </Box>
           </Box>
         )}
       </HStack>

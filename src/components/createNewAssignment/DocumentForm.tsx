@@ -22,6 +22,7 @@ interface DocumentFormProps {
   setClassId: (selection: number | null) => void; //(id: number) => void;
   classRefetch: number;
   setAddClassModalOpen: (setValue: boolean) => void;
+  studentId?: number | null;
 }
 
 const DocumentForm = ({
@@ -32,9 +33,10 @@ const DocumentForm = ({
   classId,
   setClassId,
   classRefetch,
-  setAddClassModalOpen
+  setAddClassModalOpen,
+  studentId,
 }: DocumentFormProps) => {
-  const { classes } = useClasses(classRefetch);
+  const { classes } = useClasses(classRefetch, studentId);
   const { assignmentTypes } = useAssignmentTypes() as { assignmentTypes: AssignmentTypeListType[] };
 
   return (

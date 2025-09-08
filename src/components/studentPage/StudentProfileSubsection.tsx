@@ -23,14 +23,13 @@ const StudentProfileSubsection = ({
       onClick={section.onClick}
       w="100%"
       align="start"
-      spaceY={4}
-      p={4}
+      px={4}
       _hover={{ bg: "gray.50", cursor: "pointer" }}
     >
-      <HStack w="100%" align="center">
+      <HStack w="100%" align="center" bg={"#EAEEF4"} p={4} borderRadius="md">
         <Image src={section.icon} boxSize="50px" objectFit="contain" />
 
-        <VStack align="start" >
+        <VStack align="start">
           <Heading size="md">{section.headingName}</Heading>
           <Text fontSize="sm" color="gray.600">
             {section.subheading}

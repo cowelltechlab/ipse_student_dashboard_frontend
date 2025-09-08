@@ -1,0 +1,33 @@
+/* This targets the actual text area inside React Quill */
+.ql-editor {
+  font-size: 1.1rem;   /* change as needed */
+  line-height: 1.6;    /* optional for better readability */
+}
+
+
+/* Ensure the Quill container grows with content (no internal scroll) */
+.rte .ql-container {
+  height: auto !important;           /* override default 100% */
+  border: none;                      /* we draw the border on the outer Box */
+}
+
+/* Make the editing area have a sensible minimum height when empty */
+.rte .ql-editor {
+  min-height: var(--rte-min-height, 8rem);
+  padding-bottom: 2rem;              /* breathing room for the caret at bottom */
+  overflow: visible;                 /* allow full content without clipping */
+}
+
+/* Keep the toolbar visible if the section scrolls (optional, but nice) */
+.rte .ql-toolbar {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  background: white;
+}
+
+/* Match outer Box rounding by removing Quill’s inner borders */
+.rte .ql-toolbar.ql-snow {
+  border: none;
+  border-bottom: 1px solid #e2e8f0;
+}

@@ -24,6 +24,9 @@ const AssignmentsTab = () => {
   const [filterByNeedsRating, setFilterByNeedsRating] =
     useState<boolean>(false);
 
+  const [filterByNotFinalized, setFilterByNotFinalized] =
+    useState<boolean>(false);
+
   const navigate = useNavigate();
 
   const handleCreateAssignment = () => {
@@ -61,17 +64,18 @@ const AssignmentsTab = () => {
         dateRange={dateRange}
         setDateRange={setDateRange}
         setFilterByNeedsRating={setFilterByNeedsRating}
+        setFilterByNotFinalized={setFilterByNotFinalized}
       />
 
       <AssignmentsTable
         assignments={assignments}
         assignmentsLoading={loading}
         assignmentsError={error}
-
         dateRange={dateRange}
         searchTerm={searchTerm}
         onAssignmentClick={handleNavigateAssignmentPage}
         filterByNeedsRating={filterByNeedsRating}
+        filterByNotFinalized={filterByNotFinalized}
       />
     </Box>
   );

@@ -27,7 +27,9 @@ export const postUserInvite = async (userData: {
   google_email: string;
   school_email: string;
   role_ids: string[];
+  student_type?: "A" | "B";
 }): Promise<UserType> => {
+  console.log("Sending user invite...");
   const response = await apiClient.post("/users/invite", userData);
   return response.data;
 };
@@ -65,5 +67,4 @@ export const deleteUser = async (userId: number): Promise<void> => {
   const response = await apiClient.delete(`/users/${userId}`);
   return response.data;
 };
-
 

@@ -13,7 +13,7 @@ export const getStudents = async (
     params.append("year_id", year_id as unknown as string);
   }
 
-  const response = await apiClient.get("/students", {
+  const response = await apiClient.get("/students/", {
     params: {
       searchTerm,
       year_id,

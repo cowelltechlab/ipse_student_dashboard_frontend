@@ -19,7 +19,7 @@ interface PasswordLoginProps {
 }
 
 const SSOLogin = ({ setFormDisplay }: PasswordLoginProps) => {
-  const { loginWithGoogle } = useAuth();
+  const { loginWithGoogle, loginWithGT } = useAuth();
 
   const onGoogleLogin = async () => {
     try {
@@ -29,9 +29,9 @@ const SSOLogin = ({ setFormDisplay }: PasswordLoginProps) => {
     }
   };
 
-  const onGTLogin = async () => {
+  const onGTLogin = () => {
     try {
-      await loginWithGoogle(); // Reuse Google login logic for GT
+      loginWithGT();
     } catch (err) {
       console.error("GT login failed:", err);
     }

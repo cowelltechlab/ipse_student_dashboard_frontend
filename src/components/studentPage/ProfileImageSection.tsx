@@ -1,4 +1,4 @@
-import { Image, Skeleton, VStack } from "@chakra-ui/react";
+import { Image, Skeleton, Spacer, VStack } from "@chakra-ui/react";
 import defaultProfileImage from "../../assets/default_profile_picture.jpg";
 import ProfilePictureSelectionDialog from "../register/ProfilePictureSelectionDialog";
 import usePostProfilePicture from "../../hooks/studentProfiles/usePostProfilePicture";
@@ -50,10 +50,12 @@ const ProfileImageSection = ({
         />
       </Skeleton>
 
+      <Spacer />
+
       <ProfilePictureSelectionDialog
         onSelectDefaultImage={handleSelectDefaultImage}
         onUploadedImage={handleUploadImage}
-        buttonStyles={{ bg: "#bd4f23" }}
+        buttonStyles={{ bg: "#BD4F23", borderColor: "None", _hover: { bg: "#5e89caff" } }}
         saveLoading={loading}
       />
     </VStack>

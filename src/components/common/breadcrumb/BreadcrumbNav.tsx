@@ -23,11 +23,11 @@ const BreadcrumbNav = ({
         <Breadcrumb.List>
           {items.flatMap((item, i) => {
             const element = (
-              <Breadcrumb.Item key={i}>
+              <Breadcrumb.Item key={i} >
                 {i === items.length - 1 ? (
-                  <Breadcrumb.CurrentLink>{item.label}</Breadcrumb.CurrentLink>
+                  <Breadcrumb.CurrentLink color="#244D8A" fontWeight={"bold"}>{item.label}</Breadcrumb.CurrentLink>
                 ) : (
-                  <Breadcrumb.Link href={item.href || "#"}>
+                  <Breadcrumb.Link href={item.href || "#"} >
                     {item.label}
                   </Breadcrumb.Link>
                 )}

@@ -82,7 +82,7 @@ const CreateNewAssignment = () => {
         />
       )}
 
-      <SubmitModal 
+      <SubmitModal
         isOpen={openSuccessDialog}
         setIsOpen={setOpenSuccessDialog}
       />

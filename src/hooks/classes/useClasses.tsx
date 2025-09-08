@@ -1,9 +1,9 @@
 import { useEffect, useState } from "react";
 import type { ErrorType } from "../../types/ErrorType";
 import type { ClassType } from "../../types/ClassTypes";
-import { getClasses } from "../../services/classServices";
+import { getClasses, getStudentClasses } from "../../services/classServices";
 
-const useClasses = (triggerRefetch: number) => {
+const useClasses = (triggerRefetch: number, studentId?: number | null) => {
   const [classes, setClasses] = useState<ClassType[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<ErrorType | null>(null);
@@ -12,8 +12,14 @@ const useClasses = (triggerRefetch: number) => {
     const fetchClasses = async () => {
       try {
         setLoading(true);
-        const response = await getClasses();
-        setClasses(response);
+        if (studentId) {
+          console.log("Fetching classes for student ID:", studentId);
+          const response = await getStudentClasses(studentId);
+          setClasses(response);
+        } else {
+          const response = await getClasses();
+          setClasses(response);
+        }
       } catch (e) {
         console.error(e);
         const error = e as ErrorType;
@@ -25,7 +31,7 @@ const useClasses = (triggerRefetch: number) => {
     };
 
     fetchClasses();
-  }, [triggerRefetch]);
+  }, [triggerRefetch, studentId]);
 
   return { classes, loading, error };
 };

@@ -120,6 +120,7 @@ const RegisterForm = () => {
                 variant="flushed"
                 size={"xl"}
                 w="full"
+                autoComplete="off"
               />
               <Input
                 placeholder="Enter Last Name"
@@ -130,6 +131,7 @@ const RegisterForm = () => {
                 variant="flushed"
                 size={"xl"}
                 w="full"
+                autoComplete="off"
               />
               <PasswordInput
                 placeholder="Enter Password"
@@ -141,6 +143,7 @@ const RegisterForm = () => {
                 variant="flushed"
                 size={"xl"}
                 w="full"
+                autoComplete="new-password"
               />
               <PasswordInput
                 placeholder="Confirm Password"
@@ -152,6 +155,7 @@ const RegisterForm = () => {
                 variant="flushed"
                 size={"xl"}
                 w="full"
+                autoComplete="new-password"
               />
 
               <Box>

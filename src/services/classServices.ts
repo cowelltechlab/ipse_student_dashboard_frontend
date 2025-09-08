@@ -5,6 +5,10 @@ export const getClasses = async () => {
   return response.data;
 };
 
+export const getStudentClasses = async (student_id: number) => {
+  const response = await apiClient.get(`/classes/student/${student_id}`);
+  return response.data;
+};
 
 export const postClass = async (
   name: string,
@@ -13,11 +17,11 @@ export const postClass = async (
   course_code: string
 ) => {
   const response = await apiClient.post("/classes/", {
-    name, 
+    name,
     term,
     type,
-    course_code
-  })
+    course_code,
+  });
 
-  return response.data
-}
+  return response.data;
+};

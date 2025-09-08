@@ -1,16 +1,20 @@
-import { Heading, HStack, Spacer, AvatarGroup, Avatar } from "@chakra-ui/react";
-
-import { IoIosNotifications } from "react-icons/io";
+import {
+  HStack,
+  Spacer,
+  Image,
+  Separator,
+} from "@chakra-ui/react";
 
 import CreateNewDropdown from "./CreateNewDropdown";
 import TextButton from "../universal/TextButton";
-import useAuth from "../../../contexts/useAuth";
 
-import profileDefaultIcon from "../../../assets/default_profile_picture.jpg";
+import myChoiceText from "../../../assets/myChoice.png";
 import { useNavigate } from "react-router-dom";
+import LogoutMenu from "./LogoutMenu";
 
 const PageHeader = () => {
-  const { profilePictureUrl } = useAuth();
+
+
 
   const navigate = useNavigate();
 
@@ -21,19 +25,22 @@ const PageHeader = () => {
 
   return (
     <HStack p={4}>
-      <Heading>IPSE Student Dashboard</Heading>
+      <HStack gap={1} onClick={onHomeClick} cursor="pointer">
+        <Image src={myChoiceText} alt="MyChoice" />
+        <Image src="/app_icon.svg" alt="MyChoice" boxSize="65px" />
+      </HStack>
+
       <Spacer />
       <HStack gap={4}>
-        <TextButton onClick={onHomeClick}>Home</TextButton>
+        <TextButton fontSize="lg" onClick={onHomeClick}>
+          Home
+        </TextButton>
         <CreateNewDropdown />
-        <IoIosNotifications color="#bd4f23" size={24} />
-        <AvatarGroup>
-          <Avatar.Root>
-            <Avatar.Fallback />
-            <Avatar.Image src={profilePictureUrl ?? profileDefaultIcon} />
-          </Avatar.Root>
-        </AvatarGroup>
+        <LogoutMenu
+        />
       </HStack>
+
+      <Separator my={6} />
     </HStack>
   );
 };

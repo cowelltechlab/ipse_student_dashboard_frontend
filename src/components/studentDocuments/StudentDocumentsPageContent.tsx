@@ -15,7 +15,7 @@ const StudentDocumentsPageContent = ({
   return (
     <Box p={4}>
       <Heading fontSize="3xl" mb={2}>
-        Documents
+        Student Documents
       </Heading>
 
       <StudentProfilePageStudentSummary
