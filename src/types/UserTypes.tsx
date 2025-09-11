@@ -3,6 +3,12 @@ interface StudentProfileType {
   student_id: number;
 }
 
+export type TutoredStudent = {
+  student_id: number;
+  code: 'FR' | 'SO' | 'JR' | 'SR';
+  name: 'Freshman' | 'Sophomore' | 'Junior' | 'Senior';
+};
+
 export interface UserType {
   id: number;
   first_name: string;
@@ -17,7 +23,9 @@ export interface UserType {
   invite_url?: string;
 
   profile_tag?: string;
+  tutored_students?: TutoredStudent[] | null;
   student_profile?: StudentProfileType;
+  
 }
 
 export interface ProfilePictureType {
