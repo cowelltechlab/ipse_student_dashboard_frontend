@@ -5,11 +5,13 @@ import { useParams } from "react-router-dom";
 import useStudent from "../hooks/students/useStudent";
 import { useState } from "react";
 import StudentProfilePageContent from "../components/studentProfile/StudentProfilePageContent";
+import { Navigate } from "react-router-dom";
 
 const StudentProfile = () => {
   const [refetchTrigger, setRefetchTrigger] = useState<number>(0);
 
   const { student_id } = useParams<{ student_id: string }>();
+  if (!student_id) return <Navigate to="/dashboard" replace />;
   const { student, loading } = useStudent(student_id, refetchTrigger);
 
   let nameLabel;

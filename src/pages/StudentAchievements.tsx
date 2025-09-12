@@ -5,9 +5,11 @@ import PageHeader from "../components/common/pageHeader/PageHeader";
 import BreadcrumbNav from "../components/common/breadcrumb/BreadcrumbNav";
 import StudentAchievementsPageContent from "../components/studentAchievements/StudentAchievementsPageContent";
 import { useState } from "react";
+import { Navigate } from "react-router-dom";
 
 const StudentAchievements = () => {
   const { student_id } = useParams<{ student_id: string }>();
+  if (!student_id) return <Navigate to="/dashboard" replace />;
   const { student, loading } = useStudent(student_id);
 
   const [refetchTrigger, setRefetchTrigger] = useState<number>(0);

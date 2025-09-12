@@ -6,7 +6,7 @@ import studentIcon from "../../assets/icons/graduated.png";
 import documentIcon from "../../assets/icons/documents.png";
 import trophyIcon from "../../assets/icons/trophy.png";
 import StudentProfileSubsection from "./StudentProfileSubsection";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 
 interface StudentPageContentProps {
   student: StudentProfileType | null;
@@ -28,7 +28,9 @@ const StudentPageContent = ({
 }: StudentPageContentProps) => {
   const navigate = useNavigate();
 
-  const student_id = student?.student_id;
+  // Use the URL param 
+  const { student_id: routeStudentId } = useParams<{ student_id: string }>();
+  const studentId = routeStudentId ?? ""; // should always exist on /student/:student_id routes
 
   const sections: StudentProfileSectionSelection[] = [
     {
@@ -36,7 +38,8 @@ const StudentPageContent = ({
       subheading: "View the full profile, make edits, and customize details.",
       icon: studentIcon,
       onClick: () => {
-        navigate(`/student/${student_id}/profile`);
+        if (!studentId) return; 
+        navigate(`/student/${studentId}/profile`);
       },
     },
     {
@@ -45,7 +48,8 @@ const StudentPageContent = ({
         "Access and reivew materials already uploaded for this student",
       icon: documentIcon,
       onClick: () => {
-        navigate(`/student/${student_id}/documents`);
+        if (!studentId) return;
+        navigate(`/student/${studentId}/documents`);
       },
     },
     {
@@ -53,7 +57,8 @@ const StudentPageContent = ({
       subheading: "View your achievements!",
       icon: trophyIcon,
       onClick: () => {
-        navigate(`/student/${student_id}/achievements`);
+        if (!studentId) return;
+        navigate(`/student/${studentId}/achievements`);
       },
     },
   ];
