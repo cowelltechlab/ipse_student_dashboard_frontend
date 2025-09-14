@@ -26,8 +26,22 @@
   background: white;
 }
 
-/* Match outer Box rounding by removing Quill’s inner borders */
+/* Match outer Box rounding by removing Quill's inner borders */
 .rte .ql-toolbar.ql-snow {
   border: none;
   border-bottom: 1px solid #e2e8f0;
+}
+
+/* White background for pre tags (templates/code blocks) */
+.rte .ql-editor pre {
+  background-color: #ffffff;
+  color: #000000;
+  padding: 1rem;
+  border: 1px solid #e2e8f0;
+  border-radius: 4px;
+  overflow-x: auto;
+  font-family: 'Courier New', Consolas, Monaco, monospace;
+  font-size: 0.9rem;
+  line-height: 1.4;
+  margin: 1rem 0;
 }

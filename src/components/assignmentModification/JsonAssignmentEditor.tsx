@@ -67,7 +67,7 @@ export default function UpdatedAssignmentStructuredEditors({
         </Box>
 
         <Box>
-          <Heading size="sm" mb={2}>Support Tools — aiPromptingHtml</Heading>
+          <Heading size="sm" mb={2}>AI Prompt Ideas</Heading>
           <RichTextEditor
             value={value.supportTools.aiPromptingHtml}
             onChange={(html) => setST("aiPromptingHtml", html)}
@@ -75,8 +75,9 @@ export default function UpdatedAssignmentStructuredEditors({
         </Box>
 
         <Box>
-          <Heading size="sm" mb={2}>Support Tools — aiPolicyHtml</Heading>
+          <Heading size="sm" mb={2}>AI Policy</Heading>
           <RichTextEditor
+          readOnly
             value={value.supportTools.aiPolicyHtml}
             onChange={(html) => setST("aiPolicyHtml", html)}
           />
