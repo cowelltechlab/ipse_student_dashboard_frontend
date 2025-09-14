@@ -48,7 +48,13 @@ const UserCardGrid = ({
     );
   }
 
-  const filteredUsers = users.filter((user) => {
+  const sortedUsers = [...users].sort((a, b) => {
+    const nameA = `${a.first_name} ${a.last_name}`.toLowerCase();
+    const nameB = `${b.first_name} ${b.last_name}`.toLowerCase();
+    return nameA.localeCompare(nameB);
+  });
+
+  const filteredUsers = sortedUsers.filter((user) => {
     const fullName = `${user.first_name} ${user.last_name}`.toLowerCase();
     const matchesSearch = fullName.includes((searchTerm ?? "").toLowerCase());
 

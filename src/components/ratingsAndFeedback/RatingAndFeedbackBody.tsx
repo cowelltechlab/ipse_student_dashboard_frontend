@@ -4,13 +4,15 @@ import Goals from "./Goals";
 import RateMyOptions from "./RateMyOptions";
 import PlanningForTheFuture from "./PlanningForTheFuture";
 import SubmitFinalRatingButton from "./SubmitFinalRatingButton";
+import RatingSubmissionModal from "./RatingSubmissionModal";
 import type { AssignmentDetailType } from "../../types/AssignmentTypes";
 import type { StudentProfileType } from "../../types/StudentTypes";
 import type { RatingUpdateRequest } from "../../types/AssignmentRatingTypes";
 import useGetAssignmentVersionByDocId from "../../hooks/assignmentVersions/useGetAssignmentVersionByDocId";
 import useGetAssignmentRatingDetails from "../../hooks/assignmentRating.tsx/useGetAssignmentRatingDetails";
 import usePostAssignmentRating from "../../hooks/assignmentRating.tsx/usePostAssignmentRating";
-import { useState } from "react";
+import useGetExistingRatingData from "../../hooks/assignmentRating.tsx/useGetExistingRatingData";
+import { useState, useEffect } from "react";
 
 interface RatingAndFeedbackBodyProps {
   assignment: AssignmentDetailType | null;
@@ -23,6 +25,7 @@ interface RatingAndFeedbackBodyProps {
 const RatingAndFeedbackBody = ({
   assignment,
   assignmentLoading,
+  student,
   assignmentVersionId,
 }: RatingAndFeedbackBodyProps) => {
 
@@ -47,13 +50,56 @@ const RatingAndFeedbackBody = ({
     const [confidenceMakingChanges, setConfidenceMakingChanges] = useState<string>("");
     const [confidenceExplanation, setConfidenceExplanation] = useState<string>("");
 
+    // Modal State
+    const [isSubmissionModalOpen, setIsSubmissionModalOpen] = useState<boolean>(false);
+
     const { assignmentVersion, loading: assignmentVersionLoading } =
         useGetAssignmentVersionByDocId(assignmentVersionId.toString());
 
     const { assignmentRatingDetails, loading: assignmentRatingDetailsLoading } =
         useGetAssignmentRatingDetails(assignmentVersionId);
 
+    const { existingRatingData } =
+        useGetExistingRatingData(assignmentVersionId);
+
     const { handlePostAssignmentRating, loading: ratingPostLoading } = usePostAssignmentRating();
+
+    // Pre-populate form fields with existing data
+    useEffect(() => {
+        if (existingRatingData) {
+            // Goals Section
+            if (existingRatingData.goals_section) {
+                setHelpedWorkTowardsGoals(existingRatingData.goals_section.helped_work_towards_goals || "");
+                setWhichGoals(existingRatingData.goals_section.which_goals || []);
+                setGoalsExplanation(existingRatingData.goals_section.goals_explanation || "");
+            }
+
+            // Options Section
+            if (existingRatingData.options_section) {
+                setMostHelpfulParts(existingRatingData.options_section.most_helpful_parts || []);
+                setMostHelpfulPartsExplanation(existingRatingData.options_section.most_helpful_explanation || "");
+                setLeastHelpfulParts(existingRatingData.options_section.least_helpful_parts || []);
+                setLeastHelpfulPartsExplanation(existingRatingData.options_section.least_helpful_explanation || "");
+            }
+
+            // Planning Section
+            if (existingRatingData.planning_section) {
+                // My Skills
+                if (existingRatingData.planning_section.my_skills) {
+                    setFoundWayToKeepUsing(existingRatingData.planning_section.my_skills.found_way_to_keep_using || "");
+                    setWayToKeepExplanation(existingRatingData.planning_section.my_skills.way_to_keep_explanation || "");
+                    setCanDescribeImprovements(existingRatingData.planning_section.my_skills.can_describe_improvements || "");
+                    setImprovementsExplanation(existingRatingData.planning_section.my_skills.improvements_explanation || "");
+                }
+
+                // Guiding Learning
+                if (existingRatingData.planning_section.guiding_my_learning) {
+                    setConfidenceMakingChanges(existingRatingData.planning_section.guiding_my_learning.confidence_making_changes || "");
+                    setConfidenceExplanation(existingRatingData.planning_section.guiding_my_learning.confidence_explanation || "");
+                }
+            }
+        }
+    }, [existingRatingData]);
 
     const handleFormSubmission = async () => {
         try {
@@ -84,7 +130,8 @@ const RatingAndFeedbackBody = ({
             };
 
             await handlePostAssignmentRating(assignmentVersionId, ratingData);
-            // Success handling could be added here (e.g., showing a success toast)
+            // Show success modal
+            setIsSubmissionModalOpen(true);
         } catch (error) {
             console.error("Error submitting rating:", error);
             // Error handling could be added here (e.g., showing an error toast)
@@ -157,10 +204,15 @@ const RatingAndFeedbackBody = ({
                     onConfidenceExplanationChange={setConfidenceExplanation}
                 />
             </Accordion.Root>
-            <SubmitFinalRatingButton 
+            <SubmitFinalRatingButton
                 onSubmit={handleFormSubmission}
                 loading={ratingPostLoading}
                 disabled={!isFormValid()}
+            />
+            <RatingSubmissionModal
+                isOpen={isSubmissionModalOpen}
+                setIsOpen={setIsSubmissionModalOpen}
+                studentId={student?.student_id}
             />
         </VStack>
     );

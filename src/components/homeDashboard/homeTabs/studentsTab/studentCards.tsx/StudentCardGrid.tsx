@@ -79,7 +79,13 @@ const StudentCardGrid = ({
     );
   }
 
-  const filteredStudents = students.filter((s) => {
+  const sortedStudents = [...students].sort((a, b) => {
+    const nameA = `${a.first_name} ${a.last_name}`.toLowerCase();
+    const nameB = `${b.first_name} ${b.last_name}`.toLowerCase();
+    return nameA.localeCompare(nameB);
+  });
+
+  const filteredStudents = sortedStudents.filter((s) => {
     const full = `${s.first_name} ${s.last_name}`.toLowerCase();
     const matchesSearch = full.includes(searchTerm?.toLowerCase() || "");
     const matchesYear = yearName

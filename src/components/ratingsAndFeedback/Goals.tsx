@@ -6,7 +6,6 @@ import {
   Stack,
   VStack,
   Heading,
-  Flex,
   Image,
 } from "@chakra-ui/react";
 import { Checkbox } from "@chakra-ui/react";
@@ -105,13 +104,21 @@ const Goals = ({
               <Text fontSize="md" fontWeight="semibold" mb={3}>
                 2. Which goal did you think it helped you with?
               </Text>
-              <Flex wrap="wrap" gap={4}>
+              <Box
+                display="grid"
+                gridTemplateColumns={{
+                  base: "1fr",
+                  md: "repeat(2, 1fr)",
+                  lg: "repeat(3, 1fr)"
+                }}
+                gap={4}
+              >
                 {goalOptions
                   .filter(
                     (option): option is string => typeof option === "string"
                   )
                   .map((option) => (
-                    <Box key={option} minW="240px" flex="1 1 auto">
+                    <Box key={option}>
                       <Checkbox.Root
                         checked={whichGoals.includes(option)}
                         variant={"outline"}
@@ -126,7 +133,7 @@ const Goals = ({
                       </Checkbox.Root>
                     </Box>
                   ))}
-              </Flex>
+              </Box>
             </Box>
 
             <Box>

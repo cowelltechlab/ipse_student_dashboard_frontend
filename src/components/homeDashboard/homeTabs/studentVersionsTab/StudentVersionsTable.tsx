@@ -85,7 +85,13 @@ const StudentVersionsTable = ({
     setPasswordResetModalOpen(true);
   };
 
-  const filteredStudents = students.filter((student) => {
+  const sortedStudents = [...students].sort((a, b) => {
+    const nameA = `${a.first_name} ${a.last_name}`.toLowerCase();
+    const nameB = `${b.first_name} ${b.last_name}`.toLowerCase();
+    return nameA.localeCompare(nameB);
+  });
+
+  const filteredStudents = sortedStudents.filter((student) => {
     const lowerSearch = searchTerm?.toLowerCase().trim();
     const matchesSearch =
       !lowerSearch ||

@@ -67,27 +67,35 @@ const RateMyOptions = ({
       <Text fontSize="sm" fontWeight="bold" mb={3} color="#244d8a">
         {sectionTitle}
       </Text>
-      <Flex direction="column" gap={2}>
+      <Box
+        display="grid"
+        gridTemplateColumns={{
+          base: "1fr",
+          md: "repeat(2, 1fr)"
+        }}
+        gap={3}
+      >
         {options.map((option) => (
-          <Checkbox.Root
-            key={option}
-            variant={"outline"}
-            colorPalette={"gray"}
-            checked={selectedOptions.includes(option)}
-            disabled={
-              !selectedOptions.includes(option) &&
-              selectedOptions.length >= maxSelections
-            }
-            onCheckedChange={(details) =>
-              handleOptionChange(option, details, isMostHelpful)
-            }
-          >
-            <Checkbox.HiddenInput />
-            <Checkbox.Control bg={"white"} borderColor={"black"} />
-            <Text ml={2}>{option}</Text>
-          </Checkbox.Root>
+          <Box key={option}>
+            <Checkbox.Root
+              variant={"outline"}
+              colorPalette={"gray"}
+              checked={selectedOptions.includes(option)}
+              disabled={
+                !selectedOptions.includes(option) &&
+                selectedOptions.length >= maxSelections
+              }
+              onCheckedChange={(details) =>
+                handleOptionChange(option, details, isMostHelpful)
+              }
+            >
+              <Checkbox.HiddenInput />
+              <Checkbox.Control bg={"white"} borderColor={"black"} />
+              <Text ml={2}>{option}</Text>
+            </Checkbox.Root>
+          </Box>
         ))}
-      </Flex>
+      </Box>
     </Box>
   );
 
