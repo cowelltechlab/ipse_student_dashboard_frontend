@@ -5,7 +5,6 @@ interface StudentProfileType {
 
 export type TutoredStudent = {
   student_id: number;
-  code: 'FR' | 'SO' | 'JR' | 'SR';
   name: 'Freshman' | 'Sophomore' | 'Junior' | 'Senior';
 };
 

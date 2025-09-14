@@ -5,7 +5,7 @@ import TextButton from "../../../common/universal/TextButton";
 import useRoles from "../../../../hooks/roles/useRoles";
 import useUsers from "../../../../hooks/users/useUsers";
 import UserCardGrid from "../../../common/userCards/UserCardGrid";
-import type { UserType } from "../../../../types/UserTypes";
+import type { TutoredStudent, UserType } from "../../../../types/UserTypes";
 import CreateUserDialog from "../../createUserDialog/CreateUserDialog";
 import DisplayTutorDialog from "./displayTutorDialog/DisplayTutorDialog";
 import DeleteUserDialog from "../DeleteUserDialog";
@@ -58,7 +58,7 @@ const PeerTutorsTab = () => {
           (u) =>
             Array.isArray(u.tutored_students) &&
             u.tutored_students.some(
-              (ts: any) =>
+              (ts: TutoredStudent) =>
                 String(ts?.name ?? "").trim().toLowerCase() === target
             )
         )
