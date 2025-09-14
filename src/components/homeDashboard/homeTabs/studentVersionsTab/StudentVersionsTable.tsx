@@ -17,6 +17,7 @@ import { useState } from "react";
 import type { ErrorType } from "../../../../types/ErrorType";
 import useUpdateStudentGroupType from "../../../../hooks/studentGroups/useUpdateStudentGroupType";
 import { toaster } from "../../../ui/toaster";
+import AdminPasswordResetModal from "./AdminPasswordResetModal";
 
 import studentIcon from "../../../../assets/profile_default.png";
 
@@ -43,6 +44,8 @@ const StudentVersionsTable = ({
   onStudentUpdate,
 }: StudentVersionsTableProps) => {
   const [visibleCount, setVisibleCount] = useState(10);
+  const [passwordResetModalOpen, setPasswordResetModalOpen] = useState(false);
+  const [selectedStudent, setSelectedStudent] = useState<StudentDetailsType | null>(null);
   const { handleUpdateGroupType } = useUpdateStudentGroupType();
 
   const groupTypeCollection = createListCollection({
@@ -75,6 +78,11 @@ const StudentVersionsTable = ({
         type: "error",
       });
     }
+  };
+
+  const handlePasswordResetClick = (student: StudentDetailsType) => {
+    setSelectedStudent(student);
+    setPasswordResetModalOpen(true);
   };
 
   const filteredStudents = students.filter((student) => {
@@ -133,6 +141,8 @@ const StudentVersionsTable = ({
           <col style={{ width: "200px" }} />
           {/* PowerPoint column fixed */}
           <col style={{ width: "160px" }} />
+          {/* Password reset column fixed */}
+          <col style={{ width: "140px" }} />
         </colgroup>
 
         <Table.Body>
@@ -142,6 +152,7 @@ const StudentVersionsTable = ({
                   <Table.Cell>
                     <Skeleton height="20px" />
                   </Table.Cell>
+                  <Table.Cell />
                   <Table.Cell />
                   <Table.Cell />
                 </Table.Row>
@@ -218,6 +229,20 @@ const StudentVersionsTable = ({
                         PPT URLs
                       </Button>
                     </Table.Cell>
+
+                    {/* Column 4: Password Reset */}
+                    <Table.Cell textAlign="right">
+                      <Button
+                        size="sm"
+                        bg="#BD4F23"
+                        color="white"
+                        onClick={() => handlePasswordResetClick(student)}
+                        borderRadius="md"
+                        _hover={{ bg: "#A43E1E" }}
+                      >
+                        Reset Password
+                      </Button>
+                    </Table.Cell>
                   </Table.Row>
                 );
               })}
@@ -235,6 +260,13 @@ const StudentVersionsTable = ({
           Load More
         </Text>
       )}
+
+      <AdminPasswordResetModal
+        open={passwordResetModalOpen}
+        setOpen={setPasswordResetModalOpen}
+        student={selectedStudent}
+        onPasswordReset={onStudentUpdate}
+      />
     </Stack>
   );
 };
