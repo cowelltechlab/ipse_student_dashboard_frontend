@@ -14,6 +14,7 @@ import { useState, useEffect } from "react";
 import useUpdateStudentPptUrls from "../../../../hooks/studentGroups/useUpdateStudentPptUrls";
 import { toaster } from "../../../ui/toaster";
 import type { StudentDetailsType } from "../../../../types/StudentGroupTypes";
+import { processSharePointUrl } from "../../../../utils/sharePointUtils";
 
 interface PowerPointUrlsModalProps {
   open: boolean;
@@ -30,26 +31,109 @@ const PowerPointUrlsModal = ({
 }: PowerPointUrlsModalProps) => {
   const [embedUrl, setEmbedUrl] = useState("");
   const [editUrl, setEditUrl] = useState("");
+  const [embedUrlError, setEmbedUrlError] = useState<string>("");
+  const [editUrlError, setEditUrlError] = useState<string>("");
   const { handleUpdatePptUrls, loading } = useUpdateStudentPptUrls();
+
+  // Validation functions
+  const validateEmbedUrl = (url: string) => {
+    if (!url.trim()) {
+      setEmbedUrlError("");
+      return;
+    }
+    const result = processSharePointUrl(url);
+    setEmbedUrlError(result.isValid ? "" : result.userFriendlyError || "Invalid SharePoint URL");
+  };
+
+  const validateEditUrl = (url: string) => {
+    if (!url.trim()) {
+      setEditUrlError("");
+      return;
+    }
+    // Basic URL validation for edit URL
+    try {
+      new URL(url);
+      if (!url.startsWith("https://gtvault-my.sharepoint.com")) {
+        setEditUrlError("Edit URL must be from Georgia Tech's SharePoint");
+      } else {
+        setEditUrlError("");
+      }
+    } catch {
+      setEditUrlError("Please enter a valid URL");
+    }
+  };
+
+  // Handle embed URL changes with validation
+  const handleEmbedUrlChange = (value: string) => {
+    setEmbedUrl(value);
+    validateEmbedUrl(value);
+  };
+
+  // Handle edit URL changes with validation
+  const handleEditUrlChange = (value: string) => {
+    setEditUrl(value);
+    validateEditUrl(value);
+  };
 
   // Initialize form values when student changes
   useEffect(() => {
     if (student) {
       setEmbedUrl(student.ppt_embed_url || "");
       setEditUrl(student.ppt_edit_url || "");
+      setEmbedUrlError("");
+      setEditUrlError("");
     } else {
       setEmbedUrl("");
       setEditUrl("");
+      setEmbedUrlError("");
+      setEditUrlError("");
     }
   }, [student]);
 
   const handleSave = async () => {
     if (!student) return;
 
+    // Validate and process URLs before saving
+    let processedEmbedUrl = embedUrl || null;
+    const processedEditUrl = editUrl || null;
+
+    // Process embed URL if provided
+    if (embedUrl.trim()) {
+      const embedValidation = processSharePointUrl(embedUrl);
+      if (!embedValidation.isValid) {
+        toaster.create({
+          description: embedValidation.userFriendlyError || "Please enter a valid SharePoint embed URL.",
+          type: "error",
+        });
+        return;
+      }
+      processedEmbedUrl = embedValidation.cleanedUrl;
+    }
+
+    // Basic validation for edit URL if provided
+    if (editUrl.trim()) {
+      try {
+        new URL(editUrl);
+        if (!editUrl.startsWith("https://gtvault-my.sharepoint.com")) {
+          toaster.create({
+            description: "Edit URL must be from Georgia Tech's SharePoint",
+            type: "error",
+          });
+          return;
+        }
+      } catch {
+        toaster.create({
+          description: "Please enter a valid edit URL",
+          type: "error",
+        });
+        return;
+      }
+    }
+
     try {
       await handleUpdatePptUrls(student.student_id, {
-        ppt_embed_url: embedUrl || null,
-        ppt_edit_url: editUrl || null,
+        ppt_embed_url: processedEmbedUrl,
+        ppt_edit_url: processedEditUrl,
       });
 
       toaster.create({
@@ -109,12 +193,18 @@ const PowerPointUrlsModal = ({
                   </Text>
                   <Input
                     value={embedUrl}
-                    onChange={(e) => setEmbedUrl(e.target.value)}
-                    placeholder="Enter PowerPoint embed URL..."
+                    onChange={(e) => handleEmbedUrlChange(e.target.value)}
+                    placeholder="Paste SharePoint embed URL (iframe link)..."
                     bg="white"
                     color="black"
                     borderRadius="md"
+                    borderColor={embedUrlError ? "red.500" : "gray.300"}
                   />
+                  {embedUrlError && (
+                    <Text fontSize="sm" color="red.300" mt={1}>
+                      {embedUrlError}
+                    </Text>
+                  )}
                 </Box>
 
                 <Box w="full">
@@ -123,12 +213,18 @@ const PowerPointUrlsModal = ({
                   </Text>
                   <Input
                     value={editUrl}
-                    onChange={(e) => setEditUrl(e.target.value)}
-                    placeholder="Enter PowerPoint edit URL..."
+                    onChange={(e) => handleEditUrlChange(e.target.value)}
+                    placeholder="Enter PowerPoint edit URL (optional)..."
                     bg="white"
                     color="black"
                     borderRadius="md"
+                    borderColor={editUrlError ? "red.500" : "gray.300"}
                   />
+                  {editUrlError && (
+                    <Text fontSize="sm" color="red.300" mt={1}>
+                      {editUrlError}
+                    </Text>
+                  )}
                 </Box>
               </VStack>
             </Dialog.Body>
@@ -155,7 +251,9 @@ const PowerPointUrlsModal = ({
                   w="50%"
                   onClick={handleSave}
                   loading={loading}
+                  disabled={loading || !!embedUrlError || !!editUrlError}
                   _hover={{ bg: "#A43E1E" }}
+                  opacity={loading || !!embedUrlError || !!editUrlError ? 0.6 : 1}
                 >
                   Save URLs
                 </Button>

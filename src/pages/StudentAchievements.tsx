@@ -9,10 +9,10 @@ import { Navigate } from "react-router-dom";
 
 const StudentAchievements = () => {
   const { student_id } = useParams<{ student_id: string }>();
-  if (!student_id) return <Navigate to="/dashboard" replace />;
   const { student, loading } = useStudent(student_id);
-
   const [refetchTrigger, setRefetchTrigger] = useState<number>(0);
+
+  if (!student_id) return <Navigate to="/dashboard" replace />;
 
   let nameLabel;
 

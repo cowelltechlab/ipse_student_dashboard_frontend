@@ -13,6 +13,7 @@ import StudentSummaryHeaderCard from "../common/studentProfilePages/StudentSumma
 import { useEffect, useState } from "react";
 import usePostEmbedUrl from "../../hooks/studentProfiles/usePostEmbedUrl";
 import { toaster } from "../ui/toaster";
+import { processSharePointUrl } from "../../utils/sharePointUtils";
 
 interface StudentAchievementsPageContentProps {
   student: StudentProfileType | null;
@@ -30,12 +31,8 @@ const StudentAchievementsPageContent = ({
 
   const { handlePostEmbedUrl, loading } = usePostEmbedUrl();
 
-  const isValidSharePointUrl = (url: string) => {
-    return (
-      url.startsWith("https://gtvault-my.sharepoint.com") &&
-      url.includes("/Doc.aspx") &&
-      url.includes("sourcedoc=")
-    );
+  const validateAndProcessUrl = (url: string) => {
+    return processSharePointUrl(url);
   };
 
   // Prepopulate fields from student object
@@ -49,9 +46,10 @@ const StudentAchievementsPageContent = ({
   const uploadPptEmbedUrl = async () => {
     if (!pptEmbedUrlUpload || !pptEditUrlUpload || !student?.student_id) return;
 
-    if (!isValidSharePointUrl(pptEmbedUrlUpload)) {
+    const embedValidation = validateAndProcessUrl(pptEmbedUrlUpload);
+    if (!embedValidation.isValid) {
       toaster.create({
-        description: "Please enter a valid SharePoint embed link.",
+        description: embedValidation.userFriendlyError || "Please enter a valid SharePoint embed link.",
         type: "error",
       });
       return;
@@ -68,7 +66,7 @@ const StudentAchievementsPageContent = ({
     try {
       await handlePostEmbedUrl(
         student.student_id,
-        pptEmbedUrlUpload,
+        embedValidation.cleanedUrl,
         pptEditUrlUpload
       );
       toaster.create({
@@ -129,14 +127,16 @@ const StudentAchievementsPageContent = ({
                   onChange={(e) => setPptEmberUrlUpload(e.target.value)}
                   bg="white"
                 />
-                {pptEmbedUrlUpload.length > 0 &&
-                  !isValidSharePointUrl(pptEmbedUrlUpload) && (
+                {pptEmbedUrlUpload.length > 0 && (() => {
+                  const validation = validateAndProcessUrl(pptEmbedUrlUpload);
+                  return !validation.isValid ? (
                     <Box w="100%" textAlign="left">
                       <Text fontSize="sm" color="red.500" mt={1}>
-                        Please enter a valid SharePoint embed link.
+                        {validation.userFriendlyError || "Please enter a valid SharePoint embed link."}
                       </Text>
                     </Box>
-                  )}
+                  ) : null;
+                })()}
 
                 <Input
                   placeholder="Paste SharePoint edit link (required)..."
@@ -156,7 +156,7 @@ const StudentAchievementsPageContent = ({
                   onClick={uploadPptEmbedUrl}
                   loading={loading}
                   disabled={
-                    !isValidSharePointUrl(pptEmbedUrlUpload) ||
+                    !validateAndProcessUrl(pptEmbedUrlUpload).isValid ||
                     pptEditUrlUpload.trim() === ""
                   }
                   bg="#244d8a"

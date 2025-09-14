@@ -151,7 +151,7 @@ const StudentVersionsTable = ({
                   <Table.Row key={student.student_id} _hover={{ bg: "gray.100" }}>
                     {/* Column 1: icon + name */}
                     <Table.Cell>
-                      <HStack align="start">
+                      <HStack align="center">
                         <Image
                           src={student.profile_picture_url || studentIcon}
                           h="40px"
@@ -160,13 +160,11 @@ const StudentVersionsTable = ({
                           alt="Student profile"
                           objectFit="cover"
                         />
-                        <VStack align="start" flex="1" minW={0}>
+                        <VStack align="start" flex="1" minW={0} p={3}>
                           <Heading fontSize="md" fontWeight="bold">
                             {student.first_name} {student.last_name}
                           </Heading>
-                          <Text fontSize="sm" color="gray.500">
-                            Student ID: {student.student_id}
-                          </Text>
+                          
                         </VStack>
                       </HStack>
                     </Table.Cell>
