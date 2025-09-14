@@ -4,10 +4,12 @@ import StudentDocumentsPageContent from "../components/studentDocuments/StudentD
 import { useParams } from "react-router-dom";
 import useStudent from "../hooks/students/useStudent";
 import BreadcrumbNav from "../components/common/breadcrumb/BreadcrumbNav";
+import { Navigate } from "react-router-dom";
 
 const StudentDocuments = () => {
 
   const { student_id } = useParams<{ student_id: string }>();
+  if (!student_id) return <Navigate to="/dashboard" replace />;
   const { student, loading } = useStudent(student_id);
 
   let nameLabel;
