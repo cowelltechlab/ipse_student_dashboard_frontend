@@ -111,7 +111,7 @@ const RatingAndFeedbackBody = ({
 
     return (
         <VStack spaceY={4} align="stretch" marginTop={4} marginBottom={4} p={6}>
-            <Accordion.Root collapsible>
+            <Accordion.Root multiple>
                 <ViewDocumentInfo
                     assignment={assignment}
                     assignmentLoading={assignmentLoading}

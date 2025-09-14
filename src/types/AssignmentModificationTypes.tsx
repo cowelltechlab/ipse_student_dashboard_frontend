@@ -5,6 +5,7 @@ export interface LearningPathwayOption {
   why_good_growth: string;
   why_challenge: string;
   internal_id: string;
+  selected?: boolean;
 }
 
 export interface AssignmentVersionData {

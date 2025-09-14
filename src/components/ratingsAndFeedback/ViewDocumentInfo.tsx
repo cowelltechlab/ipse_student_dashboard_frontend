@@ -3,6 +3,7 @@ import AssignmentPreviews from "../assignmentDetails/assignmentDetailsBody/Assig
 import type { AssignmentVersionData } from "../../types/AssignmentVersionTypes";
 import type { AssignmentDetailType } from "../../types/AssignmentTypes";
 import { buildModifiedHtml } from "../../utils/assignmentHtml";
+import { useEffect } from "react";
 
 interface ViewDocumentInfoProps {
   assignment: AssignmentDetailType | null;
@@ -17,15 +18,33 @@ const ViewDocumentInfo = ({
   assignmentVersion,
   assignmentVersionLoading,
 }: ViewDocumentInfoProps) => {
-  const title = "Document Information";
+  const title = "View Document Information";
+
+  useEffect (() => {
+    console.log("Assignment Version in ViewDocumentInfo: ", assignmentVersion);
+  }, [assignmentVersion]);
 
   return (
-    <Accordion.Item key={title} value={title}>
-      <Accordion.ItemTrigger bg={"#244d8a"} padding={2} fontWeight="bold" color="white" fontSize={"2xl"}>
+    <Accordion.Item
+      key={title}
+      value={title}
+      my={10}
+      border="1px solid #ccc"
+      borderRadius="8px"
+      overflow="hidden"
+    >
+      <Accordion.ItemTrigger
+        bg={"#244d8a"}
+        padding={2}
+        fontWeight="bold"
+        color="white"
+        p={4}
+        fontSize={"4xl"}
+      >
         <Span flex="1">{title}</Span>
-        <Accordion.ItemIndicator />
+        <Accordion.ItemIndicator color={"white"} />
       </Accordion.ItemTrigger>
-      <Accordion.ItemContent bg="#white" padding={2}>
+      <Accordion.ItemContent bg="#white" p={4}>
         <Accordion.ItemBody>
           <AssignmentPreviews
             assignment={assignment}

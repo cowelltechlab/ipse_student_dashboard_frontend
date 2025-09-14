@@ -14,9 +14,6 @@ const AssignmentDetails = () => {
     assignment_id: string;
   }>();
 
-  if (!student_id) return <Navigate to="/dashboard" replace />;
-  if (!assignment_id) return <Navigate to={`/student/${student_id}/documents`} replace />;
-
   const [refetchTrigger, setRefetchTrigger] = useState<number>(0);
 
   const { student, loading: StudentLoading } = useStudent(
@@ -26,6 +23,10 @@ const AssignmentDetails = () => {
   const { assignment, loading: AssignmentLoading } = useAssignment(
     Number(assignment_id)
   );
+
+  if (!student_id) return <Navigate to="/dashboard" replace />;
+  if (!assignment_id)
+    return <Navigate to={`/student/${student_id}/documents`} replace />;
 
   let nameLabel;
   let assignmentLabel;

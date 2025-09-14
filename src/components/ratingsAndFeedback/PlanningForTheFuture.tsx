@@ -1,4 +1,4 @@
-import { Accordion, Span, Text, Stack, Box, Textarea } from "@chakra-ui/react";
+import { Accordion, Text, Stack, Box, Textarea, VStack, Heading } from "@chakra-ui/react";
 import LickertButtons from "./LickertButtons";
 import type { AssignmentRatingDataType } from "../../types/AssignmentRatingTypes";
 
@@ -34,29 +34,33 @@ const PlanningForTheFuture = ({
   onConfidenceExplanationChange
 }: PlanningForTheFutureProps) => {
     const title = "Planning for the Future";
+    const subtitle = "Reflect on what you've learned and how you can apply it moving forward.";
 
     return (
         <Accordion.Item key={title} value={title}>
             <Accordion.ItemTrigger
                 bg={"#244d8a"}
-                padding={2}
+                padding={4}
                 fontWeight="bold"
                 color="white"
                 fontSize={"2xl"}
             >
-            <Span flex="1">{title}</Span>
-            <Accordion.ItemIndicator />
+            <VStack align="start" gap={3} flex="1" textAlign="center">
+                <Heading flex="1" fontSize={"4xl"}>
+                    {title}
+                </Heading>
+                <Text fontSize="md" fontWeight="medium">
+                    {subtitle}
+                </Text>
+            </VStack>
+            <Accordion.ItemIndicator color={"white"} />
             </Accordion.ItemTrigger>
             <Accordion.ItemContent
-                bg="#cce0ff"
+                bg="#EAF2FF"
                 padding={4}
             >
             <Accordion.ItemBody>
                 <Stack spaceY={8}>
-                    <Text fontSize="md" fontWeight="medium">
-                        Reflect on what you've learned and how you can apply it moving forward.
-                    </Text>
-
                     {/* My Skills Subsection */}
                     <Box>
                         <Text fontSize="lg" fontWeight="bold" mb={4} color="#244d8a">
@@ -84,6 +88,8 @@ const PlanningForTheFuture = ({
                                     placeholder="Describe the working or learning method you found helpful..."
                                     minHeight="120px"
                                     resize="vertical"
+                                    bg={"white"}
+                                    border={"1px solid"}
                                 />
                             </Box>
 
@@ -107,6 +113,8 @@ const PlanningForTheFuture = ({
                                     placeholder="Describe what you could do better and how you know this..."
                                     minHeight="120px"
                                     resize="vertical"
+                                    bg={"white"}
+                                    border={"1px solid"}
                                 />
                             </Box>
                         </Stack>
@@ -139,6 +147,8 @@ const PlanningForTheFuture = ({
                                     placeholder="Describe what affects your confidence and what would help you feel more confident..."
                                     minHeight="120px"
                                     resize="vertical"
+                                    bg={"white"}
+                                    border={"1px solid"}
                                 />
                             </Box>
                         </Stack>

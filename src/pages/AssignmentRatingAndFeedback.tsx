@@ -35,6 +35,16 @@ const AssignmentRatingAndFeedback = () => {
       "Student";
   }
 
+  if (!assignment_id) {
+    assignmentLabel = "Assignment";
+  } else if (AssignmentLoading) {
+    assignmentLabel = <Skeleton height="20px" width="100px" />;
+  } else {
+    const assignmentTitle = assignment?.title || "";
+    // Normalize initial capitalization
+    assignmentLabel = assignmentTitle.charAt(0).toUpperCase() + assignmentTitle.slice(1);
+  }
+
   const breadcrumbItems = [
     { label: "Home", href: "/dashboard" },
     { label: nameLabel, href: `/student/${student_id}` },
