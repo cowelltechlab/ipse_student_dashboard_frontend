@@ -80,13 +80,24 @@ const AssignmentDetailsBody = ({
     }
 
     try {
-      const response = await handleFinalizeAssignmentVersion(versionId);
-      if (response) {
-        toaster.create({
-          description: `Assginment finalized successfully`,
-          type: "success",
-        });
+      await handleFinalizeAssignmentVersion(versionId);
+
+      // Immediately update local state for instant UI feedback
+      if (assignment?.versions) {
+        const finalizedVersion = assignment.versions.find(v => v.document_id === versionId);
+        if (finalizedVersion) {
+          // Update the finalVersion state to show the Final Version section immediately
+          setFinalVersion({ ...finalizedVersion, finalized: true });
+          // Set the finalized version as the active version
+          setActiveVersion(finalizedVersion.document_id);
+        }
       }
+
+      toaster.create({
+        description: `Assignment finalized successfully`,
+        type: "success",
+      });
+      // Still trigger refetch to sync with server state
       triggerRefetch();
     } catch (e) {
       console.error(e);
@@ -97,7 +108,7 @@ const AssignmentDetailsBody = ({
 
       const errorMessage = error.response?.data.message || error.message;
       toaster.create({
-        description: `Error creating class: ${errorMessage}`,
+        description: `Error finalizing assignment: ${errorMessage}`,
         type: "error",
       });
     }
@@ -115,7 +126,7 @@ const AssignmentDetailsBody = ({
         setActiveVersion(finalizedVersion.document_id);
       }
     }
-  }, [assignment, finalVersion]);
+  }, [assignment]);
 
 
   const originalAssignmentData = async () => {
@@ -156,7 +167,7 @@ const AssignmentDetailsBody = ({
         selectedVersionLoading={AssignmentVersionLoading}
         isFinalizedVersion={activeVersion === finalVersion?.document_id}
       />
-      {assignment?.finalized && (
+      {(assignment?.finalized || finalVersion?.finalized) && (
         <AssignmentSection
           tagContent="Final Version"
           assignment={assignment}

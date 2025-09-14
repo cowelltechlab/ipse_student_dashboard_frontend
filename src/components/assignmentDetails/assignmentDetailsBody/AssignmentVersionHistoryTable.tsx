@@ -1,6 +1,6 @@
 // file: AssignmentVersionHistoryTable.tsx
 
-import { Box, Table, Text } from "@chakra-ui/react";
+import { Box, Table, Text, Heading, VStack, Separator } from "@chakra-ui/react";
 import type { AssignmentDetailType } from "../../../types/AssignmentTypes";
 import AssignmentDetailsDocLine from "./AssignmentDetailsDocLine";
 import AssignmentsVersionHistoryTableRowButtons from "./AssignmentVersionHistoryTableButtons";
@@ -43,40 +43,87 @@ const AssignmentVersionHistoryTable = ({
     }
   };
 
+  // Group versions by modifier role
+  const groupVersionsByRole = (versions: AssignmentDetailType["versions"]) => {
+    const roleOrder = ['Admin', 'Student', 'Peer Tutor', 'Advisor'];
+    const grouped: Record<string, typeof versions> = {};
+
+    versions.forEach(version => {
+      const role = version.modifier_role || 'Other';
+      if (!grouped[role]) {
+        grouped[role] = [];
+      }
+      grouped[role].push(version);
+    });
+
+    // Sort groups by role priority
+    const sortedGroups: Array<{ role: string; versions: typeof versions }> = [];
+
+    roleOrder.forEach(role => {
+      if (grouped[role] && grouped[role].length > 0) {
+        sortedGroups.push({ role, versions: grouped[role] });
+      }
+    });
+
+    // Add any remaining roles not in the priority list
+    Object.keys(grouped).forEach(role => {
+      if (!roleOrder.includes(role) && grouped[role].length > 0) {
+        sortedGroups.push({ role, versions: grouped[role] });
+      }
+    });
+
+    return sortedGroups;
+  };
+
   if (!assignment) {
     return <Text>No assignment data</Text>;
   }
 
+  const groupedVersions = groupVersionsByRole(assignment.versions);
+
   return (
     <Box overflowX="auto" p={6}>
-      <Table.Root>
-        <Table.Body>
-          {assignment.versions.map((version) => (
-            <Table.Row
-              key={version.document_id}
-              _hover={{ bg: "gray.100", cursor: "pointer" }}
-              onClick={() => handleSelectVersionClick(version.document_id)}
-            >
-              <AssignmentDetailsDocLine
-                assignment={assignment}
-                versionNumber={`Version ${version.version_number}`}
-              >
-                <AssignmentsVersionHistoryTableRowButtons
-                  fileName={assignment.title}
-                  fileType={assignment.source_format}
-                  onDownload={() => handleDownload(version.document_id, assignment.title)}
-                  
-                  handleVersionFinalization={() =>
-                    version.version_number
-                      ? finalizeVersion(version.document_id)
-                      : () => {}
-                  }
-                />
-              </AssignmentDetailsDocLine>
-            </Table.Row>
-          ))}
-        </Table.Body>
-      </Table.Root>
+      <VStack align="stretch" gap={6}>
+        {groupedVersions.map(({ role, versions }) => (
+          <Box key={role}>
+            <Heading size="md" color="#244d8a" mb={3}>
+              Modified by {role}
+            </Heading>
+            <Table.Root>
+              <Table.Body>
+                {versions.map((version) => (
+                  <Table.Row
+                    key={version.document_id}
+                    _hover={{ bg: "gray.100", cursor: "pointer" }}
+                    onClick={() => handleSelectVersionClick(version.document_id)}
+                  >
+                    <AssignmentDetailsDocLine
+                      assignment={assignment}
+                      versionNumber={`Version ${version.version_number}`}
+                    >
+                      <AssignmentsVersionHistoryTableRowButtons
+                        fileName={assignment.title}
+                        fileType={assignment.source_format}
+                        onDownload={() => handleDownload(version.document_id, assignment.title)}
+
+                        handleVersionFinalization={() =>
+                          version.version_number
+                            ? finalizeVersion(version.document_id)
+                            : () => {}
+                        }
+                      />
+                    </AssignmentDetailsDocLine>
+                  </Table.Row>
+                ))}
+              </Table.Body>
+            </Table.Root>
+            {/* Add separator between role groups, except for the last one */}
+            {groupedVersions.indexOf(groupedVersions.find(g => g.role === role)!) < groupedVersions.length - 1 && (
+              <Separator my={4} />
+            )}
+          </Box>
+        ))}
+      </VStack>
     </Box>
   );
 };
