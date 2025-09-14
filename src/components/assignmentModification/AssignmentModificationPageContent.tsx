@@ -330,10 +330,13 @@ const AssignmentDetailsPageContent = ({
         )}
       </HStack>
 
-      {assignment && studentId && isCompletionModalOpen && (
+      {assignment && studentId && isCompletionModalOpen && updatedJson && versionOptions?.version_document_id && (
         <AssignmentModificationCompletionDialog
           student_id={studentId}
-          assignment_id={assignment?.assignment_id}
+          assignment_id={assignment.assignment_id}
+          assignmentJson={updatedJson}
+          versionDocumentId={versionOptions.version_document_id}
+          assignmentTitle={assignment.title || 'modified-assignment'}
           isModalOpen={isCompletionModalOpen}
           setIsModalOpen={setIsCompletionModalOpen}
         />

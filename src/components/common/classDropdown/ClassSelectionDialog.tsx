@@ -45,7 +45,7 @@ const ClassSelectionDialog = ({
   const [year, setYear] = useState<string>(new Date().getFullYear().toString());
   const [semester, setSemester] = useState<string>("");
 
-  const [classType, setClassType] = useState<"IPSE" | "Inclusive">("IPSE");
+  const [classType, setClassType] = useState<"IPSE" | "Inclusive">("Inclusive");
 
   const { handleCreateClass } = useCreateClass();
 
