@@ -11,7 +11,7 @@ interface RichTextEditorProps {
   readOnly?: boolean; // default false
 }
 
-const RichTextEditor: React.FC<RichTextEditorProps> = ({
+const RichTextEditor: React.FC<RichTextEditorProps> = React.memo(({
   value,
   onChange,
   minHeightRem = 8,
@@ -29,27 +29,61 @@ const RichTextEditor: React.FC<RichTextEditorProps> = ({
       .trim();
   }, []);
 
+  // Enhanced normalization that also handles ensureFragment transformation
+  const normalizeForComparison = useCallback((html: string) => {
+    const lower = html.toLowerCase();
+    let normalized = html;
+
+    // Apply the same logic as ensureFragment to ensure consistency
+    if (
+      lower.includes("<html") ||
+      lower.includes("<body") ||
+      lower.includes("<head") ||
+      lower.includes("<!doctype")
+    ) {
+      const div = document.createElement("div");
+      div.innerHTML = html;
+      normalized = div.innerHTML;
+    }
+
+    return normalizeHtml(normalized);
+  }, [normalizeHtml]);
+
   // Keep Quill's document in sync with external value changes
   useEffect(() => {
     const quill = quillRef.current?.getEditor?.();
     if (!quill) return;
 
     const current = quill.root.innerHTML;
-    // Normalize both values for comparison to handle minor formatting differences
-    const normalizedCurrent = normalizeHtml(current);
-    const normalizedValue = normalizeHtml(value || "");
+    // Use enhanced normalization that accounts for ensureFragment
+    const normalizedCurrent = normalizeForComparison(current);
+    const normalizedValue = normalizeForComparison(value || "");
 
     // Only update if different and not currently updating from our own onChange
     if (normalizedCurrent !== normalizedValue && !isUpdatingFromProp.current) {
+      // Save cursor position before updating
+      const selection = quill.getSelection();
+
       isUpdatingFromProp.current = true;
+
       // "silent" avoids triggering onChange and causing loops
       quill.clipboard.dangerouslyPasteHTML(value || "", "silent");
-      // Reset flag after a short delay to allow for DOM updates
+
+      // Restore cursor position after DOM updates
       setTimeout(() => {
+        if (selection) {
+          try {
+            quill.setSelection(selection);
+          } catch {
+            // If the selection is invalid (e.g., beyond new content), place cursor at end
+            const length = quill.getLength();
+            quill.setSelection(length - 1);
+          }
+        }
         isUpdatingFromProp.current = false;
-      }, 0);
+      }, 10); // Small delay to ensure DOM updates complete
     }
-  }, [value, normalizeHtml]);
+  }, [value, normalizeForComparison]);
 
   // Cleanup debounce timer on unmount
   useEffect(() => {
@@ -83,7 +117,13 @@ const RichTextEditor: React.FC<RichTextEditorProps> = ({
               clearTimeout(debounceTimer.current);
             }
             debounceTimer.current = setTimeout(() => {
+              // Set flag briefly to prevent the useEffect from firing during the onChange
+              isUpdatingFromProp.current = true;
               onChange(content);
+              // Reset the flag after a short delay to allow parent component update
+              setTimeout(() => {
+                isUpdatingFromProp.current = false;
+              }, 50);
             }, 100); // 100ms debounce
           }
         }}
@@ -118,6 +158,15 @@ const RichTextEditor: React.FC<RichTextEditorProps> = ({
       />
     </Box>
   );
-};
+
+}, (prevProps, nextProps) => {
+  // Only re-render if these specific props have changed
+  return (
+    prevProps.value === nextProps.value &&
+    prevProps.readOnly === nextProps.readOnly &&
+    prevProps.minHeightRem === nextProps.minHeightRem &&
+    prevProps.onChange === nextProps.onChange
+  );
+});
 
 export default RichTextEditor;

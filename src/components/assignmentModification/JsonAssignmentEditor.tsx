@@ -1,5 +1,5 @@
-// UpdatedAssignmentStructuredEditors.tsx
 import { Box, Heading, VStack } from "@chakra-ui/react";
+import { useCallback } from "react";
 import RichTextEditor from "../common/universal/EditableHTMLContentBox";
 
 export type AssignmentJson = {
@@ -21,14 +21,40 @@ export default function UpdatedAssignmentStructuredEditors({
   value: AssignmentJson;
   onChange: (next: AssignmentJson) => void;
 }) {
-  const set = <K extends keyof AssignmentJson>(k: K, v: string) =>
-    onChange({ ...value, [k]: ensureFragment(v) } as AssignmentJson);
+  const set = useCallback(<K extends keyof AssignmentJson>(k: K, v: string) => {
+    const updatedValue = { ...value, [k]: ensureFragment(v) } as AssignmentJson;
+    onChange(updatedValue);
+  }, [value, onChange]);
 
-  const setST = <K extends keyof AssignmentJson["supportTools"]>(k: K, v: string) =>
-    onChange({
+  const setST = useCallback(<K extends keyof AssignmentJson["supportTools"]>(k: K, v: string) => {
+    const updatedValue = {
       ...value,
       supportTools: { ...value.supportTools, [k]: ensureFragment(v) },
-    });
+    };
+    onChange(updatedValue);
+  }, [value, onChange]);
+
+  // Create stable onChange handlers for each field
+  const onAssignmentInstructionsChange = useCallback((html: string) =>
+    set("assignmentInstructionsHtml", html), [set]);
+
+  const onStepByStepPlanChange = useCallback((html: string) =>
+    set("stepByStepPlanHtml", html), [set]);
+
+  const onPromptsChange = useCallback((html: string) =>
+    set("promptsHtml", html), [set]);
+
+  const onToolsChange = useCallback((html: string) =>
+    setST("toolsHtml", html), [setST]);
+
+  const onAiPromptingChange = useCallback((html: string) =>
+    setST("aiPromptingHtml", html), [setST]);
+
+  const onAiPolicyChange = useCallback((html: string) =>
+    setST("aiPolicyHtml", html), [setST]);
+
+  const onMotivationalMessageChange = useCallback((html: string) =>
+    set("motivationalMessageHtml", html), [set]);
 
   return (
     // Set a max height for the whole section and make it scrollable
@@ -38,7 +64,7 @@ export default function UpdatedAssignmentStructuredEditors({
           <Heading size="sm" mb={2}>Assignment Instructions</Heading>
           <RichTextEditor
             value={value.assignmentInstructionsHtml}
-            onChange={(html) => set("assignmentInstructionsHtml", html)}
+            onChange={onAssignmentInstructionsChange}
           />
         </Box>
 
@@ -46,7 +72,7 @@ export default function UpdatedAssignmentStructuredEditors({
           <Heading size="sm" mb={2}>Step-by-Step Plan</Heading>
           <RichTextEditor
             value={value.stepByStepPlanHtml}
-            onChange={(html) => set("stepByStepPlanHtml", html)}
+            onChange={onStepByStepPlanChange}
           />
         </Box>
 
@@ -54,7 +80,7 @@ export default function UpdatedAssignmentStructuredEditors({
           <Heading size="sm" mb={2}>Prompts</Heading>
           <RichTextEditor
             value={value.promptsHtml}
-            onChange={(html) => set("promptsHtml", html)}
+            onChange={onPromptsChange}
           />
         </Box>
 
@@ -62,7 +88,7 @@ export default function UpdatedAssignmentStructuredEditors({
           <Heading size="sm" mb={2}>Support Tools</Heading>
           <RichTextEditor
             value={value.supportTools.toolsHtml}
-            onChange={(html) => setST("toolsHtml", html)}
+            onChange={onToolsChange}
           />
         </Box>
 
@@ -70,16 +96,16 @@ export default function UpdatedAssignmentStructuredEditors({
           <Heading size="sm" mb={2}>AI Prompt Ideas</Heading>
           <RichTextEditor
             value={value.supportTools.aiPromptingHtml}
-            onChange={(html) => setST("aiPromptingHtml", html)}
+            onChange={onAiPromptingChange}
           />
         </Box>
 
         <Box>
           <Heading size="sm" mb={2}>AI Policy</Heading>
           <RichTextEditor
-          readOnly
+            readOnly
             value={value.supportTools.aiPolicyHtml}
-            onChange={(html) => setST("aiPolicyHtml", html)}
+            onChange={onAiPolicyChange}
           />
         </Box>
 
@@ -87,7 +113,7 @@ export default function UpdatedAssignmentStructuredEditors({
           <Heading size="sm" mb={2}>Motivational Message</Heading>
           <RichTextEditor
             value={value.motivationalMessageHtml}
-            onChange={(html) => set("motivationalMessageHtml", html)}
+            onChange={onMotivationalMessageChange}
           />
         </Box>
       </VStack>

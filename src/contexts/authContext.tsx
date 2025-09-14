@@ -72,9 +72,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       setLastName(decoded.last_name ?? null);
       setRoles(decoded.role_names ?? []);
       setProfilePictureUrl(decoded.profile_picture_url ?? null);
-
-      console.log("Decoded token:", decoded);
-
+      
       return decoded;
     } catch (e) {
       console.error("Failed to decode token:", e);
