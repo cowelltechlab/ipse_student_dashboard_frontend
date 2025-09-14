@@ -5,6 +5,7 @@ import PeerTutorsTab from "./homeTabs/peerTutorsTab/PeerTutorsTab";
 
 import { Tabs } from "@chakra-ui/react";
 import useAuth from "../../contexts/useAuth";
+import StudentVersionsTab from "./homeTabs/studentVersionsTab/StudentVersionsTab";
 
 const HomeContent = () => {
   const { roles } = useAuth();
@@ -15,6 +16,14 @@ const HomeContent = () => {
         <Tabs.Trigger _selected={{ fontWeight: "bold" }} value="students">
           Students
         </Tabs.Trigger>
+        {roles.includes("Admin") && (
+          <Tabs.Trigger
+            _selected={{ fontWeight: "bold" }}
+            value="student-groups"
+          >
+            Student Groups
+          </Tabs.Trigger>
+        )}
         <Tabs.Trigger _selected={{ fontWeight: "bold" }} value="assignments">
           Assignments
         </Tabs.Trigger>
@@ -34,6 +43,11 @@ const HomeContent = () => {
       <Tabs.Content value="students">
         <StudentsTab />
       </Tabs.Content>
+      {roles.includes("Admin") && (
+        <Tabs.Content value="student-groups">
+          <StudentVersionsTab />
+        </Tabs.Content>
+      )}
       <Tabs.Content value="assignments">
         <AssignmentsTab />
       </Tabs.Content>
