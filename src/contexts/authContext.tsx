@@ -149,6 +149,30 @@ const loginWithGT = () => {
   );
 };
 
+  // GT OAuth callback handler (direct token)
+  const handleGTCallback = async (
+    accessToken: string
+  ): Promise<{ isStudent: boolean; studentId: number | null } | null> => {
+    try {
+      setLoading(true);
+      const decoded = setAuthFromToken(accessToken);
+      if (!decoded) {
+        throw new Error("Invalid or expired token");
+      }
+
+      const isStudent =
+        (decoded.role_names ?? []).includes("Student") && !!decoded.student_id;
+      const studentId = isStudent ? decoded.student_id : null;
+
+      return { isStudent, studentId };
+    } catch (error) {
+      console.error("GT Authentication failed", error);
+      throw error;
+    } finally {
+      setLoading(false);
+    }
+  };
+
   // Google OAuth callback handler
   const handleCallback = async (
     code: string
@@ -307,6 +331,7 @@ const loginWithGT = () => {
         loginWithEmail,
         logout,
         handleCallback,
+        handleGTCallback,
         refreshAuth,
       }}
     >
