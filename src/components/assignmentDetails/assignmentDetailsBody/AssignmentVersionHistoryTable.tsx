@@ -97,22 +97,24 @@ const AssignmentVersionHistoryTable = ({
                     _hover={{ bg: "gray.100", cursor: "pointer" }}
                     onClick={() => handleSelectVersionClick(version.document_id)}
                   >
-                    <AssignmentDetailsDocLine
-                      assignment={assignment}
-                      versionNumber={`Version ${version.version_number}`}
-                    >
-                      <AssignmentsVersionHistoryTableRowButtons
-                        fileName={assignment.title}
-                        fileType={assignment.source_format}
-                        onDownload={() => handleDownload(version.document_id, assignment.title)}
+                    <Table.Cell>
+                      <AssignmentDetailsDocLine
+                        assignment={assignment}
+                        versionNumber={`Version ${version.version_number}`}
+                      >
+                        <AssignmentsVersionHistoryTableRowButtons
+                          fileName={assignment.title}
+                          fileType={assignment.source_format}
+                          onDownload={() => handleDownload(version.document_id, assignment.title)}
 
-                        handleVersionFinalization={() =>
-                          version.version_number
-                            ? finalizeVersion(version.document_id)
-                            : () => {}
-                        }
-                      />
-                    </AssignmentDetailsDocLine>
+                          handleVersionFinalization={() =>
+                            version.version_number
+                              ? finalizeVersion(version.document_id)
+                              : () => {}
+                          }
+                        />
+                      </AssignmentDetailsDocLine>
+                    </Table.Cell>
                   </Table.Row>
                 ))}
               </Table.Body>
