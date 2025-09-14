@@ -59,7 +59,7 @@ export default function UpdatedAssignmentStructuredEditors({
         </Box>
 
         <Box>
-          <Heading size="sm" mb={2}>Support Tools — toolsHtml</Heading>
+          <Heading size="sm" mb={2}>Support Tools</Heading>
           <RichTextEditor
             value={value.supportTools.toolsHtml}
             onChange={(html) => setST("toolsHtml", html)}

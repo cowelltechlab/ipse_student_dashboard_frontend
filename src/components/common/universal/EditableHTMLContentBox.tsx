@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useCallback } from "react";
 import { Box } from "@chakra-ui/react";
 import ReactQuill from "react-quill-new";
 import "react-quill-new/dist/quill.snow.css";
@@ -18,6 +18,16 @@ const RichTextEditor: React.FC<RichTextEditorProps> = ({
   readOnly = false,
 }) => {
   const quillRef = useRef<ReactQuill | null>(null);
+  const isUpdatingFromProp = useRef(false);
+  const debounceTimer = useRef<NodeJS.Timeout | null>(null);
+
+  // Normalize HTML for comparison to avoid minor formatting differences
+  const normalizeHtml = useCallback((html: string) => {
+    return html
+      .replace(/\s+/g, ' ') // normalize whitespace
+      .replace(/> </g, '><') // remove spaces between tags
+      .trim();
+  }, []);
 
   // Keep Quill's document in sync with external value changes
   useEffect(() => {
@@ -25,12 +35,30 @@ const RichTextEditor: React.FC<RichTextEditorProps> = ({
     if (!quill) return;
 
     const current = quill.root.innerHTML;
-    // Only update if different to avoid cursor jumps while typing
-    if (current !== value) {
+    // Normalize both values for comparison to handle minor formatting differences
+    const normalizedCurrent = normalizeHtml(current);
+    const normalizedValue = normalizeHtml(value || "");
+
+    // Only update if different and not currently updating from our own onChange
+    if (normalizedCurrent !== normalizedValue && !isUpdatingFromProp.current) {
+      isUpdatingFromProp.current = true;
       // "silent" avoids triggering onChange and causing loops
       quill.clipboard.dangerouslyPasteHTML(value || "", "silent");
+      // Reset flag after a short delay to allow for DOM updates
+      setTimeout(() => {
+        isUpdatingFromProp.current = false;
+      }, 0);
     }
-  }, [value]);
+  }, [value, normalizeHtml]);
+
+  // Cleanup debounce timer on unmount
+  useEffect(() => {
+    return () => {
+      if (debounceTimer.current) {
+        clearTimeout(debounceTimer.current);
+      }
+    };
+  }, []);
 
   return (
     <Box
@@ -47,7 +75,18 @@ const RichTextEditor: React.FC<RichTextEditorProps> = ({
         value={value}
         // ReactQuill calls onChange(content, delta, source, editor)
         // Our handler's first arg will be the HTML string we want.
-        onChange={onChange}
+        onChange={(content) => {
+          // Only call onChange if this isn't a programmatic update
+          if (!isUpdatingFromProp.current) {
+            // Debounce rapid changes to prevent infinite loops
+            if (debounceTimer.current) {
+              clearTimeout(debounceTimer.current);
+            }
+            debounceTimer.current = setTimeout(() => {
+              onChange(content);
+            }, 100); // 100ms debounce
+          }
+        }}
         readOnly={readOnly}
         theme="snow"
         style={{ fontSize: "1.1rem", lineHeight: "1.6" }}
