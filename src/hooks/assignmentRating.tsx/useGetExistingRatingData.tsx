@@ -20,7 +20,7 @@ const useGetExistingRatingData = (assignment_version_id: string) => {
       } catch (e) {
         const errorObj = e as ErrorType;
         // If it's a 404, it means no existing data, which is not an error
-        if (errorObj.status !== 404) {
+        if (errorObj.code !== '404') {
           setError(errorObj);
         }
         setExistingRatingData(null);

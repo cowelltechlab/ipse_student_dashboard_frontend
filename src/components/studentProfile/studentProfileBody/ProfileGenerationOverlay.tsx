@@ -15,7 +15,7 @@ const ProfileGenerationOverlay = () => {
       alignItems="center"
       justifyContent="center"
     >
-      <VStack spacing={6}>
+      <VStack gap={6}>
         <DotLottieReact
           src="https://lottie.host/e2884197-ec9c-48f7-b5d9-c12f12330558/JaG9omssx9.lottie"
           loop
