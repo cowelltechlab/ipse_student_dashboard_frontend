@@ -7,10 +7,13 @@ import {
   VStack,
   Heading,
   Flex,
+  Image,
 } from "@chakra-ui/react";
 import { Checkbox } from "@chakra-ui/react";
 import LickertButtons from "./LickertButtons";
 import type { AssignmentRatingDataType } from "../../types/AssignmentRatingTypes";
+
+import GoalIcon from "../../assets/icons/goal.png";
 
 interface GoalsProps {
   assignmentRatingDetails?: AssignmentRatingDataType | null;
@@ -74,6 +77,7 @@ const Goals = ({
         color="white"
         fontSize={"2xl"}
       >
+        <Image boxSize="40px" src={GoalIcon} alt="Goals Icon" />
         <VStack align="start" gap={3} flex="1" textAlign="center">
           <Heading flex="1" fontSize={"4xl"}>
             {title}

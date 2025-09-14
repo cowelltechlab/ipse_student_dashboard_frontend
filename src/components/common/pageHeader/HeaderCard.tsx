@@ -11,12 +11,16 @@ interface HeaderCardProps {
   cardHeading: string;
   cardText: string;
   cardImageUrl: string;
+  bg?: string;
+  color?: string;
 }
 
 const HeaderCard = ({
   cardHeading,
   cardText,
   cardImageUrl,
+  bg = "#244d8a",
+  color = "white",
 }: HeaderCardProps) => {
   const imageSize = useBreakpointValue({
     base: "200px",
@@ -38,7 +42,7 @@ const HeaderCard = ({
       overflow="hidden"
     >
       {/* Blue Background Box */}
-      <Box position="absolute" inset={0} bg="#244d8a" zIndex={0} />
+      <Box position="absolute" inset={0} bg={bg} zIndex={0} />
 
       {/* Foreground Content */}
       <Box
@@ -56,10 +60,10 @@ const HeaderCard = ({
           justify="space-between"
         >
           <Box flex="1" pr={{ md: 4 }}>
-            <Heading color="white" fontSize="2xl" mb={2}>
+            <Heading color={color} fontSize="2xl" mb={2}>
               {cardHeading}
             </Heading>
-            <Text color="white" fontSize="md">
+            <Text color={color} fontSize="md">
               {cardText}
             </Text>
           </Box>

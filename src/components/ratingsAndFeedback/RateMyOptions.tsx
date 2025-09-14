@@ -7,9 +7,12 @@ import {
   Flex,
   VStack,
   Heading,
+  Image,
 } from "@chakra-ui/react";
 import { Checkbox } from "@chakra-ui/react";
 import type { AssignmentRatingDataType } from "../../types/AssignmentRatingTypes";
+
+import RateOptionsIcon from "../../assets/icons/rating.png"
 
 interface RateMyOptionsProps {
   assignmentRatingDetails?: AssignmentRatingDataType | null;
@@ -121,6 +124,7 @@ const RateMyOptions = ({
         color="white"
         fontSize={"2xl"}
       >
+        <Image boxSize="40px" src={RateOptionsIcon} alt="Rate My Options Icon" />
         <VStack align="start" gap={3} flex="1" textAlign="center">
           <Heading flex="1" fontSize={"4xl"}>
             {title}

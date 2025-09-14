@@ -1,9 +1,10 @@
-import { Accordion, Span } from "@chakra-ui/react";
+import { Accordion, Span, Image } from "@chakra-ui/react";
 import AssignmentPreviews from "../assignmentDetails/assignmentDetailsBody/AssignmentPreviews";
 import type { AssignmentVersionData } from "../../types/AssignmentVersionTypes";
 import type { AssignmentDetailType } from "../../types/AssignmentTypes";
 import { buildModifiedHtml } from "../../utils/assignmentHtml";
-import { useEffect } from "react";
+
+import documentIcon from "../../assets/icons/documents.png"
 
 interface ViewDocumentInfoProps {
   assignment: AssignmentDetailType | null;
@@ -18,11 +19,8 @@ const ViewDocumentInfo = ({
   assignmentVersion,
   assignmentVersionLoading,
 }: ViewDocumentInfoProps) => {
-  const title = "View Document Information";
-
-  useEffect (() => {
-    console.log("Assignment Version in ViewDocumentInfo: ", assignmentVersion);
-  }, [assignmentVersion]);
+  const title = "Document Information";
+  
 
   return (
     <Accordion.Item
@@ -32,6 +30,7 @@ const ViewDocumentInfo = ({
       border="1px solid #ccc"
       borderRadius="8px"
       overflow="hidden"
+      
     >
       <Accordion.ItemTrigger
         bg={"#244d8a"}
@@ -41,6 +40,7 @@ const ViewDocumentInfo = ({
         p={4}
         fontSize={"4xl"}
       >
+        <Image boxSize="40px" src={documentIcon} alt="View Document Icon" />  
         <Span flex="1">{title}</Span>
         <Accordion.ItemIndicator color={"white"} />
       </Accordion.ItemTrigger>
