@@ -20,6 +20,11 @@ const RichTextEditor: React.FC<RichTextEditorProps> = React.memo(({
   const quillRef = useRef<ReactQuill | null>(null);
   const isUpdatingFromProp = useRef(false);
   const debounceTimer = useRef<NodeJS.Timeout | null>(null);
+  const userActivityTimer = useRef<NodeJS.Timeout | null>(null);
+  const immediateProtectionTimer = useRef<NodeJS.Timeout | null>(null);
+  const isUserEditing = useRef(false);
+  const isImmediatelyProtected = useRef(false);
+  const lastPropUpdateTime = useRef<number>(0);
 
   // Normalize HTML for comparison to avoid minor formatting differences
   const normalizeHtml = useCallback((html: string) => {
@@ -49,18 +54,75 @@ const RichTextEditor: React.FC<RichTextEditorProps> = React.memo(({
     return normalizeHtml(normalized);
   }, [normalizeHtml]);
 
+  // Check if content changes are significant enough to warrant an update
+  const isSignificantChange = useCallback((current: string, incoming: string) => {
+    const normalizedCurrent = normalizeForComparison(current);
+    const normalizedIncoming = normalizeForComparison(incoming || "");
+
+    // If content is substantially different (not just minor formatting)
+    if (normalizedCurrent !== normalizedIncoming) {
+      const lengthDiff = Math.abs(normalizedCurrent.length - normalizedIncoming.length);
+      // Only consider it significant if there's a meaningful difference in length
+      // or if the content is empty (initial load)
+      return lengthDiff > 10 || normalizedCurrent.trim() === "" || normalizedIncoming.trim() === "";
+    }
+
+    return false;
+  }, [normalizeForComparison]);
+
+  // Immediately protect user input from any prop updates
+  const protectUserInput = useCallback(() => {
+    isUserEditing.current = true;
+    isImmediatelyProtected.current = true;
+
+    // Clear existing timers
+    if (userActivityTimer.current) {
+      clearTimeout(userActivityTimer.current);
+    }
+    if (immediateProtectionTimer.current) {
+      clearTimeout(immediateProtectionTimer.current);
+    }
+
+    // Immediate protection lasts 200ms - blocks ALL prop updates
+    immediateProtectionTimer.current = setTimeout(() => {
+      isImmediatelyProtected.current = false;
+    }, 200);
+
+    // Extended user editing state lasts 2 seconds
+    userActivityTimer.current = setTimeout(() => {
+      isUserEditing.current = false;
+    }, 2000);
+  }, []);
+
   // Keep Quill's document in sync with external value changes
   useEffect(() => {
     const quill = quillRef.current?.getEditor?.();
     if (!quill) return;
 
     const current = quill.root.innerHTML;
-    // Use enhanced normalization that accounts for ensureFragment
-    const normalizedCurrent = normalizeForComparison(current);
-    const normalizedValue = normalizeForComparison(value || "");
+    const now = Date.now();
+
+    // Check if this is a rapid sequence of prop updates (likely during generation)
+    const isRapidUpdate = now - lastPropUpdateTime.current < 200;
+    lastPropUpdateTime.current = now;
+
+    // IMMEDIATE PROTECTION: Block ALL prop updates if user just interacted
+    if (isImmediatelyProtected.current) {
+      return;
+    }
+
+    // Don't update if user is actively editing, unless it's a significant change
+    if (isUserEditing.current && !isSignificantChange(current, value)) {
+      return;
+    }
 
     // Only update if different and not currently updating from our own onChange
-    if (normalizedCurrent !== normalizedValue && !isUpdatingFromProp.current) {
+    if (isSignificantChange(current, value) && !isUpdatingFromProp.current) {
+      // During rapid updates, be more conservative about overwriting user content
+      if (isRapidUpdate && isUserEditing.current) {
+        return;
+      }
+
       // Save cursor position before updating
       const selection = quill.getSelection();
 
@@ -69,9 +131,12 @@ const RichTextEditor: React.FC<RichTextEditorProps> = React.memo(({
       // "silent" avoids triggering onChange and causing loops
       quill.clipboard.dangerouslyPasteHTML(value || "", "silent");
 
-      // Restore cursor position after DOM updates
+      // Restore cursor position after DOM updates - but only if this editor has focus
       setTimeout(() => {
-        if (selection) {
+        // Check if this specific editor currently has focus before restoring cursor
+        const hasFocus = quill.root.contains(document.activeElement);
+
+        if (selection && hasFocus) {
           try {
             quill.setSelection(selection);
           } catch {
@@ -81,15 +146,21 @@ const RichTextEditor: React.FC<RichTextEditorProps> = React.memo(({
           }
         }
         isUpdatingFromProp.current = false;
-      }, 10); // Small delay to ensure DOM updates complete
+      }, 100); // Extended delay to prevent interference windows
     }
-  }, [value, normalizeForComparison]);
+  }, [value, isSignificantChange]);
 
-  // Cleanup debounce timer on unmount
+  // Cleanup timers on unmount
   useEffect(() => {
     return () => {
       if (debounceTimer.current) {
         clearTimeout(debounceTimer.current);
+      }
+      if (userActivityTimer.current) {
+        clearTimeout(userActivityTimer.current);
+      }
+      if (immediateProtectionTimer.current) {
+        clearTimeout(immediateProtectionTimer.current);
       }
     };
   }, []);
@@ -112,7 +183,10 @@ const RichTextEditor: React.FC<RichTextEditorProps> = React.memo(({
         onChange={(content) => {
           // Only call onChange if this isn't a programmatic update
           if (!isUpdatingFromProp.current) {
-            // Debounce rapid changes to prevent infinite loops
+            // IMMEDIATELY protect this input from prop updates
+            protectUserInput();
+
+            // Debounce rapid changes to prevent infinite loops - reduced for responsiveness
             if (debounceTimer.current) {
               clearTimeout(debounceTimer.current);
             }
@@ -123,9 +197,19 @@ const RichTextEditor: React.FC<RichTextEditorProps> = React.memo(({
               // Reset the flag after a short delay to allow parent component update
               setTimeout(() => {
                 isUpdatingFromProp.current = false;
-              }, 50);
-            }, 100); // 100ms debounce
+              }, 100); // Match the useEffect timing for consistency
+            }, 20); // Faster response for better user experience
           }
+        }}
+        onChangeSelection={(selection, source) => {
+          // Protect on any user-initiated selection change (typing, clicking, etc.)
+          if (source === 'user') {
+            protectUserInput();
+          }
+        }}
+        onFocus={() => {
+          // Protect immediately when user focuses this editor
+          protectUserInput();
         }}
         readOnly={readOnly}
         theme="snow"

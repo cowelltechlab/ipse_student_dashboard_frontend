@@ -46,11 +46,13 @@ const Goals = ({
   const goalOptions = [
     assignmentRatingDetails?.student_profile.profile_summaries.long_term_goals,
     assignmentRatingDetails?.student_profile.profile_summaries.short_term_goals,
-    assignmentRatingDetails?.student_profile.classes[0].class_name +
-      " - " +
-      capitalizeFirstLetter(
-        assignmentRatingDetails?.student_profile.classes[0].learning_goal
-      ),
+    assignmentRatingDetails?.student_profile.classes?.length
+      ? assignmentRatingDetails.student_profile.classes[0].class_name +
+        " - " +
+        capitalizeFirstLetter(
+          assignmentRatingDetails.student_profile.classes[0].learning_goal
+        )
+      : undefined,
     "A different goal",
     "None/Not too sure",
   ];
