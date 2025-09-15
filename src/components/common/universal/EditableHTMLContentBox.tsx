@@ -203,6 +203,7 @@ const RichTextEditor: React.FC<RichTextEditorProps> = React.memo(({
         }}
         onChangeSelection={(selection, source) => {
           // Protect on any user-initiated selection change (typing, clicking, etc.)
+          console.log(selection)
           if (source === 'user') {
             protectUserInput();
           }
