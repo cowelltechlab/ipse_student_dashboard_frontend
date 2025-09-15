@@ -10,7 +10,7 @@ import {
 import useAuth from "../../contexts/useAuth";
 
 import georgiaTechLogo from "../../assets/Georgia_Tech_Yellow_Jackets_logo.png";
-import googleLogo from "../../assets/google_logo_icon.png";
+// import googleLogo from "../../assets/google_logo_icon.png";
 
 interface PasswordLoginProps {
   setFormDisplay: React.Dispatch<
@@ -19,15 +19,16 @@ interface PasswordLoginProps {
 }
 
 const SSOLogin = ({ setFormDisplay }: PasswordLoginProps) => {
-  const { loginWithGoogle, loginWithGT } = useAuth();
+  // const { loginWithGoogle, loginWithGT } = useAuth();
+  const { loginWithGT } = useAuth();
 
-  const onGoogleLogin = async () => {
-    try {
-      await loginWithGoogle(); // Redirects immediately via window.location
-    } catch (err) {
-      console.error("Google login failed:", err);
-    }
-  };
+  // const onGoogleLogin = async () => {
+  //   try {
+  //     await loginWithGoogle(); // Redirects immediately via window.location
+  //   } catch (err) {
+  //     console.error("Google login failed:", err);
+  //   }
+  // };
 
   const onGTLogin = () => {
     try {
@@ -47,7 +48,7 @@ const SSOLogin = ({ setFormDisplay }: PasswordLoginProps) => {
     >
       <Box maxW={{ base: "sm", lg: "lg" }} w="lg">
         <VStack spaceY={4} w="full">
-          <Button
+          {/* <Button
             variant="outline"
             bg="white"
             _hover={{ bg: "gray.100" }}
@@ -68,7 +69,7 @@ const SSOLogin = ({ setFormDisplay }: PasswordLoginProps) => {
                 Sign in with Google
               </Heading>
             </Flex>
-          </Button>
+          </Button> */}
 
           <Button
             variant="outline"
