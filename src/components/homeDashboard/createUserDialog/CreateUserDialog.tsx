@@ -21,6 +21,7 @@ interface DisplayCreateUserDialogProps {
   setOpen: (open: boolean) => void;
   refetchTrigger?: number;
   setRefetchTrigger?: (trigger: number) => void;
+  onCreated?: () => void;
 }
 
 const CreateUserDialog = ({
@@ -28,6 +29,7 @@ const CreateUserDialog = ({
   setOpen,
   refetchTrigger = 0,
   setRefetchTrigger = () => refetchTrigger + 1,
+  onCreated,
 }: DisplayCreateUserDialogProps) => {
   const { roles } = useRoles();
   const { handlePostUserInvite } = usePostUserInvite();
@@ -39,7 +41,6 @@ const CreateUserDialog = ({
 
   const handleCreateUser = async () => {
     try {
-      console.log("Inviting user...");
       await handlePostUserInvite(
         newUserGoogleEmail,
         newUserGTEmail,
@@ -51,6 +52,8 @@ const CreateUserDialog = ({
         type: "success",
       });
       setRefetchTrigger(refetchTrigger + 1);
+      onCreated?.();
+
       setOpen(false);
       setNewUserGoogleEmail("");
       setNewUserGTEmail("");
