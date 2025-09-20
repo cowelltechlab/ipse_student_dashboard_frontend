@@ -21,6 +21,7 @@ interface DisplayTutorDialogProps {
   open: boolean;
   setOpen: (open: boolean) => void;
   setOpenDeleteDialog: (open: boolean) => void;
+  onUpdated?: () => void;
 }
 
 const DisplayTutorDialog = ({
@@ -28,6 +29,7 @@ const DisplayTutorDialog = ({
   open,
   setOpen,
   setOpenDeleteDialog,
+  onUpdated,
 }: DisplayTutorDialogProps) => {
   const [openUpdateDialog, setOpenUpdateDialog] = useState<boolean>(false);
   const [refetchTrigger, setRefetchTrigger] = useState<number>(0);
@@ -140,7 +142,10 @@ const DisplayTutorDialog = ({
           tutor={user}
           open={openUpdateDialog}
           setOpen={setOpenUpdateDialog}
-          triggerRefetch={() => setRefetchTrigger(refetchTrigger + 1)}
+          triggerRefetch={() => {
+            setRefetchTrigger((v) => v + 1);
+            onUpdated?.();
+          }}
         />
       )}
     </Box>

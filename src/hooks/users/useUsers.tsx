@@ -80,3 +80,29 @@ const useUsers = (refetchTrigger: number, roleId?: number) => {
 };
 
 export default useUsers;
+
+export function invalidateUsersCache(roleId?: number) {
+  const key = String(roleId || "");
+  usersCache.delete(key);
+  inflight.delete(key);
+}
+
+export function upsertUserInCache(updated: UserType, roleId?: number) {
+  const key = String(roleId || "");
+  const hit = usersCache.get(key);
+  if (!hit) return;
+  const list = hit.data.slice();
+  const idx = list.findIndex(u => u.id === updated.id);
+  if (idx >= 0) list[idx] = { ...list[idx], ...updated };
+  else list.unshift(updated);
+  usersCache.set(key, { data: list, ts: Date.now() });
+}
+
+export function removeUserFromCache(userId: number, roleId?: number) {
+  const key = String(roleId || "");
+  const hit = usersCache.get(key);
+  if (!hit) return;
+  const list = hit.data.filter(u => u.id !== userId);
+  usersCache.set(key, { data: list, ts: Date.now() });
+}
+
