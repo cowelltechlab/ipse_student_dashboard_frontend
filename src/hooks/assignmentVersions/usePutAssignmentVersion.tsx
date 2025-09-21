@@ -1,19 +1,18 @@
 import { useState } from "react";
 import { putAssignmentVersion } from "../../services/assignmentVersionServices";
-import type { AssignmentJson } from "../../components/assignmentModification/JsonAssignmentEditor";
 
 const usePutAssignmentVersion = () => {
   const [loading, setLoading] = useState<boolean>(false);
 
   const handlePutAssignmentVersion = async (
     assignmentVersionId: string,
-    updatedJsonContent: AssignmentJson
+    updatedHtmlContent: string
   ) => {
     try {
       setLoading(true);
       const response = await putAssignmentVersion(
         assignmentVersionId,
-        updatedJsonContent
+        updatedHtmlContent
       );
       return response;
     } finally {

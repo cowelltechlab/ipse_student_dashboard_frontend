@@ -24,9 +24,7 @@ import AssignmentModificationCompletionDialog from "./AssignmentModificationComp
 import AssignmentModificationVisibilityButtons from "./AssignmentModificationVisibilityButtons";
 import AssignmentStreamViewer from "./AssignmentStreamViewer";
 import { useAssignmentStreamSections } from "../../hooks/assignmentVersions/useAssignmentStreamSections";
-import UpdatedAssignmentStructuredEditors, {
-  type AssignmentJson,
-} from "./JsonAssignmentEditor";
+import SingleHTMLEditor from "./SingleHTMLEditor";
 import LoadingGenerationLottie from "./LoadingGenerationLottie";
 
 interface AssignmentDetailsPageContentProps {
@@ -53,8 +51,8 @@ const AssignmentDetailsPageContent = ({
   const [hasGenerated, setHasGenerated] = useState(false);
   const [generationKey, setGenerationKey] = useState(0);
 
-  // NEW: JSON state for the editable assignment
-  const [updatedJson, setUpdatedJson] = useState<AssignmentJson | null>(null);
+  // NEW: HTML state for the editable assignment
+  const [updatedHtml, setUpdatedHtml] = useState<string | null>(null);
 
   const [isCompletionModalOpen, setIsCompletionModalOpen] =
     useState<boolean>(false);
@@ -71,15 +69,16 @@ const AssignmentDetailsPageContent = ({
     error: streamError,
     start: startStream,
     cancel: cancelStream,
+    sectionsToHtml,
   } = useAssignmentStreamSections();
 
-  const hydrating = hasGenerated && !streaming && updatedJson === null;
+  const hydrating = hasGenerated && !streaming && updatedHtml === null;
 
   const handleAssignmentGenerationClick = async () => {
     if (!versionOptions?.version_document_id) return;
 
     setHasGenerated(true);
-    setUpdatedJson(null);
+    setUpdatedHtml(null);
 
     try {
       await startStream(
@@ -105,30 +104,11 @@ const AssignmentDetailsPageContent = ({
   // When streaming is done, stitch everything into one HTML for editing
   useEffect(() => {
     if (!streaming && hasGenerated) {
-      const {
-        assignmentInstructionsHtml,
-        stepByStepPlanHtml,
-        promptsHtml,
-        supportTools,
-        motivationalMessageHtml,
-      } = sections;
-
-      const obj = {
-        assignmentInstructionsHtml: assignmentInstructionsHtml ?? "",
-        stepByStepPlanHtml: stepByStepPlanHtml ?? "",
-        promptsHtml: promptsHtml ?? "",
-        supportTools: {
-          toolsHtml: supportTools?.toolsHtml ?? "",
-          aiPromptingHtml: supportTools?.aiPromptingHtml ?? "",
-          aiPolicyHtml: supportTools?.aiPolicyHtml ?? "",
-        },
-        motivationalMessageHtml: motivationalMessageHtml ?? "",
-      };
-
-      setUpdatedJson(obj);
+      const combinedHtml = sectionsToHtml(sections);
+      setUpdatedHtml(combinedHtml);
       setGenerationKey((k) => k + 1);
     }
-  }, [streaming, sections, hasGenerated]);
+  }, [streaming, sections, hasGenerated, sectionsToHtml]);
 
   useEffect(() => {
     return () => {
@@ -138,7 +118,7 @@ const AssignmentDetailsPageContent = ({
 
   //  For Updating Assignment
   const handleSaveChangesClick = async () => {
-    console.debug("[Save] clicked", { versionOptions, updatedJson });
+    console.debug("[Save] clicked", { versionOptions, updatedHtml });
 
     if (!versionOptions?.version_document_id) {
       toaster.create({
@@ -147,9 +127,9 @@ const AssignmentDetailsPageContent = ({
       });
       return;
     }
-    if (!updatedJson) {
+    if (!updatedHtml) {
       toaster.create({
-        description: "Nothing to save yet (updatedJson is empty).",
+        description: "Nothing to save yet (updatedHtml is empty).",
         type: "warning",
       });
       return;
@@ -162,18 +142,18 @@ const AssignmentDetailsPageContent = ({
 
       const response = await handlePutAssignmentVersion(
         versionOptions.version_document_id,
-        updatedJson
+        updatedHtml
       );
 
       console.debug("[Save] response", response);
 
-      if (response?.json_content) {
-        setUpdatedJson(response.json_content);
+      if (response?.html_content) {
+        setUpdatedHtml(response.html_content);
         toaster.create({ description: "Saved.", type: "success" });
         setIsCompletionModalOpen(true);
       } else {
         toaster.create({
-          description: "Save completed, but no json_content returned.",
+          description: "Save completed, but no html_content returned.",
           type: "info",
         });
       }
@@ -279,7 +259,7 @@ const AssignmentDetailsPageContent = ({
 
                 {!streaming && hydrating && <LoadingGenerationLottie />}
 
-                {!streaming && !hydrating && !updatedJson && (
+                {!streaming && !hydrating && !updatedHtml && (
                   <Textarea
                     pt={4}
                     // remove fixed 75vh — the container controls height now
@@ -289,11 +269,11 @@ const AssignmentDetailsPageContent = ({
                   />
                 )}
 
-                {!streaming && !hydrating && updatedJson && (
-                  <UpdatedAssignmentStructuredEditors
+                {!streaming && !hydrating && updatedHtml && (
+                  <SingleHTMLEditor
                     key={`gen-${generationKey}`}
-                    value={updatedJson}
-                    onChange={setUpdatedJson}
+                    value={updatedHtml}
+                    onChange={setUpdatedHtml}
                   />
                 )}
 
@@ -317,7 +297,7 @@ const AssignmentDetailsPageContent = ({
                   bg="#bd4f23"
                   color="white"
                   w="100%"
-                  disabled={!updatedJson}
+                  disabled={!updatedHtml}
                   loading={loadingAssignmentUpdate}
                   onClick={handleSaveChangesClick}
                 >
@@ -330,11 +310,11 @@ const AssignmentDetailsPageContent = ({
         )}
       </HStack>
 
-      {assignment && studentId && isCompletionModalOpen && updatedJson && versionOptions?.version_document_id && (
+      {assignment && studentId && isCompletionModalOpen && updatedHtml && versionOptions?.version_document_id && (
         <AssignmentModificationCompletionDialog
           student_id={studentId}
           assignment_id={assignment.assignment_id}
-          assignmentJson={updatedJson}
+          assignmentHtml={updatedHtml}
           versionDocumentId={versionOptions.version_document_id}
           assignmentTitle={assignment.title || 'modified-assignment'}
           isModalOpen={isCompletionModalOpen}
