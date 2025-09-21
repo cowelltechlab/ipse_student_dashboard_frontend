@@ -174,9 +174,11 @@ const RateMyOptions = ({
             </Box>
 
             <Box>
-              <Text fontSize="md" fontWeight="semibold" mb={3}>
-                2. Why do you think these were helpful changes? Which changes do
-                you think you would make to similar assignments in the future?
+              <Text fontSize="md" fontWeight="semibold" mb={1}>
+                2. Why do you think these were helpful changes?
+              </Text>
+              <Text fontSize="md" fontWeight="normal" fontStyle="italic" mb={3}>
+                Which changes do you think you would make to similar assignments in the future?
               </Text>
               <Textarea
                 value={mostHelpfulPartsExplanation}

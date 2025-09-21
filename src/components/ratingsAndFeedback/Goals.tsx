@@ -139,11 +139,14 @@ const Goals = ({
             </Box>
 
             <Box>
-              <Text fontSize="md" fontWeight="semibold" mb={3}>
-                3. How did the assignment help you work toward your goals? Did
-                the assignment change how you think about your goals, like
-                helping you change a goal or add a new goal?
+              <Text fontSize="md" fontWeight="semibold" mb={1}>
+                3. How did the assignment help you work toward your goals?
               </Text>
+              <Text fontSize="md" fontWeight="normal" fontStyle="italic" mb={3}>
+                Did the assignment change how you think about your goals, like helping you
+                change a goal or add a new goal?
+              </Text>
+
               <Textarea
                 value={goalsExplanation}
                 onChange={(e) => onGoalsExplanationChange(e.target.value)}
