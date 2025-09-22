@@ -59,14 +59,14 @@ const ForgotPasswordDialog = ({ open, setOpen }: ForgotPasswordDialogProps) => {
       <Portal>
         <Dialog.Backdrop />
         <Dialog.Positioner>
-          <Dialog.Content bg={"#eaeef4"} p={6}>
+          <Dialog.Content bg="#eaeef4" p={6} color="black">
             <Dialog.Body>
-              <VStack alignItems={"center"} spaceY={4} mb={4}>
+              <VStack alignItems="center" spaceY={4} mb={4}>
                 <Image height="400px" src={forgotPasswordImage} alt="Forgot Password" />
-                <Heading as="h2" size="2xl" mb={4}>
+                <Heading as="h2" size="2xl" mb={4} color="black">
                   Forgot your Password?
                 </Heading>
-                <Text fontSize={"lg"} textAlign={"center"} px={10} lineHeight={1.5}>
+                <Text fontSize="lg" textAlign="center" px={10} lineHeight={1.5} color="black">
                   Enter your email address and we will send you instructions to
                   reset your password
                 </Text>
@@ -75,21 +75,23 @@ const ForgotPasswordDialog = ({ open, setOpen }: ForgotPasswordDialogProps) => {
                     value={email}
                     placeholder="Enter Email Address"
                     onChange={(e) => setEmail(e.target.value)}
-                    bg={"white"}
-                    borderRadius={"xl"}
+                    bg="white"
+                    borderRadius="xl"
                     p={4}
+                    color="black"
+                    _placeholder={{ color: "black" }}
                   />
                 </Field.Root>
               </VStack>
             </Dialog.Body>
             <Dialog.Footer>
-              <VStack w={"100%"} spaceY={2}>
+              <VStack w="100%" spaceY={2}>
                 <Button
-                  w={"100%"}
-                  bg={"#BD4F23"}
+                  w="100%"
+                  bg="#BD4F23"
                   p={4}
-                  color={"white"}
-                  borderRadius={"xl"}
+                  color="white"
+                  borderRadius="xl"
                   onClick={handleForgotPassword}
                   loading={loading}
                 >
