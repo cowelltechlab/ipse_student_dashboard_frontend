@@ -16,7 +16,7 @@ export function normalizeQuillLists(html: string): string {
 
   // Fix illegal nesting: ensure sub-<ul>/<ol> lives inside its parent's <li>
   // (simple pass: wrap stray list siblings into previous <li>, best-effort)
-  out = out.replace(/<\/li>\s*(<ul|<ol)/gi, (m, listStart) => `\n${listStart}`);
+  out = out.replace(/<\/li>\s*(<ul|<ol)/gi, (_, listStart) => `\n${listStart}`);
   out = out.replace(/(<\/ul>|<\/ol>)\s*(<ul|<ol)/gi, "$1<li>$2"); // rare edge
 
   return out;
