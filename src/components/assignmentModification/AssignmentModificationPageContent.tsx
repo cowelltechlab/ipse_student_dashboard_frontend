@@ -24,6 +24,8 @@ import AssignmentModificationCompletionDialog from "./AssignmentModificationComp
 import AssignmentModificationVisibilityButtons from "./AssignmentModificationVisibilityButtons";
 import SingleHTMLEditor from "./SingleHTMLEditor";
 import { postAssignmentVersion } from "../../services/assignmentVersionServices";
+import LoadingGenerationLottie from "./LoadingGenerationLottie";
+import { sanitizeForSave } from "../../utils/sanitizeForSave";
 
 interface AssignmentDetailsPageContentProps {
   assignment: AssignmentDetailType | null;
@@ -120,6 +122,8 @@ const AssignmentDetailsPageContent = ({
       return;
     }
 
+    const cleaned = sanitizeForSave(updatedHtml);
+
     try {
       console.debug("[Save] calling handlePutAssignmentVersion", {
         version_document_id: versionOptions.version_document_id,
@@ -127,7 +131,7 @@ const AssignmentDetailsPageContent = ({
 
       const response = await handlePutAssignmentVersion(
         versionOptions.version_document_id,
-        updatedHtml
+        cleaned
       );
 
       console.debug("[Save] response", response);
@@ -197,7 +201,7 @@ const AssignmentDetailsPageContent = ({
               bg="#bd4f23"
               color="white"
               w="100%"
-              disabled={selectedLearningPathways.length < 1 || isGenerating}
+              disabled={(selectedLearningPathways.length < 1 && ideasForChange.trim() === "") || isGenerating}
               onClick={handleAssignmentGenerationClick}
             >
               Generate Assignment
@@ -237,12 +241,13 @@ const AssignmentDetailsPageContent = ({
               <Box flex="1" p={3}>
                 {isGenerating && (
                   <Box textAlign="center" py={8}>
-                    <Text fontSize="lg" fontWeight="semibold" color="gray.700">
+                    <LoadingGenerationLottie/>
+                    {/* <Text fontSize="lg" fontWeight="semibold" color="gray.700">
                       Generating Modified Assignment...
                     </Text>
                     <Text fontSize="sm" color="gray.500" mt={1}>
                       This may take a few moments...
-                    </Text>
+                    </Text> */}
                   </Box>
                 )}
 
