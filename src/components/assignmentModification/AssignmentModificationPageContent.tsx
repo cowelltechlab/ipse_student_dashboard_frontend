@@ -10,7 +10,7 @@ import {
   Textarea,
 } from "@chakra-ui/react";
 import type { AssignmentDetailType } from "../../types/AssignmentTypes";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import modifiedAssignmentIcon from "../../assets/icons/note.png";
 
 import { FaCircleCheck } from "react-icons/fa6";
@@ -22,10 +22,8 @@ import usePutAssignmentVersion from "../../hooks/assignmentVersions/usePutAssign
 import { toaster } from "../ui/toaster";
 import AssignmentModificationCompletionDialog from "./AssignmentModificationCompletionDialog";
 import AssignmentModificationVisibilityButtons from "./AssignmentModificationVisibilityButtons";
-import AssignmentStreamViewer from "./AssignmentStreamViewer";
-import { useAssignmentStreamSections } from "../../hooks/assignmentVersions/useAssignmentStreamSections";
 import SingleHTMLEditor from "./SingleHTMLEditor";
-import LoadingGenerationLottie from "./LoadingGenerationLottie";
+import { postAssignmentVersion } from "../../services/assignmentVersionServices";
 
 interface AssignmentDetailsPageContentProps {
   assignment: AssignmentDetailType | null;
@@ -48,7 +46,7 @@ const AssignmentDetailsPageContent = ({
     string[]
   >([]);
 
-  const [hasGenerated, setHasGenerated] = useState(false);
+  // const [hasGenerated, setHasGenerated] = useState(false);
   const [generationKey, setGenerationKey] = useState(0);
 
   // NEW: HTML state for the editable assignment
@@ -63,29 +61,27 @@ const AssignmentDetailsPageContent = ({
   const { handlePutAssignmentVersion, loading: loadingAssignmentUpdate } =
     usePutAssignmentVersion();
 
-  const {
-    sections,
-    isLoading: streaming,
-    error: streamError,
-    start: startStream,
-    cancel: cancelStream,
-    sectionsToHtml,
-  } = useAssignmentStreamSections();
+  const [isGenerating, setIsGenerating] = useState(false);
+  const [generationError, setGenerationError] = useState<string | null>(null);
 
-  const hydrating = hasGenerated && !streaming && updatedHtml === null;
 
   const handleAssignmentGenerationClick = async () => {
     if (!versionOptions?.version_document_id) return;
 
-    setHasGenerated(true);
+    setIsGenerating(true);
+    setGenerationError(null);
     setUpdatedHtml(null);
 
     try {
-      await startStream(
+      const response = await postAssignmentVersion(
         versionOptions.version_document_id,
         selectedLearningPathways,
         ideasForChange
       );
+
+      setUpdatedHtml(response.html_content);
+      // setHasGenerated(true);
+      setGenerationKey((k) => k + 1);
     } catch (e) {
       console.error(e);
       const error = e as {
@@ -94,27 +90,16 @@ const AssignmentDetailsPageContent = ({
       };
 
       const errorMessage = error.response?.data.message || error.message;
+      setGenerationError(errorMessage);
       toaster.create({
-        description: `Error creating class: ${errorMessage}`,
+        description: `Error generating assignment: ${errorMessage}`,
         type: "error",
       });
+    } finally {
+      setIsGenerating(false);
     }
   };
 
-  // When streaming is done, stitch everything into one HTML for editing
-  useEffect(() => {
-    if (!streaming && hasGenerated) {
-      const combinedHtml = sectionsToHtml(sections);
-      setUpdatedHtml(combinedHtml);
-      setGenerationKey((k) => k + 1);
-    }
-  }, [streaming, sections, hasGenerated, sectionsToHtml]);
-
-  useEffect(() => {
-    return () => {
-      cancelStream();
-    };
-  }, [cancelStream]);
 
   //  For Updating Assignment
   const handleSaveChangesClick = async () => {
@@ -212,7 +197,7 @@ const AssignmentDetailsPageContent = ({
               bg="#bd4f23"
               color="white"
               w="100%"
-              disabled={selectedLearningPathways.length < 1 || streaming}
+              disabled={selectedLearningPathways.length < 1 || isGenerating}
               onClick={handleAssignmentGenerationClick}
             >
               Generate Assignment
@@ -249,27 +234,28 @@ const AssignmentDetailsPageContent = ({
               </Flex>
 
               {/* Scrollable body */}
-              <Box flex="1"  p={3} >
-                {streaming && (
-                  <AssignmentStreamViewer
-                    sections={sections}
-                    isLoading={streaming}
-                  />
+              <Box flex="1" p={3}>
+                {isGenerating && (
+                  <Box textAlign="center" py={8}>
+                    <Text fontSize="lg" fontWeight="semibold" color="gray.700">
+                      Generating Modified Assignment...
+                    </Text>
+                    <Text fontSize="sm" color="gray.500" mt={1}>
+                      This may take a few moments...
+                    </Text>
+                  </Box>
                 )}
 
-                {!streaming && hydrating && <LoadingGenerationLottie />}
-
-                {!streaming && !hydrating && !updatedHtml && (
+                {!isGenerating && !updatedHtml && (
                   <Textarea
                     pt={4}
-                    // remove fixed 75vh — the container controls height now
                     value="Select Changes to Generate Modified Assignment"
                     fontSize="md"
                     disabled
                   />
                 )}
 
-                {!streaming && !hydrating && updatedHtml && (
+                {!isGenerating && updatedHtml && (
                   <SingleHTMLEditor
                     key={`gen-${generationKey}`}
                     value={updatedHtml}
@@ -277,9 +263,9 @@ const AssignmentDetailsPageContent = ({
                   />
                 )}
 
-                {streamError && (
+                {generationError && (
                   <Text color="red.500" mt={2}>
-                    {streamError}
+                    {generationError}
                   </Text>
                 )}
               </Box>
