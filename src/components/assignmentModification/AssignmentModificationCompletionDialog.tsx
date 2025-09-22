@@ -13,15 +13,13 @@ import {
 
 import { useNavigate } from "react-router-dom";
 import { FaArrowCircleLeft, FaDownload } from "react-icons/fa";
-import type { AssignmentJson } from "./JsonAssignmentEditor";
-import { convertAssignmentJsonToHtml } from "../../utils/assignmentHtml";
 import HtmlContentBox from "../common/universal/HTMLContentDisplay";
 import useDownloadAssignmentVersion from "../../hooks/assignmentVersions/useDownloadAssignmentVersion";
 
 interface AssignmentModificationCompletionDialogProps {
   student_id: string;
   assignment_id: number;
-  assignmentJson: AssignmentJson;
+  assignmentHtml: string;
   versionDocumentId: string;
   assignmentTitle: string;
 
@@ -32,7 +30,7 @@ interface AssignmentModificationCompletionDialogProps {
 const AssignmentModificationCompletionDialog = ({
   student_id,
   assignment_id,
-  assignmentJson,
+  assignmentHtml,
   versionDocumentId,
   assignmentTitle,
 
@@ -74,7 +72,7 @@ const AssignmentModificationCompletionDialog = ({
   };
 
   // Convert JSON to HTML for preview
-  const previewHtml = convertAssignmentJsonToHtml(assignmentJson);
+  const previewHtml = assignmentHtml;
 
   return (
     <Dialog.Root

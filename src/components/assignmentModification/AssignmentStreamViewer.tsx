@@ -85,7 +85,7 @@ export default function AssignmentStreamViewer({ sections, isLoading }: Props) {
         // borderColor={"#244d8a"}
         w={"100%"}
         h={"66vh"
-          
+
         }
         overflow={"auto"}
       >
