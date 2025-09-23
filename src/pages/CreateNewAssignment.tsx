@@ -1,4 +1,4 @@
-import { Box, Separator, Flex } from "@chakra-ui/react";
+import { Box, Separator, Flex, Button } from "@chakra-ui/react";
 import CreateNewAssignmentIcon from "../assets/Create New Assignment.svg";
 import PageHeader from "../components/common/pageHeader/PageHeader";
 import HeaderCard from "../components/common/pageHeader/HeaderCard";
@@ -15,6 +15,7 @@ const CreateNewAssignment = () => {
                      student's needs. Let's make learning accessible for all!`;
 
   const [studentIds, setStudentIds] = useState<Set<number>>(new Set<number>());
+  const [allStudentIds, setAllStudentIds] = useState<number[]>([]);
   const [title, setTitle] = useState<string>("");
   const [classId, setClassId] = useState<number | null>(null);
   const [classRefetch, setClassRefetch] = useState<number>(0);
@@ -56,12 +57,25 @@ const CreateNewAssignment = () => {
           setAddClassModalOpen={setAddClassModalOpen}
         />
       </Flex>
+
+      <Flex justify="flex-end" px={6} mt={2}>
+        <Button
+          size="sm"
+          bgColor={"#BD4F23"}
+          onClick={() => setStudentIds(new Set(allStudentIds))}
+        >
+          Select All Students
+        </Button>
+      </Flex>
+
       <Flex p={6}>
         <SelectStudentsSection
           selectedStudentIds={studentIds}
           setSelectedStudentIds={setStudentIds}
+          onStudentsLoaded={setAllStudentIds}
         />
       </Flex>
+      
 
       <Flex>
         <SubmitForm
