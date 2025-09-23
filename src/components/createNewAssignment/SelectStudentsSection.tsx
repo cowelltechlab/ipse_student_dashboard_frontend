@@ -1,18 +1,25 @@
 import { Fieldset, Field, VStack, HStack } from "@chakra-ui/react";
-import { useState } from "react";
+import { useState, useEffect } from "react"; 
 import CreateAssignmentStudentCardGrid from "./selectStudents/CreateAssignmentStudentCardGrid";
 import StudentYearButtons from "../common/filterButtons/StudentYearButtons";
 import SearchBar from "../common/searchBar/SearchBar";
 import useStudents from "../../hooks/students/useStudents";
 
+
+
+
 interface SelectStudentsSectionProps {
-  selectedStudentIds: Set<number>; // number[];
-  setSelectedStudentIds: React.Dispatch<React.SetStateAction<Set<number>>> 
+  selectedStudentIds: Set<number>;
+  setSelectedStudentIds: React.Dispatch<React.SetStateAction<Set<number>>>;
+  onStudentsLoaded?: (studentIds: number[]) => void;
 }
+
+
 
 const SelectStudentsSection = ({
   selectedStudentIds,
   setSelectedStudentIds,
+  onStudentsLoaded,
 }: SelectStudentsSectionProps) => {
   const [yearName, setYearName] = useState<string | null>(null);
   const [searchTerm, setSearchTerm] = useState<string>("");
@@ -20,6 +27,13 @@ const SelectStudentsSection = ({
   const {
     students, loading, error
     }  = useStudents()
+
+  useEffect(() => {
+    if (onStudentsLoaded && students.length > 0) {
+      onStudentsLoaded(students.map((s) => Number(s.id)));
+;
+    }
+  }, [students, onStudentsLoaded]);
 
   const handleOnStudentClick = (clickedStudentId: number | null) => {
 
