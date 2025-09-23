@@ -10,7 +10,7 @@ import {
   Textarea,
 } from "@chakra-ui/react";
 import type { AssignmentDetailType } from "../../types/AssignmentTypes";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import modifiedAssignmentIcon from "../../assets/icons/note.png";
 
 import { FaCircleCheck } from "react-icons/fa6";
@@ -22,12 +22,10 @@ import usePutAssignmentVersion from "../../hooks/assignmentVersions/usePutAssign
 import { toaster } from "../ui/toaster";
 import AssignmentModificationCompletionDialog from "./AssignmentModificationCompletionDialog";
 import AssignmentModificationVisibilityButtons from "./AssignmentModificationVisibilityButtons";
-import AssignmentStreamViewer from "./AssignmentStreamViewer";
-import { useAssignmentStreamSections } from "../../hooks/assignmentVersions/useAssignmentStreamSections";
-import UpdatedAssignmentStructuredEditors, {
-  type AssignmentJson,
-} from "./JsonAssignmentEditor";
+import SingleHTMLEditor from "./SingleHTMLEditor";
+import { postAssignmentVersion } from "../../services/assignmentVersionServices";
 import LoadingGenerationLottie from "./LoadingGenerationLottie";
+import { sanitizeForSave } from "../../utils/sanitizeForSave";
 
 interface AssignmentDetailsPageContentProps {
   assignment: AssignmentDetailType | null;
@@ -50,11 +48,11 @@ const AssignmentDetailsPageContent = ({
     string[]
   >([]);
 
-  const [hasGenerated, setHasGenerated] = useState(false);
+  // const [hasGenerated, setHasGenerated] = useState(false);
   const [generationKey, setGenerationKey] = useState(0);
 
-  // NEW: JSON state for the editable assignment
-  const [updatedJson, setUpdatedJson] = useState<AssignmentJson | null>(null);
+  // NEW: HTML state for the editable assignment
+  const [updatedHtml, setUpdatedHtml] = useState<string | null>(null);
 
   const [isCompletionModalOpen, setIsCompletionModalOpen] =
     useState<boolean>(false);
@@ -65,28 +63,27 @@ const AssignmentDetailsPageContent = ({
   const { handlePutAssignmentVersion, loading: loadingAssignmentUpdate } =
     usePutAssignmentVersion();
 
-  const {
-    sections,
-    isLoading: streaming,
-    error: streamError,
-    start: startStream,
-    cancel: cancelStream,
-  } = useAssignmentStreamSections();
+  const [isGenerating, setIsGenerating] = useState(false);
+  const [generationError, setGenerationError] = useState<string | null>(null);
 
-  const hydrating = hasGenerated && !streaming && updatedJson === null;
 
   const handleAssignmentGenerationClick = async () => {
     if (!versionOptions?.version_document_id) return;
 
-    setHasGenerated(true);
-    setUpdatedJson(null);
+    setIsGenerating(true);
+    setGenerationError(null);
+    setUpdatedHtml(null);
 
     try {
-      await startStream(
+      const response = await postAssignmentVersion(
         versionOptions.version_document_id,
         selectedLearningPathways,
         ideasForChange
       );
+
+      setUpdatedHtml(response.html_content);
+      // setHasGenerated(true);
+      setGenerationKey((k) => k + 1);
     } catch (e) {
       console.error(e);
       const error = e as {
@@ -95,50 +92,20 @@ const AssignmentDetailsPageContent = ({
       };
 
       const errorMessage = error.response?.data.message || error.message;
+      setGenerationError(errorMessage);
       toaster.create({
-        description: `Error creating class: ${errorMessage}`,
+        description: `Error generating assignment: ${errorMessage}`,
         type: "error",
       });
+    } finally {
+      setIsGenerating(false);
     }
   };
 
-  // When streaming is done, stitch everything into one HTML for editing
-  useEffect(() => {
-    if (!streaming && hasGenerated) {
-      const {
-        assignmentInstructionsHtml,
-        stepByStepPlanHtml,
-        promptsHtml,
-        supportTools,
-        motivationalMessageHtml,
-      } = sections;
-
-      const obj = {
-        assignmentInstructionsHtml: assignmentInstructionsHtml ?? "",
-        stepByStepPlanHtml: stepByStepPlanHtml ?? "",
-        promptsHtml: promptsHtml ?? "",
-        supportTools: {
-          toolsHtml: supportTools?.toolsHtml ?? "",
-          aiPromptingHtml: supportTools?.aiPromptingHtml ?? "",
-          aiPolicyHtml: supportTools?.aiPolicyHtml ?? "",
-        },
-        motivationalMessageHtml: motivationalMessageHtml ?? "",
-      };
-
-      setUpdatedJson(obj);
-      setGenerationKey((k) => k + 1);
-    }
-  }, [streaming, sections, hasGenerated]);
-
-  useEffect(() => {
-    return () => {
-      cancelStream();
-    };
-  }, [cancelStream]);
 
   //  For Updating Assignment
   const handleSaveChangesClick = async () => {
-    console.debug("[Save] clicked", { versionOptions, updatedJson });
+    console.debug("[Save] clicked", { versionOptions, updatedHtml });
 
     if (!versionOptions?.version_document_id) {
       toaster.create({
@@ -147,13 +114,15 @@ const AssignmentDetailsPageContent = ({
       });
       return;
     }
-    if (!updatedJson) {
+    if (!updatedHtml) {
       toaster.create({
-        description: "Nothing to save yet (updatedJson is empty).",
+        description: "Nothing to save yet (updatedHtml is empty).",
         type: "warning",
       });
       return;
     }
+
+    const cleaned = sanitizeForSave(updatedHtml);
 
     try {
       console.debug("[Save] calling handlePutAssignmentVersion", {
@@ -162,18 +131,18 @@ const AssignmentDetailsPageContent = ({
 
       const response = await handlePutAssignmentVersion(
         versionOptions.version_document_id,
-        updatedJson
+        cleaned
       );
 
       console.debug("[Save] response", response);
 
-      if (response?.json_content) {
-        setUpdatedJson(response.json_content);
+      if (response?.html_content) {
+        setUpdatedHtml(response.html_content);
         toaster.create({ description: "Saved.", type: "success" });
         setIsCompletionModalOpen(true);
       } else {
         toaster.create({
-          description: "Save completed, but no json_content returned.",
+          description: "Save completed, but no html_content returned.",
           type: "info",
         });
       }
@@ -232,7 +201,7 @@ const AssignmentDetailsPageContent = ({
               bg="#bd4f23"
               color="white"
               w="100%"
-              disabled={selectedLearningPathways.length < 1 || streaming}
+              disabled={(selectedLearningPathways.length < 1 && ideasForChange.trim() === "") || isGenerating}
               onClick={handleAssignmentGenerationClick}
             >
               Generate Assignment
@@ -269,37 +238,39 @@ const AssignmentDetailsPageContent = ({
               </Flex>
 
               {/* Scrollable body */}
-              <Box flex="1"  p={3} >
-                {streaming && (
-                  <AssignmentStreamViewer
-                    sections={sections}
-                    isLoading={streaming}
-                  />
+              <Box flex="1" p={3}>
+                {isGenerating && (
+                  <Box textAlign="center" py={8}>
+                    <LoadingGenerationLottie/>
+                    {/* <Text fontSize="lg" fontWeight="semibold" color="gray.700">
+                      Generating Modified Assignment...
+                    </Text>
+                    <Text fontSize="sm" color="gray.500" mt={1}>
+                      This may take a few moments...
+                    </Text> */}
+                  </Box>
                 )}
 
-                {!streaming && hydrating && <LoadingGenerationLottie />}
-
-                {!streaming && !hydrating && !updatedJson && (
+                {!isGenerating && !updatedHtml && (
                   <Textarea
                     pt={4}
-                    // remove fixed 75vh — the container controls height now
                     value="Select Changes to Generate Modified Assignment"
                     fontSize="md"
                     disabled
                   />
                 )}
 
-                {!streaming && !hydrating && updatedJson && (
-                  <UpdatedAssignmentStructuredEditors
+                {!isGenerating && updatedHtml && (
+                  <SingleHTMLEditor
                     key={`gen-${generationKey}`}
-                    value={updatedJson}
-                    onChange={setUpdatedJson}
+                    value={updatedHtml}
+                    onChange={setUpdatedHtml}
                   />
                 )}
 
-                {streamError && (
+                {generationError && (
                   <Text color="red.500" mt={2}>
-                    {streamError}
+                    {generationError}
                   </Text>
                 )}
               </Box>
@@ -317,7 +288,7 @@ const AssignmentDetailsPageContent = ({
                   bg="#bd4f23"
                   color="white"
                   w="100%"
-                  disabled={!updatedJson}
+                  disabled={!updatedHtml}
                   loading={loadingAssignmentUpdate}
                   onClick={handleSaveChangesClick}
                 >
@@ -330,10 +301,13 @@ const AssignmentDetailsPageContent = ({
         )}
       </HStack>
 
-      {assignment && studentId && isCompletionModalOpen && (
+      {assignment && studentId && isCompletionModalOpen && updatedHtml && versionOptions?.version_document_id && (
         <AssignmentModificationCompletionDialog
           student_id={studentId}
-          assignment_id={assignment?.assignment_id}
+          assignment_id={assignment.assignment_id}
+          assignmentHtml={updatedHtml}
+          versionDocumentId={versionOptions.version_document_id}
+          assignmentTitle={assignment.title || 'modified-assignment'}
           isModalOpen={isCompletionModalOpen}
           setIsModalOpen={setIsCompletionModalOpen}
         />

@@ -65,8 +65,10 @@ const AssignmentDetailsBody = ({
     setActiveVersion(selectedVersionId);
   };
 
-  const handleRatingNavigateClick = (assignment_id?: string) => {
+  const handleRatingNavigateClick = () => {
     const student_id = assignment?.student.id;
+    const assignment_id = assignment?.assignment_id;
+    
 
     navigate(
       `/student/${student_id}/assignment/${assignment_id}/rating-and-feedback/${assignmentVersion?.id}`
@@ -80,13 +82,26 @@ const AssignmentDetailsBody = ({
     }
 
     try {
-      const response = await handleFinalizeAssignmentVersion(versionId);
-      if (response) {
-        toaster.create({
-          description: `Assginment finalized successfully`,
-          type: "success",
-        });
+      await handleFinalizeAssignmentVersion(versionId);
+
+      // Immediately update local state for instant UI feedback
+      if (assignment?.versions) {
+        const finalizedVersion = assignment.versions.find(v => v.document_id === versionId);
+        if (finalizedVersion) {
+
+          console.log("Finalized Version:", finalizedVersion);
+          // Update the finalVersion state to show the Final Version section immediately
+          setFinalVersion({ ...finalizedVersion, finalized: true });
+          // Set the finalized version as the active version
+          setActiveVersion(finalizedVersion.document_id);
+        }
       }
+
+      toaster.create({
+        description: `Assignment finalized successfully`,
+        type: "success",
+      });
+      // Still trigger refetch to sync with server state
       triggerRefetch();
     } catch (e) {
       console.error(e);
@@ -97,7 +112,7 @@ const AssignmentDetailsBody = ({
 
       const errorMessage = error.response?.data.message || error.message;
       toaster.create({
-        description: `Error creating class: ${errorMessage}`,
+        description: `Error finalizing assignment: ${errorMessage}`,
         type: "error",
       });
     }
@@ -108,6 +123,8 @@ const AssignmentDetailsBody = ({
       const finalizedVersion =
         assignment.versions.find((v) => v.finalized === true) || null;
 
+      console.log("Detected finalized version:", finalizedVersion);
+
       setFinalVersion(finalizedVersion);
 
       // If there is a finalized version, set it as the active version
@@ -115,7 +132,7 @@ const AssignmentDetailsBody = ({
         setActiveVersion(finalizedVersion.document_id);
       }
     }
-  }, [assignment, finalVersion]);
+  }, [assignment]);
 
 
   const originalAssignmentData = async () => {
@@ -129,6 +146,8 @@ const AssignmentDetailsBody = ({
 
 
   const getFinalVersionDocx = async () => {
+    console.log("Final Version Doc ID:", finalVersion?.document_id);
+
     if (!finalVersion?.document_id) {
       throw new Error("No document_id provided for final version.");
     }
@@ -156,7 +175,7 @@ const AssignmentDetailsBody = ({
         selectedVersionLoading={AssignmentVersionLoading}
         isFinalizedVersion={activeVersion === finalVersion?.document_id}
       />
-      {assignment?.finalized && (
+      {(assignment?.finalized || finalVersion?.finalized) && (
         <AssignmentSection
           tagContent="Final Version"
           assignment={assignment}
@@ -188,7 +207,7 @@ const AssignmentDetailsBody = ({
                 variant={"ghost"}
                 padding={0}
                 onClick={() =>
-                  handleRatingNavigateClick(finalVersion?.document_id)
+                  handleRatingNavigateClick()
                 }
               >
                 <Icon size="md">

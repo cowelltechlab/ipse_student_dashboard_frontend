@@ -16,7 +16,7 @@ interface SubmitFormProps {
   file: File | null;
   assignmentTypeId: number | null;
 
-  openSuccessDialog: () => void;
+  openSuccessDialog: (assignmentId?: number) => void;
 }
 
 const SubmitForm = ({ 
@@ -73,7 +73,7 @@ const SubmitForm = ({
         type: "success",
       });
 
-      openSuccessDialog();
+      openSuccessDialog(response[0].assignment_id);
       console.log(`Assignment "${response[0].title}" created successfully!`);
     } catch (e) {
       const error = e as ErrorType;

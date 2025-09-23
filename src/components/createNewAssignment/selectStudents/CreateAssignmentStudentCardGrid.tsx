@@ -44,7 +44,13 @@ const CreateAssignmentStudentCardGrid = ({
     console.log(students)
   ),[students])
 
-  const filteredStudents = students.filter((student) => {
+  const sortedStudents = [...students].sort((a, b) => {
+    const nameA = `${a.first_name} ${a.last_name}`.toLowerCase();
+    const nameB = `${b.first_name} ${b.last_name}`.toLowerCase();
+    return nameA.localeCompare(nameB);
+  });
+
+  const filteredStudents = sortedStudents.filter((student) => {
     const fullName = `${student.first_name} ${student.last_name}`.toLowerCase();
     const matchesSearch = fullName.includes(searchTerm?.toLowerCase() || "");
     const matchesYear = yearName

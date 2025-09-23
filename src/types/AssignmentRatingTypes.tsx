@@ -41,9 +41,16 @@ export interface PlanningForFutureRating {
 }
 
 export interface RatingUpdateRequest {
-    goals_section: GoalsRating, 
+    goals_section: GoalsRating,
     options_section: OptionsRating,
     planning_section: PlanningForFutureRating,
     date_modified?: string
+}
 
+export interface ExistingRatingDataResponse {
+    assignment_version_id: string;
+    goals_section?: GoalsRating;
+    options_section?: OptionsRating;
+    planning_section?: PlanningForFutureRating;
+    last_rating_update?: string;
 }

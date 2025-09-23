@@ -29,8 +29,6 @@ export function buildOriginalHtml(json?: FinalGeneratedJsonContent | null): stri
 function combineSections(json: FinalGeneratedJsonContent): string {
   const parts: string[] = [];
 
-  pushIf(parts, )
-
   // order is up to you; this is a sensible default
   pushIf(parts, json.assignmentInstructionsHtml);
   pushIf(parts, json.stepByStepPlanHtml);
@@ -47,6 +45,7 @@ function combineSections(json: FinalGeneratedJsonContent): string {
   // Use a thin divider to separate major sections
   return parts.filter(Boolean).join('<hr style="margin:1rem 0; border:none; border-top:1px solid #e2e8f0;" />');
 }
+
 
 function pushIf(arr: string[], maybeHtml?: string) {
   if (maybeHtml && maybeHtml.trim()) arr.push(maybeHtml.trim());

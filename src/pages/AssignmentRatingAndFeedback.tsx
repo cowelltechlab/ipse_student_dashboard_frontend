@@ -7,7 +7,7 @@ import useStudent from "../hooks/students/useStudent";
 import useAssignment from "../hooks/assignments/useAssignment";
 import HeaderCard from "../components/common/pageHeader/HeaderCard";
 
-import HeaderCardImage from "../assets/Student Profile_Document_No change summary.svg";
+import HeaderCardImage from "../assets/Rating & Feedback_FinalModal.svg";
 import RatingAndFeedbackBody from "../components/ratingsAndFeedback/RatingAndFeedbackBody";
 
 const AssignmentRatingAndFeedback = () => {
@@ -35,6 +35,17 @@ const AssignmentRatingAndFeedback = () => {
       "Student";
   }
 
+  if (!assignment_id) {
+    assignmentLabel = "Assignment";
+  } else if (AssignmentLoading) {
+    assignmentLabel = <Skeleton height="20px" width="100px" />;
+  } else {
+    const assignmentTitle = assignment?.title || "";
+    // Normalize initial capitalization
+    assignmentLabel =
+      assignmentTitle.charAt(0).toUpperCase() + assignmentTitle.slice(1);
+  }
+
   const breadcrumbItems = [
     { label: "Home", href: "/dashboard" },
     { label: nameLabel, href: `/student/${student_id}` },
@@ -52,13 +63,15 @@ const AssignmentRatingAndFeedback = () => {
         cardText="Provide your feedback and rate the assignment based on various criteria to help improve future submissions."
         cardImageUrl={HeaderCardImage}
       />
-      <RatingAndFeedbackBody
-        assignment={assignment}
-        assignmentLoading={AssignmentLoading}
-        student={student}
-        studentLoading={StudentLoading}
-        assignmentVersionId={assignment_version_id || ""}
-      />
+      <Box maxW={"2000px"} margin="auto" marginTop={4} marginBottom={4}>
+        <RatingAndFeedbackBody
+          assignment={assignment}
+          assignmentLoading={AssignmentLoading}
+          student={student}
+          studentLoading={StudentLoading}
+          assignmentVersionId={assignment_version_id || ""}
+        />
+      </Box>
     </Box>
   );
 };

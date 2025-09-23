@@ -207,8 +207,93 @@ export function useAssignmentStreamSections() {
     [reset]
   );
 
+  const sectionsToHtml = useCallback((sectionsData: SectionsState): string => {
+    const {
+      assignmentInstructionsHtml,
+      stepByStepPlanHtml,
+      promptsHtml,
+      supportTools,
+      motivationalMessageHtml,
+    } = sectionsData;
+
+    const htmlParts: string[] = [];
+    htmlParts.push('<div class="assignment-content">');
+
+    // Assignment Instructions
+    if (assignmentInstructionsHtml) {
+      htmlParts.push(
+        '  <section class="instructions">',
+        '    <h2>Assignment Instructions</h2>',
+        `    ${assignmentInstructionsHtml}`,
+        '  </section>'
+      );
+    }
+
+    // Step-by-Step Plan
+    if (stepByStepPlanHtml) {
+      htmlParts.push(
+        '  <section class="plan">',
+        '    <h2>Step-by-Step Plan</h2>',
+        `    ${stepByStepPlanHtml}`,
+        '  </section>'
+      );
+    }
+
+    // Prompts
+    if (promptsHtml) {
+      htmlParts.push(
+        '  <section class="prompts">',
+        '    <h2>Prompts</h2>',
+        `    ${promptsHtml}`,
+        '  </section>'
+      );
+    }
+
+    // Support Tools
+    if (supportTools) {
+      htmlParts.push(
+        '  <section class="support-tools">',
+        '    <h2>Tools and Resources</h2>'
+      );
+
+      if (supportTools.toolsHtml) {
+        htmlParts.push(`    ${supportTools.toolsHtml}`);
+      }
+
+      if (supportTools.aiPromptingHtml) {
+        htmlParts.push(
+          '    <h3>AI Prompting Guide</h3>',
+          `    ${supportTools.aiPromptingHtml}`
+        );
+      }
+
+      if (supportTools.aiPolicyHtml) {
+        htmlParts.push(
+          '    <h3>AI Policy</h3>',
+          `    ${supportTools.aiPolicyHtml}`
+        );
+      }
+
+      htmlParts.push('  </section>');
+    }
+
+    // Motivational Message
+    if (motivationalMessageHtml) {
+      htmlParts.push(
+        '  <section class="motivation">',
+        '    <h2>Motivation</h2>',
+        `    ${motivationalMessageHtml}`,
+        '  </section>'
+      );
+    }
+
+    htmlParts.push('</div>');
+
+    return htmlParts.join('\n');
+  }, []);
+
   return useMemo(
-    () => ({ sections, isLoading, error, start, cancel, rawLog }),
-    [sections, isLoading, error, start, cancel, rawLog]
+    () => ({ sections, isLoading, error, start, cancel, rawLog, sectionsToHtml }),
+    [sections, isLoading, error, start, cancel, rawLog, sectionsToHtml]
   );
 }

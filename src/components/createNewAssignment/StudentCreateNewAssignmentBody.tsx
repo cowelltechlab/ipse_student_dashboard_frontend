@@ -8,7 +8,7 @@ import { useParams } from "react-router-dom";
 import UploadAssignmentBox from "./UploadAssignmentBox";
 import DocumentForm from "./DocumentForm";
 import ClassSelectionDialog from "../common/classDropdown/ClassSelectionDialog";
-import SubmitModal from "./SubmitModal";
+import StudentSubmitModal from "./StudentSubmitModal";
 import useStudent from "../../hooks/students/useStudent";
 import StudentSummaryHeaderCard from "../common/studentProfilePages/StudentSummaryHeaderCard";
 
@@ -26,6 +26,7 @@ const StudentCreateNewAssignmentBody = () => {
   const [file, setFile] = useState<File | null>(null);
 
   const [openSuccessDialog, setOpenSuccessDialog] = useState<boolean>(false);
+  const [createdAssignmentId, setCreatedAssignmentId] = useState<number | null>(null);
 
   const { student, loading: profileLoading } = useStudent(student_id);
 
@@ -72,7 +73,10 @@ const StudentCreateNewAssignmentBody = () => {
           classId={classId}
           file={file}
           assignmentTypeId={assignmentTypeId}
-          openSuccessDialog={() => setOpenSuccessDialog(true)}
+          openSuccessDialog={(assignmentId) => {
+            setCreatedAssignmentId(assignmentId || null);
+            setOpenSuccessDialog(true);
+          }}
         />
       </Flex>
 
@@ -84,9 +88,11 @@ const StudentCreateNewAssignmentBody = () => {
         />
       )}
 
-      <SubmitModal
+      <StudentSubmitModal
         isOpen={openSuccessDialog}
         setIsOpen={setOpenSuccessDialog}
+        studentId={student_id ? Number(student_id) : undefined}
+        assignmentId={createdAssignmentId || undefined}
       />
     </Box>
   );

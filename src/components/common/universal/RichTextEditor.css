@@ -18,7 +18,7 @@
   overflow: visible;                 /* allow full content without clipping */
 }
 
-/* Keep the toolbar visible if the section scrolls (optional, but nice) */
+/* Keep the toolbar visible if the section scrolls */
 .rte .ql-toolbar {
   position: sticky;
   top: 0;
@@ -26,7 +26,7 @@
   background: white;
 }
 
-/* Match outer Box rounding by removing Quill’s inner borders */
+/* Match outer Box rounding by removing Quill's inner borders */
 .rte .ql-toolbar.ql-snow {
   border: none;
   border-bottom: 1px solid #e2e8f0;

@@ -1,8 +1,10 @@
-import { Accordion, Span } from "@chakra-ui/react";
+import { Accordion, Span, Image } from "@chakra-ui/react";
 import AssignmentPreviews from "../assignmentDetails/assignmentDetailsBody/AssignmentPreviews";
 import type { AssignmentVersionData } from "../../types/AssignmentVersionTypes";
 import type { AssignmentDetailType } from "../../types/AssignmentTypes";
 import { buildModifiedHtml } from "../../utils/assignmentHtml";
+
+import documentIcon from "../../assets/icons/documents.png"
 
 interface ViewDocumentInfoProps {
   assignment: AssignmentDetailType | null;
@@ -18,14 +20,31 @@ const ViewDocumentInfo = ({
   assignmentVersionLoading,
 }: ViewDocumentInfoProps) => {
   const title = "Document Information";
+  
 
   return (
-    <Accordion.Item key={title} value={title}>
-      <Accordion.ItemTrigger bg={"#244d8a"} padding={2} fontWeight="bold" color="white" fontSize={"2xl"}>
+    <Accordion.Item
+      key={title}
+      value={title}
+      my={10}
+      border="1px solid #ccc"
+      borderRadius="8px"
+      overflow="hidden"
+      
+    >
+      <Accordion.ItemTrigger
+        bg={"#244d8a"}
+        padding={2}
+        fontWeight="bold"
+        color="white"
+        p={4}
+        fontSize={"4xl"}
+      >
+        <Image boxSize="40px" src={documentIcon} alt="View Document Icon" />  
         <Span flex="1">{title}</Span>
-        <Accordion.ItemIndicator />
+        <Accordion.ItemIndicator color={"white"} />
       </Accordion.ItemTrigger>
-      <Accordion.ItemContent bg="#white" padding={2}>
+      <Accordion.ItemContent bg="#white" p={4}>
         <Accordion.ItemBody>
           <AssignmentPreviews
             assignment={assignment}

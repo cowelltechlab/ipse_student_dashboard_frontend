@@ -72,9 +72,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       setLastName(decoded.last_name ?? null);
       setRoles(decoded.role_names ?? []);
       setProfilePictureUrl(decoded.profile_picture_url ?? null);
-
-      console.log("Decoded token:", decoded);
-
+      
       return decoded;
     } catch (e) {
       console.error("Failed to decode token:", e);
@@ -148,6 +146,30 @@ const loginWithGT = () => {
     "https://ipse-dashboard-backend-adcpeuexeuf8fvf4.centralus-01.azurewebsites.net/auth/login/gatech"
   );
 };
+
+  // GT OAuth callback handler (direct token)
+  const handleGTCallback = async (
+    accessToken: string
+  ): Promise<{ isStudent: boolean; studentId: number | null } | null> => {
+    try {
+      setLoading(true);
+      const decoded = setAuthFromToken(accessToken);
+      if (!decoded) {
+        throw new Error("Invalid or expired token");
+      }
+
+      const isStudent =
+        (decoded.role_names ?? []).includes("Student") && !!decoded.student_id;
+      const studentId = isStudent ? decoded.student_id : null;
+
+      return { isStudent, studentId };
+    } catch (error) {
+      console.error("GT Authentication failed", error);
+      throw error;
+    } finally {
+      setLoading(false);
+    }
+  };
 
   // Google OAuth callback handler
   const handleCallback = async (
@@ -307,6 +329,7 @@ const loginWithGT = () => {
         loginWithEmail,
         logout,
         handleCallback,
+        handleGTCallback,
         refreshAuth,
       }}
     >

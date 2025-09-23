@@ -15,6 +15,7 @@ const HtmlContentBox: React.FC<HtmlContentBoxProps> = ({
     <Box
       p={padding}
       h={height}
+      bg={"white"}
       overflow={"auto"}
       css={{
         "& p": { marginBottom: "1em" },

@@ -28,13 +28,15 @@ const spinnerKeyframes = `
 `;
 
 const OAuthCallbackHandler = () => {
-  const { handleCallback } = useAuth();
+  const { handleCallback, handleGTCallback } = useAuth();
   const navigate = useNavigate();
   const processedRef = useRef(false);
 
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
     const code = params.get("code");
+    const accessToken = params.get("access_token");
+    const ssoProvider = params.get("sso");
     const oauthError = params.get("error");
 
     if (processedRef.current) return;
@@ -46,54 +48,83 @@ const OAuthCallbackHandler = () => {
         navigate("/login", {
           replace: true,
           state: {
-            error: `Google sign-in was canceled or denied (${oauthError}).`,
+            error: `Sign-in was canceled or denied (${oauthError}).`,
           },
         });
       });
       return;
     }
 
-    if (!code) {
-      queueMicrotask(() => {
-        window.history.replaceState({}, document.title, "/");
-        navigate("/login", {
-          replace: true,
-          state: { error: "Missing authorization code. Please try again." },
-        });
-      });
+    // Handle GT SAML OAuth (direct token)
+    if (ssoProvider === "gatech" && accessToken) {
+      (async () => {
+        try {
+          const result = await handleGTCallback(accessToken);
+          queueMicrotask(() => {
+            window.history.replaceState({}, document.title, "/");
+
+            if (result?.isStudent && result.studentId) {
+              navigate(`/student/${result.studentId}`, { replace: true });
+            } else {
+              navigate("/dashboard", { replace: true });
+            }
+          });
+        } catch {
+          queueMicrotask(() => {
+            window.history.replaceState({}, document.title, "/");
+            navigate("/login", {
+              replace: true,
+              state: { error: "GT authentication failed. Please try again." },
+            });
+          });
+        }
+      })();
       return;
     }
 
-    (async () => {
-      try {
-        const result = await handleCallback(code);
-        queueMicrotask(() => {
-          // strip the code immediately so nothing can re-trigger
-          window.history.replaceState({}, document.title, "/");
+    // Handle Google OAuth (code exchange)
+    if (code) {
+      (async () => {
+        try {
+          const result = await handleCallback(code);
+          queueMicrotask(() => {
+            // strip the code immediately so nothing can re-trigger
+            window.history.replaceState({}, document.title, "/");
 
-          if (result?.isStudent && result.studentId) {
-            navigate(`/student/${result.studentId}`, { replace: true });
-          } else {
-            navigate("/dashboard", { replace: true });
-          }
-        });
-      } catch {
-        queueMicrotask(() => {
-          window.history.replaceState({}, document.title, "/");
-          navigate("/login", {
-            replace: true,
-            state: { error: "Authentication failed. Please try again." },
+            if (result?.isStudent && result.studentId) {
+              navigate(`/student/${result.studentId}`, { replace: true });
+            } else {
+              navigate("/dashboard", { replace: true });
+            }
           });
-        });
-      }
-    })();
-  }, [handleCallback, navigate]);
+        } catch {
+          queueMicrotask(() => {
+            window.history.replaceState({}, document.title, "/");
+            navigate("/login", {
+              replace: true,
+              state: { error: "Google authentication failed. Please try again." },
+            });
+          });
+        }
+      })();
+      return;
+    }
+
+    // No valid parameters found
+    queueMicrotask(() => {
+      window.history.replaceState({}, document.title, "/");
+      navigate("/login", {
+        replace: true,
+        state: { error: "Missing authorization parameters. Please try again." },
+      });
+    });
+  }, [handleCallback, handleGTCallback, navigate]);
 
   return (
     <div style={containerStyle}>
       <style>{spinnerKeyframes}</style>
       <div style={spinnerStyle}></div>
-      <p>Authenticating with Google...</p>
+      <p>Authenticating...</p>
     </div>
   );
 };

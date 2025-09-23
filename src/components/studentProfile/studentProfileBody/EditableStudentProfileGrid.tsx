@@ -27,6 +27,7 @@ import StudentClassSelection from "../../profileCreation/profileCreationSteps/st
 import { FaCheckCircle } from "react-icons/fa";
 import usePutStudentProfile from "../../../hooks/studentProfiles/usePutStudentProfile";
 import { toaster } from "../../ui/toaster";
+import ProfileGenerationOverlay from "./ProfileGenerationOverlay";
 
 interface EditableStudentProfileGridProps {
   student: StudentProfileType | null;
@@ -127,7 +128,7 @@ const EditableStudentProfileGrid = ({
       selectedClasses.length < 1 ||
       strengths.filter((s) => s.trim() !== "").length < 3 ||
       weaknesses.filter((w) => w.trim() !== "").length < 3 ||
-      bestWaysToHelp.filter((b) => b.trim() !== "").length < 3;
+      bestWaysToHelp.filter((b) => b.trim() !== "").length < 1;
 
     console.log(longTermGoals);
     console.log(selectedClasses);
@@ -149,6 +150,7 @@ const EditableStudentProfileGrid = ({
 
   return (
     <Box>
+      {loadingPatchUpdate && <ProfileGenerationOverlay />}
       <Grid
         templateColumns={{ base: "1fr", md: "1fr 1fr" }}
         templateRows="auto repeat(3, 1fr)"

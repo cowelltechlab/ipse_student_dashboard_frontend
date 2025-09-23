@@ -6,6 +6,7 @@ import useStudent from "../hooks/students/useStudent";
 import BreadcrumbNav from "../components/common/breadcrumb/BreadcrumbNav";
 import useAssignment from "../hooks/assignments/useAssignment";
 import AssignmentDetailsPageContent from "../components/assignmentDetails/AssignmentDetailsPageContent";
+import { Navigate } from "react-router-dom";
 
 const AssignmentDetails = () => {
   const { student_id, assignment_id } = useParams<{
@@ -22,6 +23,10 @@ const AssignmentDetails = () => {
   const { assignment, loading: AssignmentLoading } = useAssignment(
     Number(assignment_id)
   );
+
+  if (!student_id) return <Navigate to="/dashboard" replace />;
+  if (!assignment_id)
+    return <Navigate to={`/student/${student_id}/documents`} replace />;
 
   let nameLabel;
   let assignmentLabel;
