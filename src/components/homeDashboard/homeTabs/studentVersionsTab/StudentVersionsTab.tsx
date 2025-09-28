@@ -1,6 +1,6 @@
 "use client";
 
-import { Box, Button, HStack, Spacer } from "@chakra-ui/react";
+import { Box, Button, HStack, Icon, Spacer } from "@chakra-ui/react";
 import { useState } from "react";
 import SearchBar from "../../../common/searchBar/SearchBar";
 import StudentVersionsTable from "./StudentVersionsTable";
@@ -10,6 +10,7 @@ import useStudentsWithDetails from "../../../../hooks/studentGroups/useStudentsW
 import type { StudentDetailsType } from "../../../../types/StudentGroupTypes";
 import useDownloadAllStudentProfiles from "../../../../hooks/studentProfiles/useDownloadAllStudentProfiles";
 import StudentVersionsEmailUpdateModal from "./StudentVersionsEmailUpdateModal";
+import { IoCloudDownloadSharp } from "react-icons/io5";
 
 const StudentVersionsTab = () => {
   const [refetchTrigger, setRefetchTrigger] = useState(0);
@@ -60,6 +61,7 @@ const StudentVersionsTab = () => {
           loading={downloading}
           borderRadius={"lg"}
         >
+          <Icon as={IoCloudDownloadSharp} />
           Download Profile Information
         </Button>
       </HStack>
