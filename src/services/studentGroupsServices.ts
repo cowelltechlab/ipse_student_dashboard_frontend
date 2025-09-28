@@ -42,7 +42,7 @@ export const updateStudentEmails = async (
   data: { email?: string; gt_email?: string }
 ): Promise<StudentDetailsType> => {
   const response = await apiClient.patch(
-    `/student-groups/${student_id}/emails`,
+    `/student-groups/${student_id}/email`,
     data
   );
 

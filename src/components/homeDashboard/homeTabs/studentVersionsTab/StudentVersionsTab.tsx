@@ -39,12 +39,8 @@ const StudentVersionsTab = () => {
     setEmailModalOpen(true);
   };
 
-  const handleStudentUpdate = () => {
-    setRefetchTrigger((prev) => prev + 1);
-  };
-
   const handleModalUpdate = () => {
-    handleStudentUpdate();
+    setRefetchTrigger((prev) => prev + 1);
   };
 
   return (
@@ -78,7 +74,7 @@ const StudentVersionsTab = () => {
         groupTypeFilter={groupTypeFilter}
         onEmailClick={handleEmailClick}
         onPptClick={handlePptClick}
-        onStudentUpdate={handleStudentUpdate}
+        onStudentUpdate={handleModalUpdate}
       />
 
       <PowerPointUrlsModal
