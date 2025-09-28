@@ -20,7 +20,7 @@ const PasswordLogin = ({ setFormDisplay }: PasswordLoginProps) => {
   const [password, setPassword] = useState("");
   const [showForgotPassword, setShowForgotPassword] = useState(false);
 
-  const { loginWithEmail } = useAuth();
+  const { loginWithEmail, loading } = useAuth();
 
   const onEmailLoginSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -99,6 +99,7 @@ const PasswordLogin = ({ setFormDisplay }: PasswordLoginProps) => {
                 bg={"#bd4f23"}
                 color="white"
                 _hover={{ bg: "#a43e1c" }}
+                loading={loading}
               >
                 Login
               </Button>
