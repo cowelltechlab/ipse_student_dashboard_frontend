@@ -97,15 +97,30 @@ const PlanningForTheFuture = ({
                   <Text fontSize="md" fontWeight="semibold" mb={1}>
                     What way of working or learning did you find?
                   </Text>
-                  <Text fontSize="md" fontWeight="normal" fontStyle="italic" mb={1}>
+                  <Text
+                    fontSize="md"
+                    fontWeight="normal"
+                    fontStyle="italic"
+                    mb={1}
+                  >
                     How do you know it was helpful for you?
                   </Text>
-                  <Text fontSize="md" fontWeight="normal" fontStyle="italic" mb={1}>
+                  <Text
+                    fontSize="md"
+                    fontWeight="normal"
+                    fontStyle="italic"
+                    mb={1}
+                  >
                     Should we update your profile to show this?
                   </Text>
-                  <Text fontSize="md" fontWeight="normal" fontStyle="italic" mb={3}>
-                    If you are proud of your work, remember that we can update your
-                    achievements page.
+                  <Text
+                    fontSize="md"
+                    fontWeight="normal"
+                    fontStyle="italic"
+                    mb={3}
+                  >
+                    If you are proud of your work, remember that we can update
+                    your achievements page.
                   </Text>
                   <Textarea
                     value={wayToKeepExplanation}
@@ -135,12 +150,22 @@ const PlanningForTheFuture = ({
                   <Text fontSize="md" fontWeight="semibold" mb={1}>
                     What could you do better?
                   </Text>
-                  <Text fontSize="md" fontWeight="normal" fontStyle="italic" mb={1}>
+                  <Text
+                    fontSize="md"
+                    fontWeight="normal"
+                    fontStyle="italic"
+                    mb={1}
+                  >
                     How do you know that you could do better?
                   </Text>
-                  <Text fontSize="md" fontWeight="normal" fontStyle="italic" mb={3}>
-                    Should we change or update your profile to show what you want to
-                    work on?
+                  <Text
+                    fontSize="md"
+                    fontWeight="normal"
+                    fontStyle="italic"
+                    mb={3}
+                  >
+                    Should we change or update your profile to show what you
+                    want to work on?
                   </Text>
                   <Textarea
                     value={improvementsExplanation}
@@ -166,8 +191,9 @@ const PlanningForTheFuture = ({
               <Stack spaceY={6}>
                 <Box>
                   <Text fontSize="md" fontWeight="semibold" mb={3}>
-                    How confident do you feel about making changes to a similar
-                    inclusive assignment in the future?
+                    How much to you agree or disagree with this statement: "I am
+                    very confident making changes to similar assignments in the
+                    future"
                   </Text>
                   <LickertButtons
                     selection={confidenceMakingChanges}
@@ -179,12 +205,22 @@ const PlanningForTheFuture = ({
                   <Text fontSize="md" fontWeight="semibold" mb={1}>
                     What makes you feel confident or not confident?
                   </Text>
-                  <Text fontSize="md" fontWeight="normal" fontStyle="italic" mb={1}>
+                  <Text
+                    fontSize="md"
+                    fontWeight="normal"
+                    fontStyle="italic"
+                    mb={1}
+                  >
                     What would help you feel more confident in the future?
                   </Text>
-                  <Text fontSize="md" fontWeight="normal" fontStyle="italic" mb={3}>
-                    Remember that we can update your achievements page if there is
-                    anything that you are proud of.
+                  <Text
+                    fontSize="md"
+                    fontWeight="normal"
+                    fontStyle="italic"
+                    mb={3}
+                  >
+                    Remember that we can update your achievements page if there
+                    is anything that you are proud of.
                   </Text>
                   <Textarea
                     value={confidenceExplanation}
