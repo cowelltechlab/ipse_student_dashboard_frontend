@@ -7,9 +7,12 @@ export const getAllStudentProfiles = async () => {
   return response.data;
 };
 
-export const downloadAllStudentProfiles = async () => {
+export const downloadAllStudentProfiles = async (
+  format: 'csv' | 'json' = 'csv'
+) => {
   const response = await apiClient.get("/profile/export", {
     responseType: "blob",
+    params: { format },
   });
   return response.data;
 };

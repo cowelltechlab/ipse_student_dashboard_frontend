@@ -39,12 +39,11 @@ export const updateStudentPptUrls = async (
 
 export const updateStudentEmails = async (
   student_id: number,
-  email: string,
-  gt_email: string
+  data: { email?: string; gt_email?: string }
 ): Promise<StudentDetailsType> => {
   const response = await apiClient.patch(
     `/student-groups/${student_id}/emails`,
-    { email, gt_email }
+    data
   );
 
   console.log("updateStudentEmails response:", response.data);
