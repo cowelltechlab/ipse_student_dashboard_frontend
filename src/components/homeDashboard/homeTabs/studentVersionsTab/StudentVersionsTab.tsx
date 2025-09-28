@@ -9,6 +9,7 @@ import PowerPointUrlsModal from "./PowerPointUrlsModal";
 import useStudentsWithDetails from "../../../../hooks/studentGroups/useStudentsWithDetails";
 import type { StudentDetailsType } from "../../../../types/StudentGroupTypes";
 import useDownloadAllStudentProfiles from "../../../../hooks/studentProfiles/useDownloadAllStudentProfiles";
+import StudentVersionsEmailUpdateModal from "./StudentVersionsEmailUpdateModal";
 
 const StudentVersionsTab = () => {
   const [refetchTrigger, setRefetchTrigger] = useState(0);
@@ -19,6 +20,7 @@ const StudentVersionsTab = () => {
   const [modalOpen, setModalOpen] = useState(false);
   const [selectedStudent, setSelectedStudent] =
     useState<StudentDetailsType | null>(null);
+  const [emailModalOpen, setEmailModalOpen] = useState(false);
 
   const { downloadProfiles, loading: downloading } =
     useDownloadAllStudentProfiles();
@@ -30,6 +32,11 @@ const StudentVersionsTab = () => {
   const handlePptClick = (student: StudentDetailsType) => {
     setSelectedStudent(student);
     setModalOpen(true);
+  };
+
+  const handleEmailClick = (student: StudentDetailsType) => {
+    setSelectedStudent(student);
+    setEmailModalOpen(true);
   };
 
   const handleStudentUpdate = () => {
@@ -69,6 +76,7 @@ const StudentVersionsTab = () => {
         studentsError={error}
         searchTerm={searchTerm}
         groupTypeFilter={groupTypeFilter}
+        onEmailClick={handleEmailClick}
         onPptClick={handlePptClick}
         onStudentUpdate={handleStudentUpdate}
       />
@@ -76,6 +84,13 @@ const StudentVersionsTab = () => {
       <PowerPointUrlsModal
         open={modalOpen}
         setOpen={setModalOpen}
+        student={selectedStudent}
+        onUpdate={handleModalUpdate}
+      />
+
+      <StudentVersionsEmailUpdateModal
+        open={emailModalOpen}
+        setOpen={setEmailModalOpen}
         student={selectedStudent}
         onUpdate={handleModalUpdate}
       />
