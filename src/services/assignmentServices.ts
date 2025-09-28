@@ -81,3 +81,23 @@ export const getAssignmentTypes = async (): Promise<AssignmentTypeListType[]> =>
   const response = await apiClient.get("/assignments/types");
   return response.data;
 };
+
+export const updateAssignment = async (
+  assignment_id: number,
+  data: Partial<{
+    title: string;
+    class_id: number;
+    assignment_type_id: number;
+  }>
+): Promise<AssignmentDetailType> => {
+  const response = await apiClient.put(
+    `/assignments/${assignment_id}`,
+    data
+  );
+  return response.data;
+};
+
+
+export const deleteAssignment = async (assignment_id: number): Promise<void> => {
+  await apiClient.delete(`/assignments/${assignment_id}`);
+};
