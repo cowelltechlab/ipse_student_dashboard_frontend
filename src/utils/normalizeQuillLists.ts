@@ -3,10 +3,10 @@ export function normalizeQuillLists(html: string): string {
 
   // Quill often encodes bullets as <ol><li data-list="bullet">...</li></ol>
   // Convert those to a semantic <ul>
-  out = out.replace(/<ol([^>]*)>([\s\S]*?)<\/ol>/gi, (m, attrs, inner) => {
+  out = out.replace(/<ol([^>]*)>([\s\S]*?)<\/ol>/gi, (_, attrs, inner) => {
     // If any top-level li carries data-list="bullet", treat as <ul>
     const hasBullet = /<li[^>]*\sdata-list="bullet"[^>]*>/i.test(inner);
-    return hasBullet ? `<ul${attrs}>${inner}</ul>` : m;
+    return hasBullet ? `<ul${attrs}>${inner}</ul>` : `<ol${attrs}>${inner}</ol>`;
   });
 
   // Remove editor-only artifacts

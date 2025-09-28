@@ -24,8 +24,8 @@ interface DisplayUserDialogProps {
   open: boolean;
   setOpen: (open: boolean) => void;
 
-
-  handleDelete: () => void;
+  handleDelete: () => void; 
+  onDeleted?: () => void;
 }
 
 const DeleteUserDialog = ({
@@ -36,15 +36,20 @@ const DeleteUserDialog = ({
   open,
   setOpen,
   handleDelete,
+  onDeleted,
 }: DisplayUserDialogProps) => {
   const [deleteHover, setDeleteHover] = useState(false);
 
   const { handleDeleteUser } = useDeleteUser();
 
-  const handleDeleteProfile = () => {
-    handleDeleteUser(userId);
-
-    handleDelete();
+  const handleDeleteProfile = async () => {
+    try {
+      await handleDeleteUser(userId);
+      handleDelete?.(); 
+      onDeleted?.();    
+      setOpen(false);
+    } catch {
+    }
   };
 
   return (
