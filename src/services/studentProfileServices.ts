@@ -2,6 +2,18 @@ import type { ClassSelectionType } from "../types/ClassTypes";
 import type { StudentProfileUpdatePayload } from "../types/StudentProfileTypes";
 import apiClient from "./apiClient";
 
+export const getAllStudentProfiles = async () => {
+  const response = await apiClient.get("/profile/");
+  return response.data;
+};
+
+export const downloadAllStudentProfiles = async () => {
+  const response = await apiClient.get("/profile/export", {
+    responseType: "blob",
+  });
+  return response.data;
+};
+
 export const getStudentProfile = async (student_id: string) => {
   const response = await apiClient.get(`/profile/${student_id}`);
   return response.data;
