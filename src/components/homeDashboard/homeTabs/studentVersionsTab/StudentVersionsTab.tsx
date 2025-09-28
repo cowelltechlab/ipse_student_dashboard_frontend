@@ -1,7 +1,6 @@
-
 "use client";
 
-import { Box, HStack, Spacer } from "@chakra-ui/react";
+import { Box, Button, HStack, Spacer } from "@chakra-ui/react";
 import { useState } from "react";
 import SearchBar from "../../../common/searchBar/SearchBar";
 import StudentVersionsTable from "./StudentVersionsTable";
@@ -9,6 +8,7 @@ import StudentVersionsFilterButtons from "./StudentVersionsFilterButtons";
 import PowerPointUrlsModal from "./PowerPointUrlsModal";
 import useStudentsWithDetails from "../../../../hooks/studentGroups/useStudentsWithDetails";
 import type { StudentDetailsType } from "../../../../types/StudentGroupTypes";
+import useDownloadAllStudentProfiles from "../../../../hooks/studentProfiles/useDownloadAllStudentProfiles";
 
 const StudentVersionsTab = () => {
   const [refetchTrigger, setRefetchTrigger] = useState(0);
@@ -17,7 +17,15 @@ const StudentVersionsTab = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [groupTypeFilter, setGroupTypeFilter] = useState<string | null>(null);
   const [modalOpen, setModalOpen] = useState(false);
-  const [selectedStudent, setSelectedStudent] = useState<StudentDetailsType | null>(null);
+  const [selectedStudent, setSelectedStudent] =
+    useState<StudentDetailsType | null>(null);
+
+  const { downloadProfiles, loading: downloading } =
+    useDownloadAllStudentProfiles();
+
+  const handleDownloadProfileData = () => {
+    downloadProfiles();
+  };
 
   const handlePptClick = (student: StudentDetailsType) => {
     setSelectedStudent(student);
@@ -41,11 +49,19 @@ const StudentVersionsTab = () => {
           placeholder="Search Students..."
         />
         <Spacer />
+        <Button
+          bg={"#bd4f23"}
+          _hover={{ bg: "#A43E1E" }}
+          color={"white"}
+          onClick={handleDownloadProfileData}
+          loading={downloading}
+          borderRadius={"lg"}
+        >
+          Download Profile Information
+        </Button>
       </HStack>
 
-      <StudentVersionsFilterButtons
-        setGroupTypeFilter={setGroupTypeFilter}
-      />
+      <StudentVersionsFilterButtons setGroupTypeFilter={setGroupTypeFilter} />
 
       <StudentVersionsTable
         students={students}
