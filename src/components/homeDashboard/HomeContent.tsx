@@ -2,40 +2,48 @@ import StudentsTab from "./homeTabs/studentsTab/StudentsTab";
 import AssignmentsTab from "./homeTabs/assignmentsTab/AssignmentsTab";
 import AdvisorsTab from "./homeTabs/advisorsTab/AdvisorsTab";
 import PeerTutorsTab from "./homeTabs/peerTutorsTab/PeerTutorsTab";
+import StudentVersionsTab from "./homeTabs/studentVersionsTab/StudentVersionsTab";
+import AdminTab from "./homeTabs/adminTab/AdminTab";
 
 import { Tabs } from "@chakra-ui/react";
 import useAuth from "../../contexts/useAuth";
-import StudentVersionsTab from "./homeTabs/studentVersionsTab/StudentVersionsTab";
 
 const HomeContent = () => {
   const { roles } = useAuth();
+  const isAdmin = roles.includes("Admin");
 
   return (
-    <Tabs.Root defaultValue="students" variant={"line"} mt={10}>
+    <Tabs.Root defaultValue="students" variant="line" mt={10}>
       <Tabs.List>
         <Tabs.Trigger _selected={{ fontWeight: "bold" }} value="students">
           Students
         </Tabs.Trigger>
-        {roles.includes("Admin") && (
-          <Tabs.Trigger
-            _selected={{ fontWeight: "bold" }}
-            value="student-groups"
-          >
+
+        {isAdmin && (
+          <Tabs.Trigger _selected={{ fontWeight: "bold" }} value="student-groups">
             Student Groups
           </Tabs.Trigger>
         )}
+
         <Tabs.Trigger _selected={{ fontWeight: "bold" }} value="assignments">
           Assignments
         </Tabs.Trigger>
-        {(roles.includes("Admin") || roles.includes("Advisor")) && (
+
+        {(isAdmin || roles.includes("Advisor")) && (
           <Tabs.Trigger _selected={{ fontWeight: "bold" }} value="advisors">
             Advisors
           </Tabs.Trigger>
         )}
 
-        {(roles.includes("Admin") || roles.includes("Advisor")) && (
+        {(isAdmin || roles.includes("Advisor")) && (
           <Tabs.Trigger _selected={{ fontWeight: "bold" }} value="peer-tutors">
             Peer Tutors
+          </Tabs.Trigger>
+        )}
+
+        {isAdmin && (
+          <Tabs.Trigger _selected={{ fontWeight: "bold" }} value="admin">
+            Admin
           </Tabs.Trigger>
         )}
       </Tabs.List>
@@ -43,22 +51,32 @@ const HomeContent = () => {
       <Tabs.Content value="students">
         <StudentsTab />
       </Tabs.Content>
-      {roles.includes("Admin") && (
+
+      {isAdmin && (
         <Tabs.Content value="student-groups">
           <StudentVersionsTab />
         </Tabs.Content>
       )}
+
       <Tabs.Content value="assignments">
         <AssignmentsTab />
       </Tabs.Content>
-      {(roles.includes("Admin") || roles.includes("Advisor")) && (
+
+      {(isAdmin || roles.includes("Advisor")) && (
         <Tabs.Content value="advisors">
           <AdvisorsTab />
         </Tabs.Content>
       )}
-      {(roles.includes("Admin") || roles.includes("Advisor")) && (
+
+      {(isAdmin || roles.includes("Advisor")) && (
         <Tabs.Content value="peer-tutors">
           <PeerTutorsTab />
+        </Tabs.Content>
+      )}
+
+      {isAdmin && (
+        <Tabs.Content value="admin">
+          <AdminTab />
         </Tabs.Content>
       )}
     </Tabs.Root>
