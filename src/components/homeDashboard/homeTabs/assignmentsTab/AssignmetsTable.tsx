@@ -40,6 +40,7 @@ const AssignmentsTable = ({
   onAssignmentClick,
   filterByNeedsRating,
   filterByNotFinalized,
+
 }: AssignmentsTableProps) => {
   const [visibleCount, setVisibleCount] = useState(10);
 
@@ -244,6 +245,9 @@ const AssignmentsTable = ({
           Load More
         </Text>
       )}
+
+
+
     </Stack>
   );
 };

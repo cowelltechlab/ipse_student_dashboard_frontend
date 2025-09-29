@@ -77,6 +77,9 @@ const AssignmentsTab = () => {
         filterByNeedsRating={filterByNeedsRating}
         filterByNotFinalized={filterByNotFinalized}
       />
+
+      
+
     </Box>
   );
 };
