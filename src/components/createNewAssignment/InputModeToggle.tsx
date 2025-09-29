@@ -41,21 +41,22 @@ const InputModeToggle = ({ inputMode, setInputMode, onModeChange }: InputModeTog
       <Text fontSize="sm" fontWeight="medium" color="gray.700" mb={2}>
         Input Method
       </Text>
-      <HStack spacing={2} bg="gray.50" p={1} borderRadius="lg">
+      <HStack gap={2} bg="gray.50" p={1} borderRadius="lg">
         <Button
-          leftIcon={<IoCloudUploadSharp />}
           onClick={() => handleModeChange('file')}
           {...(inputMode === 'file' ? activeStyles : inactiveStyles)}
           flex={1}
         >
+          <IoCloudUploadSharp />
           Upload File
         </Button>
         <Button
-          leftIcon={<IoDocumentTextSharp />}
+          
           onClick={() => handleModeChange('text')}
           {...(inputMode === 'text' ? activeStyles : inactiveStyles)}
           flex={1}
         >
+          <IoDocumentTextSharp />
           Raw Text
         </Button>
       </HStack>

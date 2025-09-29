@@ -23,9 +23,9 @@ const RawTextInputBox = ({ textContent, setTextContent }: RawTextInputBoxProps) 
       justify="flex-start"
       bg="#EAF2FF"
       border="2px solid transparent"
-      spacing={4}
+      gap={4}
     >
-      <VStack align="center" spacing={3}>
+      <VStack align="center" gap={3}>
         <Box>
           <IoDocumentTextSharp color="#BD4F23" size={44} />
         </Box>
