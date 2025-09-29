@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React from "react";
 import { Navigate, useLocation } from "react-router-dom";
 import { Flex, Spinner } from "@chakra-ui/react";
 import useAuth from "../contexts/useAuth";
@@ -12,10 +12,6 @@ const FullscreenSpinner = () => (
 const AuthGate: React.FC = () => {
   const { isAuthenticated, roles, studentId, loading, userId } = useAuth();
   const location = useLocation();
-
-  useEffect(() => {
-    console.log("AuthGate: isAuthenticated =", isAuthenticated, "roles =", roles, "studentId =", studentId, "userId =", userId);
-  }, [isAuthenticated, roles, studentId, userId]);
 
   // NEW: also wait for roles to hydrate before deciding
   if (loading || roles.length === 0) return <FullscreenSpinner />;

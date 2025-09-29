@@ -57,7 +57,6 @@ const useStudentsWithDetails = (refetchTrigger?: number) => {
 
         studentsDetailsCache.set(key, { data: fresh, ts: Date.now() });
         setStudents(fresh);
-        console.log("Fetched students with details:", fresh);
         setError(null);
       } catch (e) {
         if (cancelled) return;

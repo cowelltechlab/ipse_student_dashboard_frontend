@@ -26,7 +26,6 @@ const SubmitModal = ({isOpen, setIsOpen}: SubmitModalProps) => {
     };
 
     const handleReturnToHomeClick = () => {
-        console.log("Return to home page.");
         navigate("/dashboard");
     };
 
@@ -60,6 +59,7 @@ const SubmitModal = ({isOpen, setIsOpen}: SubmitModalProps) => {
                             fontSize="md"
                             mr="5%"
                             ml="5%"
+                            color={"#244d8a"}
                         >
                             All set! Your document has been uploaded successfully.
                         </Text>

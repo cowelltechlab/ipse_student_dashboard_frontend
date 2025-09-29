@@ -13,7 +13,6 @@ const useClasses = (triggerRefetch: number, studentId?: number | null) => {
       try {
         setLoading(true);
         if (studentId) {
-          console.log("Fetching classes for student ID:", studentId);
           const response = await getStudentClasses(studentId);
           setClasses(response);
         } else {

@@ -115,7 +115,6 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       if (looksLikeStudent && !hasStudentId) {
         try {
           const me = await apiClient.get("/auth/me");
-          console.log("/auth/me response 1:", me.data);
           // Extract student_id from student_profile if it exists
           const studentId = me.data?.student_profile?.student_id ?? me.data?.student_id ?? null;
           setStudentId(studentId);
@@ -255,7 +254,6 @@ const loginWithGT = () => {
       if (needsMe) {
         try {
           const me = await apiClient.get("/auth/me");
-          console.log("/auth/me response 2:", me.data);
           // Expecting { roles: string[], student_id: number, ... } – adjust to your shape
           if (Array.isArray(me.data?.roles)) setRoles(me.data.roles);
           
@@ -296,8 +294,7 @@ const loginWithGT = () => {
   const refreshAuth = useCallback(async () => {
     try {
       const me = await apiClient.get("/auth/me");
-      console.log("/auth/me response 3 (refreshAuth):", me.data);
-      
+            
       // Extract student_id from student_profile if it exists
       const studentId = me.data?.student_profile?.student_id ?? me.data?.student_id ?? null;
       if (studentId != null) setStudentId(studentId);

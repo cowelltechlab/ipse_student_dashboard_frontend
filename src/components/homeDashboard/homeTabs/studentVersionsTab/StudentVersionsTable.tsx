@@ -31,6 +31,7 @@ interface StudentVersionsTableProps {
   searchTerm: string | null;
   groupTypeFilter: string | null;
   onPptClick: (student: StudentDetailsType) => void;
+  onEmailClick: (student: StudentDetailsType) => void;
   onStudentUpdate: () => void;
 }
 
@@ -41,11 +42,13 @@ const StudentVersionsTable = ({
   searchTerm,
   groupTypeFilter,
   onPptClick,
+  onEmailClick,
   onStudentUpdate,
 }: StudentVersionsTableProps) => {
   const [visibleCount, setVisibleCount] = useState(10);
   const [passwordResetModalOpen, setPasswordResetModalOpen] = useState(false);
-  const [selectedStudent, setSelectedStudent] = useState<StudentDetailsType | null>(null);
+  const [selectedStudent, setSelectedStudent] =
+    useState<StudentDetailsType | null>(null);
   const { handleUpdateGroupType } = useUpdateStudentGroupType();
 
   const groupTypeCollection = createListCollection({
@@ -74,7 +77,9 @@ const StudentVersionsTable = ({
     } catch (e) {
       const error = e as { message?: string };
       toaster.create({
-        description: `Error updating group type: ${error.message || "Unknown error"}`,
+        description: `Error updating group type: ${
+          error.message || "Unknown error"
+        }`,
         type: "error",
       });
     }
@@ -143,6 +148,10 @@ const StudentVersionsTable = ({
         <colgroup>
           {/* Student info column flexes */}
           <col style={{ width: "auto" }} />
+          {/* Email column fixed */}
+          <col style={{ width: "180px" }} />
+          {/* GT Email column fixed */}
+          <col style={{ width: "180px" }} />
           {/* Group type column fixed */}
           <col style={{ width: "200px" }} />
           {/* PowerPoint column fixed */}
@@ -165,7 +174,10 @@ const StudentVersionsTable = ({
               ))
             : visibleStudents.map((student) => {
                 return (
-                  <Table.Row key={student.student_id} _hover={{ bg: "gray.100" }}>
+                  <Table.Row
+                    key={student.student_id}
+                    _hover={{ bg: "gray.100" }}
+                  >
                     {/* Column 1: icon + name */}
                     <Table.Cell>
                       <HStack align="center">
@@ -181,18 +193,55 @@ const StudentVersionsTable = ({
                           <Heading fontSize="md" fontWeight="bold">
                             {student.first_name} {student.last_name}
                           </Heading>
-                          
                         </VStack>
                       </HStack>
                     </Table.Cell>
 
-                    {/* Column 2: Group Type (editable) */}
+                    {/* Column 1: Email */}
+                    <Table.Cell onClick={() => onEmailClick(student)}>
+                      <Text
+                        color={"gray.800"}
+                        overflow="hidden"
+                        textOverflow="ellipsis"
+                        whiteSpace="nowrap"
+                        maxWidth="170px"
+                        title={student.email || student.gt_email || "No email"}
+                        _hover={{
+                          textDecoration: "underline",
+                          cursor: "pointer",
+                        }}
+                      >
+                        {student.email || student.gt_email || "No email"}
+                      </Text>
+                    </Table.Cell>
+
+                    {/* Column 2: GT Email */}
+                    <Table.Cell onClick={() => onEmailClick(student)}>
+                      <Text
+                        color={"gray.800"}
+                        overflow="hidden"
+                        textOverflow="ellipsis"
+                        whiteSpace="nowrap"
+                        maxWidth="170px"
+                        title={student.gt_email || "No GT email"}
+                        _hover={{
+                          textDecoration: "underline",
+                          cursor: "pointer",
+                        }}
+                      >
+                        {student.gt_email || "No GT email"}
+                      </Text>
+                    </Table.Cell>
+
+                    {/* Column 3: Group Type (editable) */}
                     <Table.Cell textAlign="right">
                       <Select.Root
                         collection={groupTypeCollection}
                         value={[student.group_type || ""]}
                         onValueChange={(details) => {
-                          const value = Array.isArray(details.value) ? details.value[0] : details.value;
+                          const value = Array.isArray(details.value)
+                            ? details.value[0]
+                            : details.value;
                           handleGroupTypeChange(
                             student.student_id,
                             value === "" ? null : value
@@ -223,7 +272,7 @@ const StudentVersionsTable = ({
                       </Select.Root>
                     </Table.Cell>
 
-                    {/* Column 3: PowerPoint URLs */}
+                    {/* Column 4: PowerPoint URLs */}
                     <Table.Cell textAlign="right">
                       <Button
                         size="sm"
@@ -236,7 +285,7 @@ const StudentVersionsTable = ({
                       </Button>
                     </Table.Cell>
 
-                    {/* Column 4: Password Reset */}
+                    {/* Column 5: Password Reset */}
                     <Table.Cell textAlign="right">
                       <Button
                         size="sm"

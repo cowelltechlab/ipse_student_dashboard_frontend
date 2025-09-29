@@ -180,7 +180,7 @@ const AssignmentDetailsPageContent = ({
         {isOriginalVisible && (
           <Box flex="1">
             <OriginalAssignmentSection
-              originalAssignmentHTML={assignment?.html_content}
+              originalAssignmentHTML={assignment?.html_content || assignment?.content || ""}
               assignmentLoading={assignmentLoading}
             />
           </Box>

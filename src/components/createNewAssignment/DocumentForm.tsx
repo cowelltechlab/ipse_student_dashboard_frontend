@@ -3,15 +3,10 @@ import {
   Fieldset,
   Field,
   Input,
-  NativeSelect,
-  For,
-  Icon,
 } from "@chakra-ui/react";
-import { FaChevronDown } from "react-icons/fa";
 import useClasses from "../../hooks/classes/useClasses";
-import useAssignmentTypes from "../../hooks/assignments/useAssignmentTypes";
-import type { AssignmentTypeListType } from "../../types/AssignmentTypes";
 import ClassDropdown from "../common/classDropdown/ClassDropdown";
+import AssignmentTypeSelectDropdown from "../common/assignments/AssignmentTypeSelectDropdown";
 
 interface DocumentFormProps {
   title: string;
@@ -37,7 +32,6 @@ const DocumentForm = ({
   studentId,
 }: DocumentFormProps) => {
   const { classes } = useClasses(classRefetch, studentId);
-  const { assignmentTypes } = useAssignmentTypes() as { assignmentTypes: AssignmentTypeListType[] };
 
   return (
     <VStack flex="1" align="stretch">
@@ -57,57 +51,21 @@ const DocumentForm = ({
               _hover={{
                 borderColor: "gray.300",
               }}
-              width="100%" 
+              width="100%"
               appearance="none"
             />
           </Field.Root>
 
-          <Field.Root mt={4}>
-            <Field.Label fontWeight="bold" fontSize="lg">
-              Select Assignment Type
-            </Field.Label>
-            <NativeSelect.Root>
-              <NativeSelect.Field
-                value={assignmentTypeId ?? ""}
-                onChange={(e) => setAssignmentTypeId(Number(e.target.value))}
-                name="assignment-type"
-                border="1px solid"
-                borderColor="gray.200"
-                borderRadius="md"
-                _hover={{
-                  borderColor: "gray.300",
-                }}
-                appearance="none"
-              >
-                <option defaultValue="">
-                  Select type
-                </option>
-
-                <For each={assignmentTypes}>
-                  {(item) => (
-                    <option key={item.id} value={item.id}>
-                      {item.type}
-                    </option>
-                  )}
-                </For>
-              </NativeSelect.Field>
-              <Icon
-              as={FaChevronDown}
-              position="absolute"
-              right="3"
-              top="30%"
-              pointerEvents="none"
-              color="gray.500"
-              boxSize="4"
-            />
-            </NativeSelect.Root>  
-          </Field.Root>
+          <AssignmentTypeSelectDropdown
+            assignmentTypeId={assignmentTypeId}
+            setAssignmentTypeId={setAssignmentTypeId}
+          />
 
           <Field.Root mt={4}>
             <Field.Label fontWeight="bold" fontSize="lg">
               Select Class
             </Field.Label>
-            <ClassDropdown 
+            <ClassDropdown
               selectedClassId={classId}
               setSelectedClassId={setClassId}
               openClassAddModal={() => setAddClassModalOpen(true)}

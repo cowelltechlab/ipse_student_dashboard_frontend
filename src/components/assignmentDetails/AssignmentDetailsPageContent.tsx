@@ -1,8 +1,18 @@
-import { Box, Heading, Separator } from "@chakra-ui/react";
+import {
+  Box,
+  Button,
+  Heading,
+  HStack,
+  Icon,
+  Separator,
+} from "@chakra-ui/react";
 import StudentSummaryHeaderCard from "../common/studentProfilePages/StudentSummaryHeaderCard";
 import type { StudentProfileType } from "../../types/StudentTypes";
 import type { AssignmentDetailType } from "../../types/AssignmentTypes";
 import AssignmentDetailsBody from "./assignmentDetailsBody/AssignmentDetailsBody";
+import AssignmentMetadataModal from "../common/assignments/AssignmentMetadataModal";
+import { GiHamburgerMenu } from "react-icons/gi";
+import { useState } from "react";
 
 interface AssignmentDetailsPageContentProps {
   student: StudentProfileType | null;
@@ -19,11 +29,32 @@ const AssignmentDetailsPageContent = ({
   assignmentLoading,
   triggerRefetch,
 }: AssignmentDetailsPageContentProps) => {
+  const [openAssignmentMenu, setOpenAssignmentMenu] = useState(false);
+
+  const handleAssignmentMenuOpen = (e: React.MouseEvent<HTMLButtonElement>) => {
+    // Prevent default action and stop event propagation
+    e.preventDefault();
+    e.stopPropagation();
+
+    setOpenAssignmentMenu(true);
+  };
+
   return (
     <Box p={4}>
-      <Heading fontSize="3xl" mb={2}>
-        Assignment Details
-      </Heading>
+      <HStack justifyContent={"space-between"} mb={4}>
+        <Heading fontSize="3xl" mb={2}>
+          Assignment Details
+        </Heading>
+        <Button
+          variant={"ghost"}
+          padding={0}
+          onClick={handleAssignmentMenuOpen}
+        >
+          <Icon size="md" >
+            <GiHamburgerMenu />
+          </Icon>
+        </Button>
+      </HStack>
       <StudentSummaryHeaderCard
         student={student}
         profileLoading={profileLoading}
@@ -33,6 +64,14 @@ const AssignmentDetailsPageContent = ({
         assignment={assignment}
         assignmentLoading={assignmentLoading}
         triggerRefetch={triggerRefetch}
+      />
+
+      <AssignmentMetadataModal
+        open={openAssignmentMenu}
+        setOpen={() => setOpenAssignmentMenu(!openAssignmentMenu)}
+        assignmentId={assignment?.assignment_id ?? null}
+        studentId={student?.student_id}
+        triggerAssignmentsRefetch={triggerRefetch}
       />
     </Box>
   );

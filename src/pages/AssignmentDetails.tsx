@@ -21,7 +21,8 @@ const AssignmentDetails = () => {
     refetchTrigger
   );
   const { assignment, loading: AssignmentLoading } = useAssignment(
-    Number(assignment_id)
+    Number(assignment_id),
+    refetchTrigger
   );
 
   if (!student_id) return <Navigate to="/dashboard" replace />;

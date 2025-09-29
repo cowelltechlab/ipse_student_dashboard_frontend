@@ -6,6 +6,8 @@ import { useState } from "react";
 import SubmitForm from "./SubmitForm";
 import { useParams } from "react-router-dom";
 import UploadAssignmentBox from "./UploadAssignmentBox";
+import RawTextInputBox from "./RawTextInputBox";
+import InputModeToggle from "./InputModeToggle";
 import DocumentForm from "./DocumentForm";
 import ClassSelectionDialog from "../common/classDropdown/ClassSelectionDialog";
 import StudentSubmitModal from "./StudentSubmitModal";
@@ -24,11 +26,21 @@ const StudentCreateNewAssignmentBody = () => {
   const [addClassModalOpen, setAddClassModalOpen] = useState<boolean>(false);
   const [assignmentTypeId, setAssignmentTypeId] = useState<number | null>(null);
   const [file, setFile] = useState<File | null>(null);
+  const [inputMode, setInputMode] = useState<'file' | 'text'>('file');
+  const [textContent, setTextContent] = useState<string>("");
 
   const [openSuccessDialog, setOpenSuccessDialog] = useState<boolean>(false);
   const [createdAssignmentId, setCreatedAssignmentId] = useState<number | null>(null);
 
   const { student, loading: profileLoading } = useStudent(student_id);
+
+  const handleModeChange = () => {
+    if (inputMode === 'file') {
+      setFile(null);
+    } else {
+      setTextContent("");
+    }
+  };
 
   return (
     <Box>
@@ -45,26 +57,38 @@ const StudentCreateNewAssignmentBody = () => {
 
       <Separator variant="solid" mx={6} />
 
-      <Flex
-        direction={{ base: "column", md: "row" }}
-        justify="space-between"
-        gap={8}
-        p={6}
-        mx="auto"
-      >
-        <UploadAssignmentBox file={file} setFile={setFile} />
-        <DocumentForm
-          title={title}
-          setTitle={setTitle}
-          assignmentTypeId={assignmentTypeId}
-          setAssignmentTypeId={setAssignmentTypeId}
-          classId={classId}
-          setClassId={setClassId}
-          classRefetch={classRefetch}
-          setAddClassModalOpen={setAddClassModalOpen}
-          studentId={student_id ? Number(student_id) : null}
+      <Box p={6}>
+        <InputModeToggle
+          inputMode={inputMode}
+          setInputMode={setInputMode}
+          onModeChange={handleModeChange}
         />
-      </Flex>
+
+        <Flex
+          direction={{ base: "column", md: "row" }}
+          justify="space-between"
+          gap={8}
+          mx="auto"
+        >
+          {inputMode === 'file' ? (
+            <UploadAssignmentBox file={file} setFile={setFile} />
+          ) : (
+            <RawTextInputBox textContent={textContent} setTextContent={setTextContent} />
+          )}
+
+          <DocumentForm
+            title={title}
+            setTitle={setTitle}
+            assignmentTypeId={assignmentTypeId}
+            setAssignmentTypeId={setAssignmentTypeId}
+            classId={classId}
+            setClassId={setClassId}
+            classRefetch={classRefetch}
+            setAddClassModalOpen={setAddClassModalOpen}
+            studentId={student_id ? Number(student_id) : null}
+          />
+        </Flex>
+      </Box>
 
       <Flex>
         <SubmitForm
@@ -72,6 +96,8 @@ const StudentCreateNewAssignmentBody = () => {
           title={title}
           classId={classId}
           file={file}
+          textContent={textContent}
+          inputMode={inputMode}
           assignmentTypeId={assignmentTypeId}
           openSuccessDialog={(assignmentId) => {
             setCreatedAssignmentId(assignmentId || null);

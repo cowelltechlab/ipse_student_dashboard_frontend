@@ -65,6 +65,7 @@ const RatingSubmissionModal = ({ isOpen, setIsOpen, studentId }: RatingSubmissio
                                 mr="5%"
                                 ml="5%"
                                 mb={3}
+                                color="black"
                             >
                                 You are learning about what works for you!
                             </Text>

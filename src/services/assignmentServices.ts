@@ -1,6 +1,8 @@
 import type {
   AssignmentDetailType,
   AssignmentTypeListType,
+  AssignmentTextCreateType,
+  AssignmentTextBulkCreateType,
 } from "../types/AssignmentTypes";
 import apiClient from "./apiClient";
 
@@ -77,7 +79,41 @@ export const postAssignment = async (assignmentData: {
   return response.data;
 };
 
+export const postAssignmentFromText = async (
+  assignmentData: AssignmentTextCreateType
+): Promise<AssignmentDetailType> => {
+  const response = await apiClient.post("/assignments/text", assignmentData);
+  return response.data;
+};
+
+export const postManyAssignmentsFromText = async (
+  assignmentData: AssignmentTextBulkCreateType
+): Promise<AssignmentDetailType[]> => {
+  const response = await apiClient.post("/assignments/text/bulk", assignmentData);
+  return response.data;
+};
+
 export const getAssignmentTypes = async (): Promise<AssignmentTypeListType[]> => {
   const response = await apiClient.get("/assignments/types");
   return response.data;
+};
+
+export const updateAssignment = async (
+  assignment_id: number,
+  data: Partial<{
+    title: string;
+    class_id: number;
+    assignment_type_id: number;
+  }>
+): Promise<AssignmentDetailType> => {
+  const response = await apiClient.put(
+    `/assignments/${assignment_id}`,
+    data
+  );
+  return response.data;
+};
+
+
+export const deleteAssignment = async (assignment_id: number): Promise<void> => {
+  await apiClient.delete(`/assignments/${assignment_id}`);
 };
