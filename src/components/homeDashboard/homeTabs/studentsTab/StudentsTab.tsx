@@ -52,7 +52,6 @@ const StudentsTab = () => {
     userInviteUrl: string | null
   ) => {
     if (userInviteUrl) {
-      console.log(userInviteUrl);
       // Open link
       window.open(userInviteUrl, "_blank");
       // navigate(userInviteUrl);

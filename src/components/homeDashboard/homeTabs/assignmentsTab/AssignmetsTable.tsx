@@ -29,6 +29,8 @@ interface AssignmentsTableProps {
   onAssignmentClick?: (studentId: number, assignmentId: number) => void;
   filterByNeedsRating: boolean;
   filterByNotFinalized: boolean;
+
+  triggerAssignmentsRefetch: () => void;
 }
 const AssignmentsTable = ({
   assignments,
@@ -40,6 +42,7 @@ const AssignmentsTable = ({
   onAssignmentClick,
   filterByNeedsRating,
   filterByNotFinalized,
+  triggerAssignmentsRefetch,
 }: AssignmentsTableProps) => {
   const [visibleCount, setVisibleCount] = useState(10);
 
@@ -73,9 +76,6 @@ const AssignmentsTable = ({
       assignment.rating_status === "Partially Rated";
 
     const isNotFinalized = !filterByNotFinalized || !assignment.finalized;
-
-    console.log(isNotFinalized)
-
     return inDateRange && matchesSearch && needsRating && isNotFinalized;
   });
 
@@ -117,18 +117,42 @@ const AssignmentsTable = ({
           {/* Finalized pill column fixed */}
           <col style={{ width: "200px" }} />
           {/* Actions column fixed */}
-          <col style={{ width: "160px" }} />
+          <col style={{ width: "200px" }} />
         </colgroup>
 
         <Table.Body>
           {assignmentsLoading
             ? Array.from({ length: 10 }).map((_, index) => (
                 <Table.Row key={index}>
+                  {/* Column 1: icon + title + meta */}
                   <Table.Cell>
-                    <Skeleton height="20px" />
+                    <HStack align="start">
+                      <Skeleton height="40px" width="40px" borderRadius="md" />
+                      <VStack align="start" flex="1" minW={0} gap={2}>
+                        <Skeleton height="18px" width="250px" />
+                        <Skeleton height="14px" width="180px" />
+                        <Skeleton height="14px" width="160px" />
+                      </VStack>
+                    </HStack>
                   </Table.Cell>
-                  <Table.Cell />
-                  <Table.Cell />
+
+                  {/* Column 2: Status pills */}
+                  <Table.Cell textAlign="right">
+                    <HStack justifyContent="right" gap={2}>
+                      <Skeleton height="24px" width="80px" borderRadius="full" />
+                      <Skeleton height="24px" width="90px" borderRadius="full" />
+                    </HStack>
+                  </Table.Cell>
+
+                  {/* Column 3: Action buttons */}
+                  <Table.Cell textAlign="right">
+                    <HStack justifyContent="right" gap={2}>
+                      <Skeleton height="32px" width="32px" borderRadius="md" />
+                      <Skeleton height="32px" width="32px" borderRadius="md" />
+                      <Skeleton height="32px" width="32px" borderRadius="md" />
+                      <Skeleton height="32px" width="32px" borderRadius="md" />
+                    </HStack>
+                  </Table.Cell>
                 </Table.Row>
               ))
             : visibleAssignments.map((assignment) => {
@@ -224,7 +248,7 @@ const AssignmentsTable = ({
                         downloadUrl={assignment.blob_url}
                         fileType={assignment.source_format}
                         fileName={assignment.title}
-
+                        triggerAssignmentsRefetch={triggerAssignmentsRefetch}
                       />
                     </Table.Cell>
                   </Table.Row>

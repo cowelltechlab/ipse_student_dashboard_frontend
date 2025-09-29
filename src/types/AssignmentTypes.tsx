@@ -86,3 +86,20 @@ export interface AssignmentTypeListType {
   id: number;
   type: string;
 }
+
+export interface AssignmentTextCreateType {
+  student_id: number;
+  title: string;
+  class_id: number;
+  content: string;
+  assignment_type_id: number;
+  date_created?: string;
+}
+
+export interface AssignmentTextBulkCreateType {
+  student_ids: number[];
+  title: string;
+  class_id: number;
+  content: string;
+  assignment_type_id: number;
+}

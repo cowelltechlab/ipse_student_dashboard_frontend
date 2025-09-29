@@ -7,7 +7,7 @@ import {
   Heading,
   VStack,
 } from "@chakra-ui/react";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import type { ErrorType } from "../../../types/ErrorType";
 import TextButton from "../../common/universal/TextButton";
 import type { StudentType } from "../../../types/StudentTypes";
@@ -40,9 +40,7 @@ const CreateAssignmentStudentCardGrid = ({
   //   return matchesYear;
   // });
 
-  useEffect(()=> (
-    console.log(students)
-  ),[students])
+
 
   const sortedStudents = [...students].sort((a, b) => {
     const nameA = `${a.first_name} ${a.last_name}`.toLowerCase();

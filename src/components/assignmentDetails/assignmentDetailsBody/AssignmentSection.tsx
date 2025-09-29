@@ -14,7 +14,7 @@ const AssignmentSection = ({
   tagContent,
   assignment,
   downloadUrl,
-  children
+  children,
 }: AssignmentSectionProps) => {
   return (
     <VStack align={"left"} mt={10} mx={10}>
@@ -24,7 +24,9 @@ const AssignmentSection = ({
         assignment={assignment}
         fileName={assignment?.title}
         downloadUrl={downloadUrl}
-      >{children}</AssignmentDetailsDocLine>
+      >
+        {children}
+      </AssignmentDetailsDocLine>
     </VStack>
   );
 };

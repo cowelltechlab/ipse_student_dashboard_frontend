@@ -20,14 +20,12 @@ export const getStudents = async (
     },
   });
 
-  console.log("getStudents response:", response.data);
 
   return response.data;
 };
 
 export const getStudentByUserId = async (user_id: number) => {
   const response = await apiClient.get(`/students/user/${user_id}`);
-  // console.log("getStudentByUserId response:", response.data);
   return response.data;
 };
 

@@ -11,7 +11,9 @@ import { IoIosAddCircle } from "react-icons/io";
 import useAssignments from "../../../../hooks/assignments/useAssignments";
 
 const AssignmentsTab = () => {
-  const { assignments, loading, error } = useAssignments();
+  const [refetchTrigger, setRefetchTrigger] = useState(0);
+
+  const { assignments, loading, error } = useAssignments(undefined, refetchTrigger);
 
   const [searchTerm, setSearchTerm] = useState("");
   const [dateRange, setDateRange] = useState<{
@@ -37,9 +39,6 @@ const AssignmentsTab = () => {
     studentId: number,
     assignmentId: number
   ) => {
-    console.log(
-      `Navigate to assignment page with ID: ${assignmentId} for student ID: ${studentId}`
-    );
     navigate(`/student/${studentId}/assignment/${assignmentId}`);
   };
 
@@ -76,6 +75,7 @@ const AssignmentsTab = () => {
         onAssignmentClick={handleNavigateAssignmentPage}
         filterByNeedsRating={filterByNeedsRating}
         filterByNotFinalized={filterByNotFinalized}
+        triggerAssignmentsRefetch={() => setRefetchTrigger((prev) => prev + 1)}
       />
     </Box>
   );

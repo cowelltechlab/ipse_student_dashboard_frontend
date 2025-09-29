@@ -24,7 +24,7 @@ const YearSelect = ({ selectLabel, value, setValue }: YearSelectProps) => {
       </Select.Label>
       <Select.Control>
         <Select.Trigger>
-          <Select.ValueText placeholder="Select framework" />
+          <Select.ValueText placeholder="Select Grade Level" />
         </Select.Trigger>
         <Select.IndicatorGroup>
           <Select.Indicator />

@@ -41,7 +41,7 @@ const AssignmentPreviews = ({
             <Skeleton w="100%" h="100%" />
           ) : (
             <HtmlContentBox
-              htmlContent={assignment?.html_content}
+              htmlContent={assignment?.html_content || assignment?.content || ""}
               height="100%"
             />
           )}

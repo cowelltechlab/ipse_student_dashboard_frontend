@@ -77,7 +77,6 @@ const UpdateCurrentStudentsDialog = ({
   // This function sends out the current student list for syncing.
   const handleSaveUpdates = async () => {
     // TODO: this function posts to API with a full list of all the students under this tutor
-    console.log("Syncing updates...");
 
     try {
       await handleSyncTutorStudents(tutor.id, selectedStudentIds);
@@ -110,8 +109,6 @@ const UpdateCurrentStudentsDialog = ({
 
   // To remove from the current student selection as shown at the top of the modal
   const handleRemoveFromCurrentStudents = (studentIdToRemove: number) => {
-    console.log("Removing student...");
-
     // Remove from the visible top section
     setCurrentStudentSelection((prevSelection) =>
       prevSelection.filter((s) => Number(s.id) !== studentIdToRemove)
