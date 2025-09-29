@@ -52,6 +52,7 @@ const TutorDialogCurrentStudents = ({
               flexDirection="column"
               justifyContent="center"
               alignItems="center"
+              color={"black"}
             >
               <Heading size="md" textAlign="center">
                 {student.student_name}

@@ -121,14 +121,16 @@ const AssignmentsTableRowButtons = ({
         </Tooltip>
       </HStack>
 
-      <AssignmentMetadataModal
-        open={openAssignmentMenu}
-        setOpen={setOpenAssignmentMenu}
-        assignmentId={assignment_id}
-        studentId={student_id}
-        triggerAssignmentsRefetch={triggerAssignmentsRefetch}
-
-      />
+      {/* Only render modal when it's actually open */}
+      {openAssignmentMenu && (
+        <AssignmentMetadataModal
+          open={openAssignmentMenu}
+          setOpen={setOpenAssignmentMenu}
+          assignmentId={assignment_id}
+          studentId={student_id}
+          triggerAssignmentsRefetch={triggerAssignmentsRefetch}
+        />
+      )}
     </>
   );
 };

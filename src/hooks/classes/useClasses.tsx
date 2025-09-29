@@ -19,6 +19,7 @@ const useClasses = (triggerRefetch: number, studentId?: number | null) => {
           const response = await getClasses();
           setClasses(response);
         }
+        setError(null);
       } catch (e) {
         console.error(e);
         const error = e as ErrorType;
@@ -29,7 +30,14 @@ const useClasses = (triggerRefetch: number, studentId?: number | null) => {
       }
     };
 
-    fetchClasses();
+    // Only fetch if triggerRefetch is a valid positive number (not -1)
+    if (triggerRefetch >= 0) {
+      fetchClasses();
+    } else {
+      setLoading(false);
+      setClasses([]);
+      setError(null);
+    }
   }, [triggerRefetch, studentId]);
 
   return { classes, loading, error };
