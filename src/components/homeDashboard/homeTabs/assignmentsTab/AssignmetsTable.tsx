@@ -29,6 +29,8 @@ interface AssignmentsTableProps {
   onAssignmentClick?: (studentId: number, assignmentId: number) => void;
   filterByNeedsRating: boolean;
   filterByNotFinalized: boolean;
+
+  triggerAssignmentsRefetch: () => void;
 }
 const AssignmentsTable = ({
   assignments,
@@ -40,7 +42,7 @@ const AssignmentsTable = ({
   onAssignmentClick,
   filterByNeedsRating,
   filterByNotFinalized,
-
+  triggerAssignmentsRefetch,
 }: AssignmentsTableProps) => {
   const [visibleCount, setVisibleCount] = useState(10);
 
@@ -75,7 +77,7 @@ const AssignmentsTable = ({
 
     const isNotFinalized = !filterByNotFinalized || !assignment.finalized;
 
-    console.log(isNotFinalized)
+    console.log(isNotFinalized);
 
     return inDateRange && matchesSearch && needsRating && isNotFinalized;
   });
@@ -225,7 +227,7 @@ const AssignmentsTable = ({
                         downloadUrl={assignment.blob_url}
                         fileType={assignment.source_format}
                         fileName={assignment.title}
-
+                        triggerAssignmentsRefetch={triggerAssignmentsRefetch}
                       />
                     </Table.Cell>
                   </Table.Row>
@@ -245,9 +247,6 @@ const AssignmentsTable = ({
           Load More
         </Text>
       )}
-
-
-
     </Stack>
   );
 };

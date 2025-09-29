@@ -65,6 +65,7 @@ const AssignmentDetailsDocLine = ({
           final_version_id={assignment?.final_version_id || null}
           assignment_id={assignment?.id ?? 0}
           student_id={assignment?.student.id ?? 0}
+          triggerAssignmentsRefetch={() => {}}
         />
       )}
     </HStack>

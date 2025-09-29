@@ -13,7 +13,9 @@ interface StudentDocumentBodyProps {
 }
 
 const StudentDocumentBody = ({studentId}: StudentDocumentBodyProps) => {
-  const { assignments, loading, error } = useAssignments(studentId);
+  const [refetchTrigger, setRefetchTrigger] = useState(0);
+
+  const { assignments, loading, error } = useAssignments(studentId, refetchTrigger);
 
   const [searchTerm, setSearchTerm] = useState("");
   const [dateRange, setDateRange] = useState<{
@@ -77,6 +79,8 @@ const StudentDocumentBody = ({studentId}: StudentDocumentBodyProps) => {
         onAssignmentClick={handleNavigateAssignmentPage}
         filterByNeedsRating={filterByNeedsRating}
         filterByNotFinalized={filterByNotFinalized}
+        triggerAssignmentsRefetch={() => setRefetchTrigger((prev) => prev + 1)}
+
       />
     </Box>
   );

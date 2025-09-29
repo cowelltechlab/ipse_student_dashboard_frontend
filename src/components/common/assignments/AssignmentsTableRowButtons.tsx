@@ -15,6 +15,7 @@ interface AssignmentsTableRowButtonsProps {
   fileName?: string;
   fileType?: string;
   downloadUrl?: string;
+  triggerAssignmentsRefetch: () => void;
 }
 
 const AssignmentsTableRowButtons = ({
@@ -24,6 +25,7 @@ const AssignmentsTableRowButtons = ({
   downloadUrl = "",
   fileName = "",
   fileType = "",
+  triggerAssignmentsRefetch,
 }: AssignmentsTableRowButtonsProps) => {
 
   const [openAssignmentMenu, setOpenAssignmentMenu] = useState(false);
@@ -125,6 +127,8 @@ const AssignmentsTableRowButtons = ({
         setOpen={setOpenAssignmentMenu}
         assignmentId={assignment_id}
         studentId={student_id}
+        triggerAssignmentsRefetch={triggerAssignmentsRefetch}
+
       />
     </>
   );

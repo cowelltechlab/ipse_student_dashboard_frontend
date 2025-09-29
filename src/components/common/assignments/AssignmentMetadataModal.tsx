@@ -32,6 +32,8 @@ interface AssignmentMetadataModalProps {
   setOpen: (open: boolean) => void;
   assignmentId: number | null;
   studentId?: number;
+
+  triggerAssignmentsRefetch: () => void;
 }
 
 const AssignmentMetadataModal = ({
@@ -39,6 +41,7 @@ const AssignmentMetadataModal = ({
   setOpen,
   assignmentId,
   studentId,
+  triggerAssignmentsRefetch,
 }: AssignmentMetadataModalProps) => {
   const { student, loading: studentLoading } = useStudent(String(studentId));
   const { assignment, loading: assignmentLoading } = useAssignment(
@@ -57,9 +60,9 @@ const AssignmentMetadataModal = ({
   const [deleteConfirmOpen, setDeleteConfirmOpen] = useState(false);
 
   const [addClassModalOpen, setAddClassModalOpen] = useState<boolean>(false);
-  const [triggerRefetch, setTriggerRefetch] = useState<number>(0);
+  const [triggerClassRefetch, setTriggerClassRefetch] = useState<number>(0);
 
-  const { classes } = useClasses(triggerRefetch);
+  const { classes } = useClasses(triggerClassRefetch);
 
   // Form validation
   const [titleError, setTitleError] = useState("");
@@ -80,6 +83,11 @@ const AssignmentMetadataModal = ({
       return "Title is required";
     }
     return "";
+  };
+
+  const handleDeleteClick = async (assignment_id: number): Promise<void> => {
+    await handleDeleteAssignment(assignment_id);
+    triggerAssignmentsRefetch();
   };
 
   const handleTitleChange = (value: string) => {
@@ -310,7 +318,9 @@ const AssignmentMetadataModal = ({
           setDeleteConfirmOpen={setDeleteConfirmOpen}
           assignmentId={assignmentId}
           assignment={assignment}
-          handleDeleteAssignment={handleDeleteAssignment}
+          handleDeleteAssignment={(assignmentId: number) =>
+            handleDeleteClick(assignmentId)
+          }
           deleteLoading={deleteLoading}
         />
 
@@ -318,7 +328,7 @@ const AssignmentMetadataModal = ({
         <ClassSelectionDialog
           open={addClassModalOpen}
           setOpen={(val) => setAddClassModalOpen(val)}
-          triggerRefetch={() => setTriggerRefetch((prev) => prev + 1)}
+          triggerRefetch={() => setTriggerClassRefetch((prev) => prev + 1)}
         />
       </Portal>
     </Dialog.Root>
