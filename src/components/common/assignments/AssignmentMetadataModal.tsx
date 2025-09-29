@@ -11,6 +11,7 @@ import {
   Heading,
   Field,
   Skeleton,
+  Image,
 } from "@chakra-ui/react";
 import { useState, useEffect } from "react";
 import useStudent from "../../../hooks/students/useStudent";
@@ -23,6 +24,8 @@ import ClassDropdown from "../classDropdown/ClassDropdown";
 import { toaster } from "../../ui/toaster";
 import AssignmentDeleteConfirmationDialog from "./AssignmentDeleteConfirmationDialog";
 import ClassSelectionDialog from "../classDropdown/ClassSelectionDialog";
+
+import assignmentImage from "../../../assets/Create New Assignment.svg";
 
 interface AssignmentMetadataModalProps {
   open: boolean;
@@ -153,11 +156,22 @@ const AssignmentMetadataModal = ({
       <Portal>
         <Dialog.Backdrop />
         <Dialog.Positioner>
-          <Dialog.Content bg={"#244d8a"} borderRadius={"md"} pb={5}>
+          <Dialog.Content
+            bg={"#244d8a"}
+            borderRadius={"md"}
+            pb={5}
+            onClick={(e) => e.stopPropagation()}
+          >
             <Box bg={"white"} w={"100%"} mb={4} roundedTop={"md"}>
               <VStack p={6} spaceY={2}>
                 <Heading fontSize="xl" color="#244d8a">
-                  Assignment Metadata
+                  Assignment Details
+                  <Image
+                    src={assignmentImage}
+                    alt="Assignment"
+                    h={"300px"}
+                    mt={2}
+                  />
                 </Heading>
                 {isLoading ? (
                   <Skeleton height="20px" width="300px" mx="auto" />
@@ -165,7 +179,7 @@ const AssignmentMetadataModal = ({
                   <Text fontSize="md" color="gray.600" textAlign="center">
                     {assignment && student
                       ? `Manage "${assignment.title}" for ${student.first_name} ${student.last_name}`
-                      : `Manage assignment metadata`}
+                      : `Manage assignment details`}
                   </Text>
                 )}
               </VStack>
@@ -228,6 +242,7 @@ const AssignmentMetadataModal = ({
                         setSelectedClassId={setSelectedClassId}
                         openClassAddModal={openClassAddModal}
                         classes={classes}
+                        placeholderColor={"white"}
                       />
                     </Box>
 
@@ -236,6 +251,7 @@ const AssignmentMetadataModal = ({
                       <AssignmentTypeSelectDropdown
                         assignmentTypeId={assignmentTypeId}
                         setAssignmentTypeId={setAssignmentTypeId}
+                        color="white"
                       />
                     </Box>
                   </>

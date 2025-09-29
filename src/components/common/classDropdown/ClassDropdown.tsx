@@ -1,4 +1,4 @@
-import { CreatableSelect } from "chakra-react-select";
+import { CreatableSelect, type ChakraStylesConfig } from "chakra-react-select";
 import { useMemo } from "react";
 import type { ClassType } from "../../../types/ClassTypes";
 
@@ -7,6 +7,12 @@ interface ClassDropdownProps {
   setSelectedClassId: (selection: number | null) => void;
   openClassAddModal: () => void;
   classes: ClassType[];
+  color?: string;
+  menuColor?: string;
+  menuBackground?: string;
+  placeholderColor?: string;
+  borderColor?: string;
+  menuHoverColor?: string;
 }
 
 function ClassDropdown({
@@ -14,6 +20,12 @@ function ClassDropdown({
   setSelectedClassId,
   openClassAddModal,
   classes,
+  color = "black",
+  menuColor = "black",
+  menuBackground = "white",
+  placeholderColor = "gray.500",
+  borderColor = "gray.300",
+  menuHoverColor = "gray.100",
 }: ClassDropdownProps) {
   const options = useMemo(
     () => classes.map((c) => ({ label: c.name, value: c.id })),
@@ -35,6 +47,35 @@ function ClassDropdown({
     openClassAddModal();
   };
 
+  // Custom styles for CreatableSelect
+  const chakraStyles: ChakraStylesConfig<
+    { label: string; value: number },
+    false
+  > = {
+    control: (provided) => ({
+      ...provided,
+      color: color,
+      borderColor: borderColor,
+    }),
+    placeholder: (provided) => ({
+      ...provided,
+      color: placeholderColor,
+    }),
+    menu: (provided) => ({
+      ...provided,
+      backgroundColor: menuBackground,
+    }),
+    option: (provided, state) => ({
+      ...provided,
+      color: menuColor,
+      backgroundColor: state.isFocused ? menuHoverColor : 'transparent',
+    }),
+    singleValue: (provided) => ({
+      ...provided,
+      color: color,
+    }),
+  };
+
   return (
     <CreatableSelect
       options={options}
@@ -43,6 +84,7 @@ function ClassDropdown({
       onCreateOption={handleCreate}
       placeholder="Select or add a class..."
       size="md"
+      chakraStyles={chakraStyles}
     />
   );
 }

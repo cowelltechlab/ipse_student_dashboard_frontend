@@ -35,7 +35,9 @@ const AssignmentsTableRowButtons = ({
     return res.blob();
   };
 
-  const handleRatingNavigateClick = () => {
+  const handleRatingNavigateClick = (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.stopPropagation();
+
     const assignment_version_id = final_version_id;
     if (!assignment_version_id) {
       console.error("Final version ID is not available.");
@@ -44,13 +46,16 @@ const AssignmentsTableRowButtons = ({
     window.location.href = `/student/${student_id}/assignment/${assignment_id}/rating-and-feedback/${assignment_version_id}`;
   };
 
-  const handleModificationNavigateClick = () => {
+  const handleModificationNavigateClick = (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.stopPropagation();
+
     window.location.href = `/student/${student_id}/assignment/${assignment_id}/modification`;
   };
 
   const handleAssignmentMenuOpen = (e: React.MouseEvent<HTMLButtonElement>) => {
-    // Prevent default action
+    // Prevent default action and stop event propagation
     e.preventDefault();
+    e.stopPropagation();
 
     setOpenAssignmentMenu(true);
   };
@@ -68,7 +73,11 @@ const AssignmentsTableRowButtons = ({
             mimeType={fileType}
             asChild
           >
-            <Button variant={"ghost"} padding={0}>
+            <Button
+              variant={"ghost"}
+              padding={0}
+              onClick={(e) => e.stopPropagation()}
+            >
               <Icon size="md">
                 <IoCloudDownload />
               </Icon>

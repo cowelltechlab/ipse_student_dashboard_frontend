@@ -7,18 +7,20 @@ import useAssignmentTypes from "../../../hooks/assignments/useAssignmentTypes";
 interface AssignmentTypeSelectDropdownProps {
   assignmentTypeId: number | null;
   setAssignmentTypeId: (id: number | null) => void;
+  color?: string;
 }
 
 const AssignmentTypeSelectDropdown = ({
   assignmentTypeId,
   setAssignmentTypeId,
+    color = "black",
 }: AssignmentTypeSelectDropdownProps) => {
   const { assignmentTypes } = useAssignmentTypes() as {
     assignmentTypes: AssignmentTypeListType[];
   };
 
   return (
-    <Field.Root mt={4}>
+    <Field.Root mt={4} color={color}>
       <Field.Label fontWeight="bold" fontSize="lg">
         Select Assignment Type
       </Field.Label>
@@ -35,11 +37,11 @@ const AssignmentTypeSelectDropdown = ({
           }}
           appearance="none"
         >
-          <option defaultValue="">Select type</option>
+          <option defaultValue="" style={{ color: "black" }}>Select type</option>
 
           <For each={assignmentTypes}>
             {(item) => (
-              <option key={item.id} value={item.id}>
+              <option key={item.id} value={item.id} style={{ color: "black" }}>
                 {item.type}
               </option>
             )}

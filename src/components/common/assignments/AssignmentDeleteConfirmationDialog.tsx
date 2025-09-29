@@ -61,7 +61,12 @@ const AssignmentDeleteConfirmationDialog = ({
       <Portal>
         <Dialog.Backdrop />
         <Dialog.Positioner>
-          <Dialog.Content bg="white" borderRadius="md" p={6}>
+          <Dialog.Content
+            bg="white"
+            borderRadius="md"
+            p={6}
+            onClick={(e) => e.stopPropagation()}
+          >
             <Dialog.Header>
               <Heading fontSize="lg" color="red.600">
                 Confirm Deletion
