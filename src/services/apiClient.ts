@@ -2,11 +2,11 @@ import axios from "axios";
 
 const apiClient = axios.create({
   //For development
-  baseURL: "http://localhost:8000/",
+  // baseURL: "http://localhost:8000/",
   // For production
-  // baseURL: "https://ipse-dashboard-backend-adcpeuexeuf8fvf4.centralus-01.azurewebsites.net/"
+  baseURL: "https://ipse-dashboard-backend-adcpeuexeuf8fvf4.centralus-01.azurewebsites.net/"
   // For Dev Environment (live)
-  baseURL: "https://ipse-dashbaord-backend-dev-c2eqe0gafcevbga4.canadacentral-01.azurewebsites.net/",
+  // baseURL: "https://ipse-dashbaord-backend-dev-c2eqe0gafcevbga4.canadacentral-01.azurewebsites.net/",
 });
 
 console.log("[apiClient] baseURL =", apiClient.defaults.baseURL);
