@@ -43,9 +43,12 @@ const AssignmentMetadataModal = ({
   studentId,
   triggerAssignmentsRefetch,
 }: AssignmentMetadataModalProps) => {
-  const { student, loading: studentLoading } = useStudent(String(studentId));
+  // Only fetch data when modal is open
+  const { student, loading: studentLoading } = useStudent(
+    open ? String(studentId) : undefined
+  );
   const { assignment, loading: assignmentLoading } = useAssignment(
-    Number(assignmentId)
+    open ? Number(assignmentId) : null
   );
 
   const { handleDeleteAssignment, loading: deleteLoading } =
@@ -62,20 +65,28 @@ const AssignmentMetadataModal = ({
   const [addClassModalOpen, setAddClassModalOpen] = useState<boolean>(false);
   const [triggerClassRefetch, setTriggerClassRefetch] = useState<number>(0);
 
-  const { classes } = useClasses(triggerClassRefetch);
+  // Only fetch classes when modal is open
+  const { classes } = useClasses(open ? triggerClassRefetch : -1);
+
 
   // Form validation
   const [titleError, setTitleError] = useState("");
 
-  // Initialize form values when assignment data loads
+  // Initialize form values when assignment data loads or when modal opens
   useEffect(() => {
-    if (assignment) {
+    if (open && assignment) {
       setTitle(assignment.title || "");
       setSelectedClassId(assignment.class_info?.id || null);
       setAssignmentTypeId(assignment.assignment_type_id || null);
       setTitleError("");
+    } else if (!open) {
+      // Reset form when modal closes
+      setTitle("");
+      setSelectedClassId(null);
+      setAssignmentTypeId(null);
+      setTitleError("");
     }
-  }, [assignment]);
+  }, [assignment, open]);
 
   // Validation functions
   const validateTitle = (value: string): string => {
@@ -152,8 +163,8 @@ const AssignmentMetadataModal = ({
     }
   };
 
-  // Determine if we should show loading state
-  const isLoading = studentLoading || assignmentLoading;
+  // Determine if we should show loading state - only show loading when modal is open
+  const isLoading = open && (studentLoading || assignmentLoading);
 
   return (
     <Dialog.Root
