@@ -19,7 +19,6 @@ const CreateNewDropdown = () => {
   };
 
   const handleCreateAssignment = () => {
-    console.log("create assignment");
     navigate("/create-assignment");
   };
 

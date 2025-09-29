@@ -1,7 +1,8 @@
-import { Heading, HStack, VStack, Text, Spacer } from "@chakra-ui/react";
+import { Heading, HStack, VStack, Text, Spacer, Image } from "@chakra-ui/react";
 import type { AssignmentDetailType } from "../../../types/AssignmentTypes";
-import { IoDocumentText } from "react-icons/io5";
 import AssignmentsTableRowButtons from "../../common/assignments/AssignmentsTableRowButtons";
+
+import AssignmentIcon from "../../../assets/contract.png"
 
 interface AssignmentDetailsDocLineProps {
   assignment: AssignmentDetailType | null;
@@ -23,7 +24,7 @@ const AssignmentDetailsDocLine = ({
   return (
     <HStack align={"center"} w={"100%"} my={2} p={2}>
       <HStack align="start" spaceX={3}>
-        <IoDocumentText size={"25px"} style={{ marginTop: 4 }} />
+        <Image src={AssignmentIcon} alt="Assignment Icon" style={{ width: "50px", marginTop: "4px" }} />
         <VStack align="start" spaceX={0}>
           <HStack>
             {" "}

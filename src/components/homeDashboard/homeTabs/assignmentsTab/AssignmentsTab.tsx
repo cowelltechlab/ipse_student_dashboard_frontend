@@ -13,7 +13,7 @@ import useAssignments from "../../../../hooks/assignments/useAssignments";
 const AssignmentsTab = () => {
   const [refetchTrigger, setRefetchTrigger] = useState(0);
 
-  const { assignments, loading, error } = useAssignments(refetchTrigger);
+  const { assignments, loading, error } = useAssignments(undefined, refetchTrigger);
 
   const [searchTerm, setSearchTerm] = useState("");
   const [dateRange, setDateRange] = useState<{
@@ -39,9 +39,6 @@ const AssignmentsTab = () => {
     studentId: number,
     assignmentId: number
   ) => {
-    console.log(
-      `Navigate to assignment page with ID: ${assignmentId} for student ID: ${studentId}`
-    );
     navigate(`/student/${studentId}/assignment/${assignmentId}`);
   };
 

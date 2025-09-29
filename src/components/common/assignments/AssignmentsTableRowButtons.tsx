@@ -32,7 +32,6 @@ const AssignmentsTableRowButtons = ({
 
   
   const data = async () => {
-    console.log(downloadUrl);
     const res = await fetch(downloadUrl);
     return res.blob();
   };

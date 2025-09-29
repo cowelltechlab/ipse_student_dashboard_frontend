@@ -1,7 +1,7 @@
 import { Box, Skeleton } from "@chakra-ui/react";
 import PageHeader from "../components/common/pageHeader/PageHeader";
 import BreadcrumbNav from "../components/common/breadcrumb/BreadcrumbNav";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import StudentProfilePageContent from "../components/studentProfile/StudentProfilePageContent";
 import ProfileCreationDialog from "../components/profileCreation/ProfileCreationDialog";
 import { useParams } from "react-router-dom";
@@ -15,10 +15,6 @@ const StudentProfile = () => {
     { label: <Skeleton height="20px" width="100px" /> },
     { label: <Skeleton height="20px" width="100px" /> },
   ];
-
-  useEffect(() => {
-    console.log("User ID:", user_id);
-  }, [user_id]);
 
   return (
     <Box>

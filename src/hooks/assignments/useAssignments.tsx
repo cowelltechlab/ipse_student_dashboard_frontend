@@ -13,7 +13,6 @@ const useAssignments = (studentId?: number | null, refetchTrigger?: number, ) =>
       try {
         setLoading(true);
         const response = await getAssignments(studentId ?? undefined);
-        console.log(response)
         setAssignments(response);
       } catch (e) {
         const error = e as ErrorType;

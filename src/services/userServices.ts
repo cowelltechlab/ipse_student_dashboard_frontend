@@ -29,7 +29,6 @@ export const postUserInvite = async (userData: {
   role_ids: string[];
   student_type?: "A" | "B";
 }): Promise<UserType> => {
-  console.log("Sending user invite...");
   const response = await apiClient.post("/users/invite", userData);
   return response.data;
 };

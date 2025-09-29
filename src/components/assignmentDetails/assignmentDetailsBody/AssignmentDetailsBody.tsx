@@ -88,8 +88,6 @@ const AssignmentDetailsBody = ({
       if (assignment?.versions) {
         const finalizedVersion = assignment.versions.find(v => v.document_id === versionId);
         if (finalizedVersion) {
-
-          console.log("Finalized Version:", finalizedVersion);
           // Update the finalVersion state to show the Final Version section immediately
           setFinalVersion({ ...finalizedVersion, finalized: true });
           // Set the finalized version as the active version
@@ -123,8 +121,6 @@ const AssignmentDetailsBody = ({
       const finalizedVersion =
         assignment.versions.find((v) => v.finalized === true) || null;
 
-      console.log("Detected finalized version:", finalizedVersion);
-
       setFinalVersion(finalizedVersion);
 
       // If there is a finalized version, set it as the active version
@@ -136,7 +132,6 @@ const AssignmentDetailsBody = ({
 
 
   const originalAssignmentData = async () => {
-    console.log(assignment?.blob_url);
     if (!assignment?.blob_url) {
       throw new Error("No blob_url provided for assignment.");
     }
@@ -146,7 +141,6 @@ const AssignmentDetailsBody = ({
 
 
   const getFinalVersionDocx = async () => {
-    console.log("Final Version Doc ID:", finalVersion?.document_id);
 
     if (!finalVersion?.document_id) {
       throw new Error("No document_id provided for final version.");

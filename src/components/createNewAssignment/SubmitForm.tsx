@@ -74,7 +74,6 @@ const SubmitForm = ({
       });
 
       openSuccessDialog(response[0].assignment_id);
-      console.log(`Assignment "${response[0].title}" created successfully!`);
     } catch (e) {
       const error = e as ErrorType;
       toaster.create({
@@ -88,7 +87,6 @@ const SubmitForm = ({
   };
 
   const handleReturnToHomeClick = () => {
-    console.log("Return to home page.");
     navigate("/dashboard");
   };
 

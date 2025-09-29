@@ -12,7 +12,6 @@ const usePostUserInvite = () => {
     studentType?: "A" | "B" 
   ) => {
     try {
-      console.log("entered invite hook");
         setLoading(true);
         const response = await postUserInvite({
           google_email,

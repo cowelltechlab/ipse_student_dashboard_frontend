@@ -40,9 +40,6 @@ const StudentDocumentBody = ({studentId}: StudentDocumentBodyProps) => {
     studentId: number,
     assignmentId: number
   ) => {
-    console.log(
-      `Navigate to assignment page with ID: ${assignmentId} for student ID: ${studentId}`
-    );
     navigate(`/student/${studentId}/assignment/${assignmentId}`);
   };
 

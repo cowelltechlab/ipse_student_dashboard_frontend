@@ -57,7 +57,6 @@ const useUsers = (refetchTrigger: number, roleId?: number) => {
         if (cancelled) return;
         inflight.delete(key);
 
-        console.log(fresh)
         usersCache.set(key, { data: fresh, ts: Date.now() });
         setUsers(fresh);
         setError(null);

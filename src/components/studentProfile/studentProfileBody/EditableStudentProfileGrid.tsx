@@ -130,14 +130,6 @@ const EditableStudentProfileGrid = ({
       weaknesses.filter((w) => w.trim() !== "").length < 3 ||
       bestWaysToHelp.filter((b) => b.trim() !== "").length < 1;
 
-    console.log(longTermGoals);
-    console.log(selectedClasses);
-    console.log(strengths);
-    console.log(weaknesses);
-    console.log(longTermGoals);
-    console.log(shortTermGoals);
-    console.log(bestWaysToHelp);
-
     setIsSaveDisabled(isInvalid);
   }, [
     selectedClasses,

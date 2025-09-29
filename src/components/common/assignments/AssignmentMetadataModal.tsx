@@ -71,7 +71,7 @@ const AssignmentMetadataModal = ({
   useEffect(() => {
     if (assignment) {
       setTitle(assignment.title || "");
-      setSelectedClassId(assignment.class_id || null);
+      setSelectedClassId(assignment.class_info?.id || null);
       setAssignmentTypeId(assignment.assignment_type_id || null);
       setTitleError("");
     }
@@ -141,6 +141,8 @@ const AssignmentMetadataModal = ({
         });
         setOpen(false);
       }
+
+        triggerAssignmentsRefetch();
     } catch (e) {
       console.error("Failed to update assignment metadata:", e);
       toaster.create({
@@ -250,6 +252,7 @@ const AssignmentMetadataModal = ({
                         setSelectedClassId={setSelectedClassId}
                         openClassAddModal={openClassAddModal}
                         classes={classes}
+                        color="white"
                         placeholderColor={"white"}
                       />
                     </Box>
@@ -260,6 +263,7 @@ const AssignmentMetadataModal = ({
                         assignmentTypeId={assignmentTypeId}
                         setAssignmentTypeId={setAssignmentTypeId}
                         color="white"
+                        
                       />
                     </Box>
                   </>
