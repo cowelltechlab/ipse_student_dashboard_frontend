@@ -175,7 +175,6 @@ const AssignmentMetadataModal = ({
             <Box bg={"white"} w={"100%"} mb={4} roundedTop={"md"}>
               <VStack p={6} spaceY={2}>
                 <Heading fontSize="xl" color="#244d8a">
-                  Assignment Details
                   <Image
                     src={assignmentImage}
                     alt="Assignment"

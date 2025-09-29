@@ -107,6 +107,7 @@ const AssignmentModificationCompletionDialog = ({
                 borderRadius="md"
                 overflow="hidden"
                 mb={4}
+                color={"black"}
               >
                 <HtmlContentBox
                   htmlContent={previewHtml}

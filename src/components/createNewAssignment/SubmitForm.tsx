@@ -73,7 +73,8 @@ const SubmitForm = ({
         type: "success",
       });
 
-      openSuccessDialog(response[0].assignment_id);
+      console.log("response", response);
+      openSuccessDialog(response[0].id);
     } catch (e) {
       const error = e as ErrorType;
       toaster.create({
