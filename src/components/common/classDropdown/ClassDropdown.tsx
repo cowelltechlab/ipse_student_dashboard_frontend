@@ -65,10 +65,18 @@ function ClassDropdown({
       ...provided,
       backgroundColor: menuBackground,
     }),
+    menuList: (provided) => ({
+      ...provided,
+      backgroundColor: menuBackground,
+      padding: 0,
+    }),
     option: (provided, state) => ({
       ...provided,
       color: menuColor,
-      backgroundColor: state.isFocused ? menuHoverColor : 'transparent',
+      backgroundColor: state.isFocused ? menuHoverColor : menuBackground,
+      ':hover': {
+        backgroundColor: menuHoverColor,
+      }
     }),
     singleValue: (provided) => ({
       ...provided,

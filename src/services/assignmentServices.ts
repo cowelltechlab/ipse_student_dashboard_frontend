@@ -1,6 +1,8 @@
 import type {
   AssignmentDetailType,
   AssignmentTypeListType,
+  AssignmentTextCreateType,
+  AssignmentTextBulkCreateType,
 } from "../types/AssignmentTypes";
 import apiClient from "./apiClient";
 
@@ -74,6 +76,20 @@ export const postAssignment = async (assignmentData: {
     },
   });
 
+  return response.data;
+};
+
+export const postAssignmentFromText = async (
+  assignmentData: AssignmentTextCreateType
+): Promise<AssignmentDetailType> => {
+  const response = await apiClient.post("/assignments/text", assignmentData);
+  return response.data;
+};
+
+export const postManyAssignmentsFromText = async (
+  assignmentData: AssignmentTextBulkCreateType
+): Promise<AssignmentDetailType[]> => {
+  const response = await apiClient.post("/assignments/text/bulk", assignmentData);
   return response.data;
 };
 

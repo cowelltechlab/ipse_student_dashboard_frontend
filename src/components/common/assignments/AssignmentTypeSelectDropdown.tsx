@@ -37,11 +37,11 @@ const AssignmentTypeSelectDropdown = ({
           }}
           appearance="none"
         >
-          <option defaultValue="" style={{ color: "black" }}>Select type</option>
+          <option defaultValue="" style={{ color: "black" , backgroundColor: "white" }}>Select type</option>
 
           <For each={assignmentTypes}>
             {(item) => (
-              <option key={item.id} value={item.id} style={{ color: "black" }}>
+              <option key={item.id} value={item.id} style={{ color: "black" , backgroundColor: "white" }}>
                 {item.type}
               </option>
             )}

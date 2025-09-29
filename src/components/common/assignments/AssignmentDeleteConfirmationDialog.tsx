@@ -91,6 +91,9 @@ const AssignmentDeleteConfirmationDialog = ({
                   variant="outline"
                   onClick={() => setDeleteConfirmOpen(false)}
                   disabled={deleteLoading}
+                  color={"black"}
+                  _hover={{ bg: "gray.100" }}
+                  bg={"white"}
                 >
                   Cancel
                 </Button>

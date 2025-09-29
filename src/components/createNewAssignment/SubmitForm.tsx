@@ -1,6 +1,7 @@
 import { Button, HStack, Text, Box } from "@chakra-ui/react";
 import { FaCheckCircle } from "react-icons/fa";
 import usePostManyAssignments from "../../hooks/assignments/usePostManyAssignments";
+import usePostManyAssignmentsFromText from "../../hooks/assignments/usePostManyAssignmentsFromText";
 import type { ErrorType } from "../../types/ErrorType";
 import { toaster } from "../ui/toaster";
 import type {
@@ -14,21 +15,26 @@ interface SubmitFormProps {
   title: string;
   classId: number | null;
   file: File | null;
+  textContent: string;
+  inputMode: 'file' | 'text';
   assignmentTypeId: number | null;
 
   openSuccessDialog: (assignmentId?: number) => void;
 }
 
-const SubmitForm = ({ 
-  studentIds, 
-  title, 
-  classId, 
-  file, 
-  assignmentTypeId, 
-  openSuccessDialog 
+const SubmitForm = ({
+  studentIds,
+  title,
+  classId,
+  file,
+  textContent,
+  inputMode,
+  assignmentTypeId,
+  openSuccessDialog
 }: SubmitFormProps) => {
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
   const { handlePostManyAssignments } = usePostManyAssignments();
+  const { handlePostManyAssignmentsFromText } = usePostManyAssignmentsFromText();
   const navigate = useNavigate();
 
   const commonButtonStyles = {
@@ -52,21 +58,33 @@ const SubmitForm = ({
         throw new Error("Class is required");
       }
 
-      if (!file) {
+      if (inputMode === 'file' && !file) {
         throw new Error("File is required");
+      }
+
+      if (inputMode === 'text' && !textContent.trim()) {
+        throw new Error("Text content is required");
       }
 
       if (Number.isNaN(assignmentTypeId) || assignmentTypeId === null || assignmentTypeId === undefined || typeof assignmentTypeId !== 'number') {
         throw new Error("Assignment Type is required");
       }
 
-      const response: AssignmentDetailType[] = await handlePostManyAssignments(
-        Array.from(studentIds),
-        title,
-        classId,
-        file,
-        assignmentTypeId
-      );
+      const response: AssignmentDetailType[] = inputMode === 'file'
+        ? await handlePostManyAssignments(
+            Array.from(studentIds),
+            title,
+            classId,
+            file!,
+            assignmentTypeId
+          )
+        : await handlePostManyAssignmentsFromText(
+            Array.from(studentIds),
+            title,
+            classId,
+            textContent.trim(),
+            assignmentTypeId
+          );
 
       toaster.create({
         description: `Assignment "${response[0].title}" created successfully!`,

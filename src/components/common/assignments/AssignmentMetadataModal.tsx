@@ -142,7 +142,7 @@ const AssignmentMetadataModal = ({
         setOpen(false);
       }
 
-        triggerAssignmentsRefetch();
+      triggerAssignmentsRefetch();
     } catch (e) {
       console.error("Failed to update assignment metadata:", e);
       toaster.create({
@@ -252,6 +252,9 @@ const AssignmentMetadataModal = ({
                         openClassAddModal={openClassAddModal}
                         classes={classes}
                         color="white"
+                        menuColor="black" 
+                        menuBackground="white"
+                        menuHoverColor="gray.100" 
                         placeholderColor={"white"}
                       />
                     </Box>
@@ -262,7 +265,6 @@ const AssignmentMetadataModal = ({
                         assignmentTypeId={assignmentTypeId}
                         setAssignmentTypeId={setAssignmentTypeId}
                         color="white"
-                        
                       />
                     </Box>
                   </>
