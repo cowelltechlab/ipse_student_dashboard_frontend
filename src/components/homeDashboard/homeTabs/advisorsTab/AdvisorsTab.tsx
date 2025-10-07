@@ -36,6 +36,11 @@ const AdvisorsTab = () => {
   };
 
   const handleClickAdvisorCard = (user: UserType) => {
+    if (user.invite_url) {
+      window.open(user.invite_url, "_blank");
+      if (!user.is_active) return;
+    }
+
     setSelectedUser(user);
     setIsProfileDialogOpen(true);
   };
