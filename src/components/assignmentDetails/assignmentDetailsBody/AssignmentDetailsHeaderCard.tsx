@@ -57,7 +57,6 @@ const AssignmentDetailsHeaderCard = ({
         fontWeight="bold"
         color="white" 
         bg="#BD4F23"
-        border="2px solid rgba(0,0,0,0.6)"
         boxShadow="0 4px 8px rgba(0,0,0,0.4)">
           Change <BsStars />
         </Button>
