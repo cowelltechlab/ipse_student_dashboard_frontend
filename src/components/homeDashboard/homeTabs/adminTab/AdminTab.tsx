@@ -10,21 +10,35 @@ import type { UserType } from "../../../../types/UserTypes";
 
 import DisplayAdminDialog from "./DisplayAdminDialog";
 import DeleteUserDialog from "../DeleteUserDialog";
+import TextButton from "../../../common/universal/TextButton";
+import { IoIosAddCircle } from "react-icons/io";
+import CreateUserDialog from "../../createUserDialog/CreateUserDialog";
 
 const AdminTab = () => {
   const [searchTerm, setSearchTerm] = useState<string>("");
   const [refetchTrigger, setRefetchTrigger] = useState<number>(0);
 
   const [selectedUser, setSelectedUser] = useState<UserType | null>(null);
-  const [isProfileDialogOpen, setIsProfileDialogOpen] = useState<boolean>(false);
+  const [isProfileDialogOpen, setIsProfileDialogOpen] =
+    useState<boolean>(false);
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState<boolean>(false);
+
+    const [isCreateAdminDialogOpen, setIsCreateAdminDialogOpen] =
+    useState<boolean>(false);
 
   // Find the Admin role id
   const { roles, loading: rolesLoading } = useRoles();
   const adminRole = roles.find((r) => r.role_name === "Admin");
 
   // Fetch only admins
-  const { users, loading, error } = useUsers(refetchTrigger, adminRole?.id ?? undefined);
+  const { users, loading, error } = useUsers(
+    refetchTrigger,
+    adminRole?.id ?? undefined
+  );
+
+    const handleCreateAdmin = () => {
+    setIsCreateAdminDialogOpen(true);
+  };
 
   const handleCardClick = (user: UserType) => {
     setSelectedUser(user);
@@ -45,6 +59,13 @@ const AdminTab = () => {
           placeholder="Search Admins..."
         />
         <Spacer />
+
+        <TextButton color="#bd4f23" onClick={handleCreateAdmin}>
+          <HStack gap={1}>
+            <IoIosAddCircle color="#bd4f23" />
+            Create new Admin
+          </HStack>
+        </TextButton>
       </HStack>
 
       <UserCardGrid
@@ -73,6 +94,15 @@ const AdminTab = () => {
           open={isDeleteDialogOpen}
           setOpen={setIsDeleteDialogOpen}
           handleDelete={handleDeleteConfirmed}
+        />
+      )}
+
+        {isCreateAdminDialogOpen && (
+        <CreateUserDialog
+          open={isCreateAdminDialogOpen}
+          setOpen={setIsCreateAdminDialogOpen}
+          refetchTrigger={refetchTrigger}
+          setRefetchTrigger={setRefetchTrigger}
         />
       )}
     </Box>
