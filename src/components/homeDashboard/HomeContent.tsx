@@ -5,7 +5,7 @@ import PeerTutorsTab from "./homeTabs/peerTutorsTab/PeerTutorsTab";
 import StudentVersionsTab from "./homeTabs/studentVersionsTab/StudentVersionsTab";
 import AdminTab from "./homeTabs/adminTab/AdminTab";
 
-import { Tabs } from "@chakra-ui/react";
+import { Spacer, Tabs } from "@chakra-ui/react";
 import useAuth from "../../contexts/useAuth";
 
 const HomeContent = () => {
@@ -14,7 +14,7 @@ const HomeContent = () => {
 
   return (
     <Tabs.Root defaultValue="students" variant="line" mt={10}>
-      <Tabs.List>
+      <Tabs.List p={3} mx={5}>
         <Tabs.Trigger _selected={{ fontWeight: "bold" }} value="students">
           Students
         </Tabs.Trigger>
@@ -41,9 +41,11 @@ const HomeContent = () => {
           </Tabs.Trigger>
         )}
 
+        <Spacer/>
+
         {isAdmin && (
           <Tabs.Trigger _selected={{ fontWeight: "bold" }} value="admin">
-            Admin
+            Administrators
           </Tabs.Trigger>
         )}
       </Tabs.List>
