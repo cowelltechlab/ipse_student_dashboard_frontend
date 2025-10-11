@@ -5,13 +5,15 @@ import {
   Image,
   Badge,
   Button,
-  Skeleton,
-  VStack,
 } from "@chakra-ui/react";
-import { useState, useMemo } from "react";
+import { useState, useMemo, useRef, useEffect } from "react";
+import { motion } from "framer-motion";
+import { DotLottieReact } from "@lottiefiles/dotlottie-react";
 import type { UserType } from "../../../../types/UserTypes";
 import type { ErrorType } from "../../../../types/ErrorType";
 import profileDefaultIcon from "../../../../assets/default_profile_picture.jpg";
+
+const MotionTableRow = motion(Table.Row);
 
 interface StudentsTableProps {
   searchTerm: string | null;
@@ -37,6 +39,15 @@ const StudentsTable = ({
 }: StudentsTableProps) => {
   const [sortBy, setSortBy] = useState<"name" | "email" | "year">("name");
   const [sortOrder, setSortOrder] = useState<"asc" | "desc">("asc");
+
+  // Only animate on the very first render after data is present
+  const didAnimateRef = useRef(false);
+  const shouldAnimate = !didAnimateRef.current;
+  useEffect(() => {
+    if (!loading && students && students.length > 0) {
+      didAnimateRef.current = true;
+    }
+  }, [loading, students]);
 
   // Filter and sort students
   const filteredAndSortedStudents = useMemo(() => {
@@ -111,13 +122,16 @@ const StudentsTable = ({
     }
   };
 
-  if (loading) {
+  if (loading || !Array.isArray(students)) {
     return (
-      <VStack gap={2} mt={4}>
-        {[...Array(10)].map((_, i) => (
-          <Skeleton key={i} height="60px" width="100%" borderRadius="md" />
-        ))}
-      </VStack>
+      <Box textAlign="center" py={10}>
+        <DotLottieReact
+          src="https://lottie.host/749207af-f4b1-47e3-8768-449bb1d7e5c5/66y1ECtWZR.lottie"
+          loop
+          autoplay
+          height={"45px"}
+        />
+      </Box>
     );
   }
 
@@ -184,12 +198,19 @@ const StudentsTable = ({
           </Table.Row>
         </Table.Header>
         <Table.Body>
-          {filteredAndSortedStudents.map((student) => (
-            <Table.Row
+          {filteredAndSortedStudents.map((student, index) => (
+            <MotionTableRow
               key={student.id}
               cursor="pointer"
               _hover={{ bg: "gray.50" }}
               onClick={() => handleRowClick(student)}
+              initial={shouldAnimate ? { opacity: 0, x: -20 } : false}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{
+                duration: 0.3,
+                ease: "easeOut",
+                delay: shouldAnimate ? index * 0.03 : 0,
+              }}
             >
               <Table.Cell p={3}>
                 <Image
@@ -234,7 +255,7 @@ const StudentsTable = ({
                   View
                 </Button>
               </Table.Cell>
-            </Table.Row>
+            </MotionTableRow>
           ))}
         </Table.Body>
       </Table.Root>
