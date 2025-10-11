@@ -74,7 +74,7 @@ export const updateUserEmails = async (
   data: { email?: string; gt_email?: string }
 ): Promise<UserDetailsResponseType> => {
   const response = await apiClient.patch(
-    `/student-groups/${user_id}/email`,
+    `/users/${user_id}/email`,
     data
   );
 

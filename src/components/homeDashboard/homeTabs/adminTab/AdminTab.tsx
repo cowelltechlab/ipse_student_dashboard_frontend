@@ -1,5 +1,5 @@
 import { Box, HStack, Spacer } from "@chakra-ui/react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 import SearchBar from "../../../common/searchBar/SearchBar";
 import UserCardGrid from "../../../common/userCards/UserCardGrid";
@@ -70,6 +70,16 @@ const AdminTab = () => {
   const handleOpenEmailEditModal = () => {
     setIsUpdateEmailModalOpen(true);
   };
+
+  // Update selectedUser when users array changes (after refetch)
+  useEffect(() => {
+    if (selectedUser && users.length > 0) {
+      const updatedUser = users.find((u) => u.id === selectedUser.id);
+      if (updatedUser) {
+        setSelectedUser(updatedUser);
+      }
+    }
+  }, [users, selectedUser]);
 
   return (
     <Box p={4} spaceY={4}>

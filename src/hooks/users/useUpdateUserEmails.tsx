@@ -22,6 +22,7 @@ const useUpdateUserEmails = () => {
       await updateUserEmails(userId, data);
     } catch (error) {
       setError(error as ErrorType);
+      throw error;
     } finally {
       setLoading(false);
     }

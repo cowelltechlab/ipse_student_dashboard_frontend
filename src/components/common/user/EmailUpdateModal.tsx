@@ -15,12 +15,13 @@ import { toaster } from "../../ui/toaster";
 import type { StudentDetailsType } from "../../../types/StudentGroupTypes";
 import useUpdateUserEmails from "../../../hooks/users/useUpdateUserEmails";
 import type { UserType } from "../../../types/UserTypes";
+import type { ErrorType } from "../../../types/ErrorType";
 
 interface EmailUpdateModalProps {
   open: boolean;
   setOpen: (open: boolean) => void;
   student?: StudentDetailsType | null;
-  user?: UserType | null
+  user?: UserType | null;
   onUpdate: () => void;
 }
 
@@ -126,7 +127,6 @@ const EmailUpdateModal = ({
     }
 
     try {
-      // Use user_id from student or id from user
       const userId = student ? student.user_id : user!.id;
 
       await handleUpdateUserEmails(
@@ -143,11 +143,12 @@ const EmailUpdateModal = ({
       onUpdate();
       setOpen(false);
     } catch (e) {
-      const error = e as { message?: string };
+      const error = e as ErrorType;
+      const errorMessage =
+        error.response?.data?.detail || error.message || "Unknown error";
+
       toaster.create({
-        description: `Error updating email addresses: ${
-          error.message || "Unknown error"
-        }`,
+        description: `Error updating email addresses: ${errorMessage}`,
         type: "error",
       });
     }
@@ -186,7 +187,8 @@ const EmailUpdateModal = ({
                   User Email Addresses
                 </Heading>
                 <Text fontSize="md" color="gray.600" textAlign="center">
-                  Manage email addresses for {student?.first_name || user?.first_name}{" "}
+                  Manage email addresses for{" "}
+                  {student?.first_name || user?.first_name}{" "}
                   {student?.last_name || user?.last_name}
                 </Text>
               </VStack>
