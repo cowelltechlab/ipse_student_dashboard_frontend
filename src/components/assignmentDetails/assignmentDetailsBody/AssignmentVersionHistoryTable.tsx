@@ -1,5 +1,3 @@
-// file: AssignmentVersionHistoryTable.tsx
-
 import { Box, Table, Text, Heading, VStack, Separator } from "@chakra-ui/react";
 import type { AssignmentDetailType } from "../../../types/AssignmentTypes";
 import AssignmentDetailsDocLine from "./AssignmentDetailsDocLine";
