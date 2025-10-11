@@ -1,11 +1,4 @@
-import {
-  Box,
-  Table,
-  Text,
-  Image,
-  Badge,
-  Button,
-} from "@chakra-ui/react";
+import { Box, Table, Text, Image, Badge, Button } from "@chakra-ui/react";
 import { useState, useMemo, useRef, useEffect } from "react";
 import { motion } from "framer-motion";
 import { DotLottieReact } from "@lottiefiles/dotlottie-react";
@@ -13,7 +6,7 @@ import type { UserType } from "../../../../types/UserTypes";
 import type { ErrorType } from "../../../../types/ErrorType";
 import profileDefaultIcon from "../../../../assets/default_profile_picture.jpg";
 
-const MotionTableRow = motion(Table.Row);
+const MotionTableRow = motion.create(Table.Row);
 
 interface StudentsTableProps {
   searchTerm: string | null;

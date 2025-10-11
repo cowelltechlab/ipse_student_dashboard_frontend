@@ -20,7 +20,7 @@ import assignmentIcon from "../../../../assets/contract.png";
 
 import { DotLottieReact } from "@lottiefiles/dotlottie-react";
 
-const MotionTableRow = motion(Table.Row);
+const MotionTableRow = motion.create(Table.Row);
 
 interface AssignmentsTableProps {
   assignments: AssignmentBasicType[];
@@ -91,9 +91,16 @@ const AssignmentsTable = ({
 
     const isNotFinalized = !filterByNotFinalized || !assignment.finalized;
 
-    const matchesClass = !selectedClassId || assignment.class_id === selectedClassId;
+    const matchesClass =
+      !selectedClassId || assignment.class_id === selectedClassId;
 
-    return inDateRange && matchesSearch && needsRating && isNotFinalized && matchesClass;
+    return (
+      inDateRange &&
+      matchesSearch &&
+      needsRating &&
+      isNotFinalized &&
+      matchesClass
+    );
   });
 
   const visibleAssignments = filteredAssignments.slice(0, visibleCount);

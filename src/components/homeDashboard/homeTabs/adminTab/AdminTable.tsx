@@ -13,7 +13,7 @@ import type { UserType } from "../../../../types/UserTypes";
 import type { ErrorType } from "../../../../types/ErrorType";
 import profileDefaultIcon from "../../../../assets/default_profile_picture.jpg";
 
-const MotionTableRow = motion(Table.Row);
+const MotionTableRow = motion.create(Table.Row);
 
 interface AdminTableProps {
   searchTerm: string | null;

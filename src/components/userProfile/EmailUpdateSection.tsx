@@ -125,7 +125,7 @@ const EmailUpdateSection = ({
           </Text>
           <Input
             value={currentEmail || "Not provided"}
-            isReadOnly
+            readOnly
             bg="gray.100"
             color="gray.600"
           />
