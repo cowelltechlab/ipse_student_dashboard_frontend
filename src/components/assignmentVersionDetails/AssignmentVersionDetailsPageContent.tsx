@@ -32,6 +32,7 @@ import { FaCircleCheck } from "react-icons/fa6";
 import { FiEdit } from "react-icons/fi";
 
 import viewIcon from "../../assets/icons/research.png";
+import finalizedIcon from "../../assets/icons/user.png";
 
 interface AssignmentVersionDetailsPageContentProps {
   assignment: AssignmentDetailType | null;
@@ -75,9 +76,7 @@ const AssignmentVersionDetailsPageContent = ({
 
   const handleChangeAssignment = () => {
     if (studentId && assignmentId) {
-      navigate(
-        `/student/${studentId}/assignment/${assignmentId}/modification`
-      );
+      navigate(`/student/${studentId}/assignment/${assignmentId}/modification`);
     }
   };
 
@@ -224,6 +223,26 @@ const AssignmentVersionDetailsPageContent = ({
         </Alert.Content>
       </Alert.Root>
 
+      {!canEdit && (
+        <Alert.Root status="warning" mb={4}>
+          <Alert.Content>
+            <HStack>
+              <Image h={"50px"} src={finalizedIcon} />
+
+              <VStack align={"start"} pl={4}>
+                <Heading fontWeight={"bold"} fontSize={"xl"} color="black">
+                  Not Editable
+                </Heading>
+                <Alert.Description fontSize={"lg"} color={"black"}>
+                  This assignment version has been rated. To make any changes,
+                  generate a new version.
+                </Alert.Description>
+              </VStack>
+            </HStack>
+          </Alert.Content>
+        </Alert.Root>
+      )}
+
       {/* Header with visibility toggles and Change Assignment button */}
       <Box
         display="flex"
@@ -256,7 +275,9 @@ const AssignmentVersionDetailsPageContent = ({
         {isOriginalVisible && (
           <Box flex="1">
             <OriginalAssignmentSection
-              originalAssignmentHTML={assignment.html_content}
+              originalAssignmentHTML={
+                assignment?.html_content || assignment?.content || ""
+              }
               assignmentLoading={assignmentLoading}
             />
           </Box>
