@@ -57,6 +57,7 @@ const AssignmentVersionDetailsPageContent = ({
   const [isEditing, setIsEditing] = useState(false);
   const [editedHtml, setEditedHtml] = useState<string | null>(null);
   const [isCompletionModalOpen, setIsCompletionModalOpen] = useState(false);
+  const [refetchTrigger, setRefetchTrigger] = useState(0);
 
   const toggleOriginalVisibility = () =>
     setIsOriginalVisible(!isOriginalVisible);
@@ -65,7 +66,7 @@ const AssignmentVersionDetailsPageContent = ({
   const toggleNewVisibility = () => setIsNewVisible(!isNewVisible);
 
   const { assignmentVersion, loading: versionLoading } =
-    useGetAssignmentVersionByDocId(versionDocumentId);
+    useGetAssignmentVersionByDocId(versionDocumentId, refetchTrigger);
 
   const { handlePutAssignmentVersion, loading: loadingAssignmentUpdate } =
     usePutAssignmentVersion();
@@ -137,6 +138,8 @@ const AssignmentVersionDetailsPageContent = ({
         toaster.create({ description: "Saved successfully.", type: "success" });
         setIsCompletionModalOpen(true);
         setIsEditing(false);
+        // Trigger refetch to update the read-only view
+        setRefetchTrigger((prev) => prev + 1);
       } else {
         toaster.create({
           description: "Save completed, but no content returned.",
