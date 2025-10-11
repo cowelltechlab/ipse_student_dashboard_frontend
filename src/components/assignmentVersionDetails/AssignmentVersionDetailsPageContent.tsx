@@ -6,7 +6,9 @@ import {
   Flex,
   Image,
   Heading,
-  Icon,
+  Button,
+  HStack,
+  VStack,
 } from "@chakra-ui/react";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
@@ -17,10 +19,11 @@ import AssignmentModificationVisibilityButtons from "../assignmentModification/A
 import HtmlContentBox from "../common/universal/HTMLContentDisplay";
 import VersionOptionsDisplaySection from "./VersionOptionsDisplaySection";
 import { buildModifiedHtml } from "../../utils/assignmentHtml";
-import TextButton from "../common/universal/TextButton";
-import { FaEye } from "react-icons/fa";
 
 import modifiedAssignmentIcon from "../../assets/icons/note.png";
+import { BsStars } from "react-icons/bs";
+
+import viewIcon from "../../assets/icons/research.png";
 
 interface AssignmentVersionDetailsPageContentProps {
   assignment: AssignmentDetailType | null;
@@ -102,19 +105,23 @@ const AssignmentVersionDetailsPageContent = ({
   }
 
   return (
-    <Box p={6} mx="auto">
+    <Box p={6} >
       {/* Info Banner */}
       <Alert.Root status="info" mb={4}>
-        <Alert.Indicator>
-          <Icon fontSize="xl">
-            <FaEye />
-          </Icon>
-        </Alert.Indicator>
         <Alert.Content>
-          <Alert.Title>View-Only Mode</Alert.Title>
-          <Alert.Description>
-            This page displays the details of a saved assignment version. To make changes or generate new options, click "Change Assignment" below.
-          </Alert.Description>
+          <HStack>
+            <Image h={"50px"} src={viewIcon} />
+
+            <VStack align={"start"}  pl={4}>
+              <Heading fontWeight={"bold"} fontSize={"xl"} color="black">
+                View-Only Mode
+              </Heading>
+              <Alert.Description fontSize={"lg"}color={"black"}>
+                This page displays the details of a saved assignment version. To
+                generate new options, click "Change Assignment" below.
+              </Alert.Description>
+            </VStack>
+          </HStack>
         </Alert.Content>
       </Alert.Root>
 
@@ -133,9 +140,15 @@ const AssignmentVersionDetailsPageContent = ({
           toggleVersionOptionsVisibility={toggleVersionOptionsVisibility}
           toggleNewVisibility={toggleNewVisibility}
         />
-        <TextButton color="#bd4f23" onClick={handleChangeAssignment}>
-          Change Assignment
-        </TextButton>
+
+        <Button
+          color="white"
+          bg="#BD4F23"
+          borderRadius={"xl"}
+          onClick={handleChangeAssignment}
+        >
+          Change <BsStars />
+        </Button>
       </Box>
 
       {/* Three-column layout */}
