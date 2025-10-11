@@ -9,9 +9,11 @@ import {
   VStack,
   Icon,
   Separator,
+  Box,
 } from "@chakra-ui/react";
 import type { UserType } from "../../../../types/UserTypes";
 import { FaTrashCan } from "react-icons/fa6";
+import { MdLockReset, MdEmail } from "react-icons/md";
 import { useState } from "react";
 
 interface DisplayAdminDialogProps {
@@ -67,30 +69,61 @@ const DisplayAdminDialog = ({
                 </Flex>
               </Dialog.Header>
               <Dialog.Body>
-                <HStack mb={2} justifyContent="space-between">
-                  <Text fontSize="md" mb={2} color="#6F6F6F">
+                {/* User Info Section */}
+                <HStack mb={4} justifyContent="space-between">
+                  <Text fontSize="md" color="#6F6F6F">
                     {user.roles?.[0] || "No Role Assigned"}
                   </Text>
-                  <Text fontSize="md" mb={2} color="#6F6F6F">
+                  <Text fontSize="md" color="#6F6F6F">
                     {user.email || "No Email Provided"}
                   </Text>
                 </HStack>
 
-                <HStack flex={1} w={"100%"}>
-                  <Button bg="#244D8A" onClick={handleOpenResetPasswordModal}>
-                    Reset Password
-                  </Button>
+                <Separator orientation="horizontal" mb={4} />
 
-                  <Button onClick={handleOpenEmailEditModal}>
-                    Update Email Addresses
-                  </Button>
-                </HStack>
+                {/* Account Settings Section */}
+                <Box mb={4}>
+                  <Text
+                    fontSize="sm"
+                    fontWeight="semibold"
+                    color="#6F6F6F"
+                    mb={2}
+                    textTransform="uppercase"
+                    letterSpacing="wide"
+                  >
+                    Account Settings
+                  </Text>
+                  <VStack gap={2} w="100%">
+                    <Button
+                      w="100%"
+                      bg="#244D8A"
+                      color="white"
+                      onClick={handleOpenResetPasswordModal}
+                      _hover={{ bg: "#1a3a6b" }}
+                    >
+                      <Icon as={MdLockReset} boxSize={5} mr={2} />
+                      Reset Password
+                    </Button>
+
+                    <Button
+                      w="100%"
+                      bg="#244D8A"
+                      color="white"
+                      onClick={handleOpenEmailEditModal}
+                      _hover={{ bg: "#1a3a6b" }}
+                    >
+                      <Icon as={MdEmail} boxSize={5} mr={2} />
+                      Update Email Addresses
+                    </Button>
+                  </VStack>
+                </Box>
 
                 <Separator orientation="horizontal" mb={4} />
 
-                <VStack m={2} align="center" mt={4}>
+                {/* Navigation & Actions Section */}
+                <VStack gap={2} w="100%">
                   <Dialog.ActionTrigger asChild>
-                    <Button bg="#BD4F23" color="white" w="50%">
+                    <Button bg="#BD4F23" color="white" w="100%">
                       Back to Dashboard
                     </Button>
                   </Dialog.ActionTrigger>
@@ -100,7 +133,7 @@ const DisplayAdminDialog = ({
                     variant="outline"
                     borderColor="#BD4F23"
                     color="#BD4F23"
-                    w="50%"
+                    w="100%"
                     _hover={{
                       bg: "#BD4F23",
                       borderColor: "#BD4F23",
