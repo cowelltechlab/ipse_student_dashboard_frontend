@@ -1,20 +1,14 @@
 import {
-  Text,
-  Button,
   CloseButton,
   Dialog,
   Flex,
   Portal,
-  HStack,
-  VStack,
-  Icon,
   Separator,
-  Box,
 } from "@chakra-ui/react";
 import type { UserType } from "../../../../types/UserTypes";
-import { FaTrashCan } from "react-icons/fa6";
-import { MdLockReset, MdEmail } from "react-icons/md";
-import { useState } from "react";
+import AccountSettingsButtons from "../../../common/userDialog/AccountSettingsButtons";
+import DialogActionButtons from "../../../common/userDialog/DialogActionButtons";
+import UserInfoHeader from "../../../common/userDialog/UserInfoHeader";
 
 interface DisplayAdminDialogProps {
   user: UserType;
@@ -34,8 +28,6 @@ const DisplayAdminDialog = ({
   handleOpenResetPasswordModal,
   handleOpenEmailEditModal,
 }: DisplayAdminDialogProps) => {
-  const [trashHover, setTrashHover] = useState<boolean>(false);
-
   const handleDeleteProfileClick = () => {
     setOpenDeleteDialog(true);
     setOpen(false);
@@ -69,88 +61,18 @@ const DisplayAdminDialog = ({
                 </Flex>
               </Dialog.Header>
               <Dialog.Body>
-                {/* User Info Section */}
-                <HStack mb={4} justifyContent="space-between">
-                  <Text fontSize="md" color="#6F6F6F">
-                    {user.roles?.[0] || "No Role Assigned"}
-                  </Text>
-                  <Text fontSize="md" color="#6F6F6F">
-                    {user.email || "No Email Provided"}
-                  </Text>
-                </HStack>
+                <UserInfoHeader user={user} />
 
                 <Separator orientation="horizontal" mb={4} />
 
-                {/* Account Settings Section */}
-                <Box mb={4}>
-                  <Text
-                    fontSize="sm"
-                    fontWeight="semibold"
-                    color="#6F6F6F"
-                    mb={2}
-                    textTransform="uppercase"
-                    letterSpacing="wide"
-                  >
-                    Account Settings
-                  </Text>
-                  <VStack gap={2} w="100%">
-                    <Button
-                      w="100%"
-                      bg="#244D8A"
-                      color="white"
-                      onClick={handleOpenResetPasswordModal}
-                      _hover={{ bg: "#1a3a6b" }}
-                    >
-                      <Icon as={MdLockReset} boxSize={5} mr={2} />
-                      Reset Password
-                    </Button>
-
-                    <Button
-                      w="100%"
-                      bg="#244D8A"
-                      color="white"
-                      onClick={handleOpenEmailEditModal}
-                      _hover={{ bg: "#1a3a6b" }}
-                    >
-                      <Icon as={MdEmail} boxSize={5} mr={2} />
-                      Update Email Addresses
-                    </Button>
-                  </VStack>
-                </Box>
+                <AccountSettingsButtons
+                  onResetPassword={handleOpenResetPasswordModal}
+                  onUpdateEmail={handleOpenEmailEditModal}
+                />
 
                 <Separator orientation="horizontal" mb={4} />
 
-                {/* Navigation & Actions Section */}
-                <VStack gap={2} w="100%">
-                  <Dialog.ActionTrigger asChild>
-                    <Button bg="#BD4F23" color="white" w="100%">
-                      Back to Dashboard
-                    </Button>
-                  </Dialog.ActionTrigger>
-
-                  <Button
-                    onClick={handleDeleteProfileClick}
-                    variant="outline"
-                    borderColor="#BD4F23"
-                    color="#BD4F23"
-                    w="100%"
-                    _hover={{
-                      bg: "#BD4F23",
-                      borderColor: "#BD4F23",
-                      color: "white",
-                    }}
-                    onMouseEnter={() => setTrashHover(true)}
-                    onMouseLeave={() => setTrashHover(false)}
-                  >
-                    Delete Profile
-                    <Icon
-                      as={FaTrashCan}
-                      ml={2}
-                      color={trashHover ? "white" : "#BD4F23"}
-                      _hover={{ color: "white" }}
-                    />
-                  </Button>
-                </VStack>
+                <DialogActionButtons onDelete={handleDeleteProfileClick} />
               </Dialog.Body>
 
               <Dialog.CloseTrigger asChild>

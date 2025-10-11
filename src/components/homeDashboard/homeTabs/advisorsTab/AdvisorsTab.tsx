@@ -1,6 +1,6 @@
 import { Box, HStack, Spacer } from "@chakra-ui/react";
 import SearchBar from "../../../common/searchBar/SearchBar";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import TextButton from "../../../common/universal/TextButton";
 import UserCardGrid from "../../../common/userCards/UserCardGrid";
 import useRoles from "../../../../hooks/roles/useRoles";
@@ -48,7 +48,21 @@ const AdvisorsTab = () => {
   const handleDelete = () => {
     setIsDeleteDialogOpen(false);
     setRefetchTrigger(refetchTrigger + 1);
-  }
+  };
+
+  const handleUpdate = () => {
+    setRefetchTrigger((v) => v + 1);
+  };
+
+  // Update selectedUser when advisors array changes (after refetch)
+  useEffect(() => {
+    if (selectedUser && advisors.length > 0) {
+      const updatedUser = advisors.find((u) => u.id === selectedUser.id);
+      if (updatedUser) {
+        setSelectedUser(updatedUser);
+      }
+    }
+  }, [advisors, selectedUser]);
 
   return (
     <Box p={4} spaceY={4}>
@@ -82,6 +96,7 @@ const AdvisorsTab = () => {
           open={isProfileDialogOpen}
           setOpen={setIsProfileDialogOpen}
           setOpenDeleteDialog={setIsDeleteDialogOpen}
+          onUpdate={handleUpdate}
         />
       )}
 

@@ -11,6 +11,7 @@ import useAuth from "../../contexts/useAuth";
 const HomeContent = () => {
   const { roles } = useAuth();
   const isAdmin = roles.includes("Admin");
+  const isAdvisor = roles.includes("Advisor")
 
   return (
     <Tabs.Root defaultValue="students" variant="line" mt={10}>
@@ -44,13 +45,13 @@ const HomeContent = () => {
             Assignments
           </Tabs.Trigger>
 
-          {(isAdmin || roles.includes("Advisor")) && (
+          {(isAdmin) && (
             <Tabs.Trigger _selected={{ fontWeight: "bold" }} value="advisors">
               Advisors
             </Tabs.Trigger>
           )}
 
-          {(isAdmin || roles.includes("Advisor")) && (
+          {(isAdmin || isAdvisor) && (
             <Tabs.Trigger _selected={{ fontWeight: "bold" }} value="peer-tutors">
               Peer Tutors
             </Tabs.Trigger>
@@ -80,13 +81,13 @@ const HomeContent = () => {
         <AssignmentsTab />
       </Tabs.Content>
 
-      {(isAdmin || roles.includes("Advisor")) && (
+      {(isAdmin) && (
         <Tabs.Content value="advisors">
           <AdvisorsTab />
         </Tabs.Content>
       )}
 
-      {(isAdmin || roles.includes("Advisor")) && (
+      {(isAdmin || isAdvisor) && (
         <Tabs.Content value="peer-tutors">
           <PeerTutorsTab />
         </Tabs.Content>
