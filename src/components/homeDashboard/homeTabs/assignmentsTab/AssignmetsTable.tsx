@@ -10,7 +10,8 @@ import {
   Box,
   Image,
 } from "@chakra-ui/react";
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
+import { motion } from "framer-motion";
 import AssignmentsTableRowButtons from "../../../common/assignments/AssignmentsTableRowButtons";
 import type { AssignmentBasicType } from "../../../../types/AssignmentTypes";
 import type { ErrorType } from "../../../../types/ErrorType";
@@ -19,6 +20,8 @@ import assignmentIcon from "../../../../assets/contract.png";
 
 import { DotLottieReact } from "@lottiefiles/dotlottie-react";
 
+const MotionTableRow = motion(Table.Row);
+
 interface AssignmentsTableProps {
   assignments: AssignmentBasicType[];
   assignmentsLoading: boolean;
@@ -26,6 +29,7 @@ interface AssignmentsTableProps {
 
   dateRange: { from: Date | undefined; to?: Date | undefined };
   searchTerm: string | null;
+  selectedClassId: number | null;
   onAssignmentClick?: (studentId: number, assignmentId: number) => void;
   filterByNeedsRating: boolean;
   filterByNotFinalized: boolean;
@@ -39,12 +43,22 @@ const AssignmentsTable = ({
 
   dateRange,
   searchTerm,
+  selectedClassId,
   onAssignmentClick,
   filterByNeedsRating,
   filterByNotFinalized,
   triggerAssignmentsRefetch,
 }: AssignmentsTableProps) => {
   const [visibleCount, setVisibleCount] = useState(10);
+
+  // Only animate on the very first render after data is present
+  const didAnimateRef = useRef(false);
+  const shouldAnimate = !didAnimateRef.current;
+  useEffect(() => {
+    if (!assignmentsLoading && assignments && assignments.length > 0) {
+      didAnimateRef.current = true;
+    }
+  }, [assignmentsLoading, assignments]);
 
   const handleLoadMore = () => {
     setVisibleCount((prev) => prev + 10);
@@ -76,7 +90,10 @@ const AssignmentsTable = ({
       assignment.rating_status === "Partially Rated";
 
     const isNotFinalized = !filterByNotFinalized || !assignment.finalized;
-    return inDateRange && matchesSearch && needsRating && isNotFinalized;
+
+    const matchesClass = !selectedClassId || assignment.class_id === selectedClassId;
+
+    return inDateRange && matchesSearch && needsRating && isNotFinalized && matchesClass;
   });
 
   const visibleAssignments = filteredAssignments.slice(0, visibleCount);
@@ -163,7 +180,7 @@ const AssignmentsTable = ({
                   </Table.Cell>
                 </Table.Row>
               ))
-            : visibleAssignments.map((assignment) => {
+            : visibleAssignments.map((assignment, index) => {
                 const displayDate =
                   assignment.date_modified ?? assignment.date_created ?? "";
                 const formattedDate = displayDate
@@ -171,7 +188,7 @@ const AssignmentsTable = ({
                   : "";
 
                 return (
-                  <Table.Row
+                  <MotionTableRow
                     key={assignment.id}
                     cursor="pointer"
                     _hover={{ bg: "gray.100" }}
@@ -185,6 +202,13 @@ const AssignmentsTable = ({
                           assignment.id
                         );
                       }
+                    }}
+                    initial={shouldAnimate ? { opacity: 0, x: -20 } : false}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{
+                      duration: 0.3,
+                      ease: "easeOut",
+                      delay: shouldAnimate ? index * 0.03 : 0,
                     }}
                   >
                     {/* Column 1: icon + title + meta */}
@@ -259,7 +283,7 @@ const AssignmentsTable = ({
                         triggerAssignmentsRefetch={triggerAssignmentsRefetch}
                       />
                     </Table.Cell>
-                  </Table.Row>
+                  </MotionTableRow>
                 );
               })}
         </Table.Body>
