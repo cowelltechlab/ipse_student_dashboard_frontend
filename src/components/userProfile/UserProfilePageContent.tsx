@@ -1,4 +1,4 @@
-import { Box, Grid, VStack } from "@chakra-ui/react";
+import { Box, VStack } from "@chakra-ui/react";
 import ProfilePictureSection from "./ProfilePictureSection";
 import PasswordChangeSection from "./PasswordChangeSection";
 import EmailUpdateSection from "./EmailUpdateSection";
@@ -30,33 +30,25 @@ const UserProfilePageContent = () => {
         cardImageUrl={ProfileIcon}
       />
 
-      {/* Profile Sections Grid */}
-      <Box p={6} maxW="1200px" mx="auto">
-        <Grid
-          templateColumns={{ base: "1fr", lg: "1fr 1fr" }}
-          gap={6}
-        >
-          {/* Left Column */}
-          <VStack gap={6} align="stretch">
-            <ProfilePictureSection
-              currentProfilePictureUrl={profilePictureUrl}
+      {/* Profile Sections - Single Column Layout */}
+      <Box p={6} maxW="1000px" mx="auto">
+        <VStack gap={6} align="stretch">
+          <ProfilePictureSection
+            currentProfilePictureUrl={profilePictureUrl}
+            onUpdate={handleUpdate}
+          />
+
+          <PasswordChangeSection />
+
+          {userId && (
+            <EmailUpdateSection
+              userId={userId}
+              currentEmail={email}
+              currentGtEmail={email}
               onUpdate={handleUpdate}
             />
-          </VStack>
-
-          {/* Right Column */}
-          <VStack gap={6} align="stretch">
-            <PasswordChangeSection />
-            {userId && (
-              <EmailUpdateSection
-                userId={userId}
-                currentEmail={email}
-                currentGtEmail={email}
-                onUpdate={handleUpdate}
-              />
-            )}
-          </VStack>
-        </Grid>
+          )}
+        </VStack>
       </Box>
     </Box>
   );

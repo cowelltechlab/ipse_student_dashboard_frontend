@@ -1,6 +1,8 @@
 import React from "react";
 import { Routes, Route, Navigate } from "react-router-dom";
+import { Box } from "@chakra-ui/react";
 import ProtectedRoute from "./routing/ProtectedRoute";
+import Footer from "./components/common/universal/Footer";
 
 // Pages
 import Login from "./pages/Login";
@@ -24,7 +26,9 @@ import UserProfilePage from "./pages/UserProfilePage";
 
 const App: React.FC = () => {
   return (
-    <Routes>
+    <Box display="flex" flexDirection="column" minH="100vh">
+      <Box flex="1">
+        <Routes>
       {/* Public routes */}
       <Route path="/login" element={<Login />} />
       <Route path="/auth/callback" element={<OAuthCallbackHandler />} />
@@ -66,10 +70,13 @@ const App: React.FC = () => {
         </Route>
       </Route>
 
-      {/* Fallbacks */}
-      <Route path="/dashboard" element={<Navigate to="/" replace />} /> {/* avoid duplicate unprotected path */}
-      <Route path="*" element={<Navigate to="/" replace />} />
-    </Routes>
+          {/* Fallbacks */}
+          <Route path="/dashboard" element={<Navigate to="/" replace />} /> {/* avoid duplicate unprotected path */}
+          <Route path="*" element={<Navigate to="/" replace />} />
+        </Routes>
+      </Box>
+      <Footer />
+    </Box>
   );
 };
 
