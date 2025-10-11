@@ -5,7 +5,7 @@ import PeerTutorsTab from "./homeTabs/peerTutorsTab/PeerTutorsTab";
 import StudentVersionsTab from "./homeTabs/studentVersionsTab/StudentVersionsTab";
 import AdminTab from "./homeTabs/adminTab/AdminTab";
 
-import { Spacer, Tabs } from "@chakra-ui/react";
+import { Spacer, Tabs, Box } from "@chakra-ui/react";
 import useAuth from "../../contexts/useAuth";
 
 const HomeContent = () => {
@@ -14,41 +14,57 @@ const HomeContent = () => {
 
   return (
     <Tabs.Root defaultValue="students" variant="line" mt={10}>
-      <Tabs.List p={3} mx={5}>
-        <Tabs.Trigger _selected={{ fontWeight: "bold" }} value="students">
-          Students
-        </Tabs.Trigger>
-
-        {isAdmin && (
-          <Tabs.Trigger _selected={{ fontWeight: "bold" }} value="student-groups">
-            Student Groups
+      <Box
+        overflowX="auto"
+        css={{
+          "&::-webkit-scrollbar": {
+            height: "4px",
+          },
+          "&::-webkit-scrollbar-thumb": {
+            background: "#244D8A",
+            borderRadius: "4px",
+          },
+          "&::-webkit-scrollbar-track": {
+            background: "#f0f0f0",
+          },
+        }}
+      >
+        <Tabs.List p={3} mx={5} minW="max-content" flexWrap={{ base: "nowrap", md: "wrap" }}>
+          <Tabs.Trigger _selected={{ fontWeight: "bold" }} value="students">
+            Students
           </Tabs.Trigger>
-        )}
 
-        <Tabs.Trigger _selected={{ fontWeight: "bold" }} value="assignments">
-          Assignments
-        </Tabs.Trigger>
+          {isAdmin && (
+            <Tabs.Trigger _selected={{ fontWeight: "bold" }} value="student-groups">
+              Student Groups
+            </Tabs.Trigger>
+          )}
 
-        {(isAdmin || roles.includes("Advisor")) && (
-          <Tabs.Trigger _selected={{ fontWeight: "bold" }} value="advisors">
-            Advisors
+          <Tabs.Trigger _selected={{ fontWeight: "bold" }} value="assignments">
+            Assignments
           </Tabs.Trigger>
-        )}
 
-        {(isAdmin || roles.includes("Advisor")) && (
-          <Tabs.Trigger _selected={{ fontWeight: "bold" }} value="peer-tutors">
-            Peer Tutors
-          </Tabs.Trigger>
-        )}
+          {(isAdmin || roles.includes("Advisor")) && (
+            <Tabs.Trigger _selected={{ fontWeight: "bold" }} value="advisors">
+              Advisors
+            </Tabs.Trigger>
+          )}
 
-        <Spacer/>
+          {(isAdmin || roles.includes("Advisor")) && (
+            <Tabs.Trigger _selected={{ fontWeight: "bold" }} value="peer-tutors">
+              Peer Tutors
+            </Tabs.Trigger>
+          )}
 
-        {isAdmin && (
-          <Tabs.Trigger _selected={{ fontWeight: "bold" }} value="admin">
-            Administrators
-          </Tabs.Trigger>
-        )}
-      </Tabs.List>
+          <Spacer/>
+
+          {isAdmin && (
+            <Tabs.Trigger _selected={{ fontWeight: "bold" }} value="admin">
+              Administrators
+            </Tabs.Trigger>
+          )}
+        </Tabs.List>
+      </Box>
 
       <Tabs.Content value="students">
         <StudentsTab />
