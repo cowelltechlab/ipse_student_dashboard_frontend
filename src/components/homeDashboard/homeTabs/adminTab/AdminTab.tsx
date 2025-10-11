@@ -3,6 +3,8 @@ import { useState, useEffect } from "react";
 
 import SearchBar from "../../../common/searchBar/SearchBar";
 import UserCardGrid from "../../../common/userCards/UserCardGrid";
+import AdminTable from "./AdminTable";
+import ViewToggle from "../../../common/universal/ViewToggle";
 
 import useRoles from "../../../../hooks/roles/useRoles";
 import useUsers from "../../../../hooks/users/useUsers";
@@ -16,8 +18,14 @@ import CreateUserDialog from "../../createUserDialog/CreateUserDialog";
 import AdminPasswordResetModal from "../PasswordResetDialog";
 import EmailUpdateModal from "../../../common/user/EmailUpdateModal";
 
+const VIEW_MODE_STORAGE_KEY = "adminTabViewMode";
+
 const AdminTab = () => {
   const [searchTerm, setSearchTerm] = useState<string>("");
+  const [viewMode, setViewMode] = useState<"card" | "table">(() => {
+    const saved = localStorage.getItem(VIEW_MODE_STORAGE_KEY);
+    return (saved as "card" | "table") || "card";
+  });
   const [refetchTrigger, setRefetchTrigger] = useState<number>(0);
 
   const [selectedUser, setSelectedUser] = useState<UserType | null>(null);
@@ -81,9 +89,14 @@ const AdminTab = () => {
     }
   }, [users, selectedUser]);
 
+  // Persist view mode to localStorage
+  useEffect(() => {
+    localStorage.setItem(VIEW_MODE_STORAGE_KEY, viewMode);
+  }, [viewMode]);
+
   return (
     <Box p={4} spaceY={4}>
-      <HStack>
+      <HStack px={4}>
         <SearchBar
           searchTerm={searchTerm}
           setSearchTerm={setSearchTerm}
@@ -99,13 +112,28 @@ const AdminTab = () => {
         </TextButton>
       </HStack>
 
-      <UserCardGrid
-        searchTerm={searchTerm}
-        users={users}
-        loading={rolesLoading || loading}
-        error={error}
-        onCardClick={handleCardClick}
-      />
+      <HStack px={4}>
+        <Spacer />
+        <ViewToggle view={viewMode} onViewChange={setViewMode} />
+      </HStack>
+
+      {viewMode === "card" ? (
+        <UserCardGrid
+          searchTerm={searchTerm}
+          users={users}
+          loading={rolesLoading || loading}
+          error={error}
+          onCardClick={handleCardClick}
+        />
+      ) : (
+        <AdminTable
+          searchTerm={searchTerm}
+          users={users}
+          loading={rolesLoading || loading}
+          error={error}
+          onCardClick={handleCardClick}
+        />
+      )}
 
       {selectedUser && (
         <DisplayAdminDialog

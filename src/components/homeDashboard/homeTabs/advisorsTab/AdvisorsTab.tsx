@@ -3,6 +3,8 @@ import SearchBar from "../../../common/searchBar/SearchBar";
 import { useState, useEffect } from "react";
 import TextButton from "../../../common/universal/TextButton";
 import UserCardGrid from "../../../common/userCards/UserCardGrid";
+import AdvisorsTable from "./AdvisorsTable";
+import ViewToggle from "../../../common/universal/ViewToggle";
 import useRoles from "../../../../hooks/roles/useRoles";
 import useUsers from "../../../../hooks/users/useUsers";
 import type { UserType } from "../../../../types/UserTypes";
@@ -11,8 +13,14 @@ import DeleteUserDialog from "../DeleteUserDialog";
 import CreateUserDialog from "../../createUserDialog/CreateUserDialog";
 import { IoIosAddCircle } from "react-icons/io";
 
+const VIEW_MODE_STORAGE_KEY = "advisorsTabViewMode";
+
 const AdvisorsTab = () => {
   const [searchTerm, setSearchTerm] = useState<string>("");
+  const [viewMode, setViewMode] = useState<"card" | "table">(() => {
+    const saved = localStorage.getItem(VIEW_MODE_STORAGE_KEY);
+    return (saved as "card" | "table") || "card";
+  });
   const [refetchTrigger, setRefetchTrigger] = useState<number>(0);
   const [isProfileDialogOpen, setIsProfileDialogOpen] =
     useState<boolean>(false);
@@ -64,9 +72,14 @@ const AdvisorsTab = () => {
     }
   }, [advisors, selectedUser]);
 
+  // Persist view mode to localStorage
+  useEffect(() => {
+    localStorage.setItem(VIEW_MODE_STORAGE_KEY, viewMode);
+  }, [viewMode]);
+
   return (
     <Box p={4} spaceY={4}>
-      <HStack>
+      <HStack px={4}>
         <SearchBar
           searchTerm={searchTerm}
           setSearchTerm={setSearchTerm}
@@ -82,13 +95,28 @@ const AdvisorsTab = () => {
         </TextButton>
       </HStack>
 
-      <UserCardGrid
-        searchTerm={searchTerm}
-        users={advisors}
-        loading={loading}
-        error={error}
-        onCardClick={handleClickAdvisorCard}
-      />
+      <HStack px={4}>
+        <Spacer />
+        <ViewToggle view={viewMode} onViewChange={setViewMode} />
+      </HStack>
+
+      {viewMode === "card" ? (
+        <UserCardGrid
+          searchTerm={searchTerm}
+          users={advisors}
+          loading={loading}
+          error={error}
+          onCardClick={handleClickAdvisorCard}
+        />
+      ) : (
+        <AdvisorsTable
+          searchTerm={searchTerm}
+          users={advisors}
+          loading={loading}
+          error={error}
+          onCardClick={handleClickAdvisorCard}
+        />
+      )}
 
       {selectedUser && (
         <DisplayAdvisorDialog
