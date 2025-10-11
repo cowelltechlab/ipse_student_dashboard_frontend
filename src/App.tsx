@@ -1,8 +1,6 @@
 import React from "react";
 import { Routes, Route, Navigate } from "react-router-dom";
-import { Box } from "@chakra-ui/react";
 import ProtectedRoute from "./routing/ProtectedRoute";
-import Footer from "./components/common/universal/Footer";
 
 // Pages
 import Login from "./pages/Login";
@@ -26,9 +24,7 @@ import UserProfilePage from "./pages/UserProfilePage";
 
 const App: React.FC = () => {
   return (
-    <Box display="flex" flexDirection="column" minH="100vh">
-      <Box flex="1">
-        <Routes>
+    <Routes>
       {/* Public routes */}
       <Route path="/login" element={<Login />} />
       <Route path="/auth/callback" element={<OAuthCallbackHandler />} />
@@ -61,22 +57,19 @@ const App: React.FC = () => {
         <Route path="/complete-account/:user_id" element={<InactiveStudentHome />} />
 
         {/* Staff-only sections */}
-        <Route element={<ProtectedRoute requiredRoles={["Admin", "Advisor", "Peer Tutor"]} />}>
+        <Route element={<ProtectedRoute requiredRoles={["Admin", "Advisor", "Peer Tutor"]} skipFooter />}>
           <Route path="/dashboard" element={<Home />} />
         </Route>
 
-        <Route element={<ProtectedRoute requiredRoles={["Admin", "Advisor", "Peer Tutor"]} />}>
+        <Route element={<ProtectedRoute requiredRoles={["Admin", "Advisor", "Peer Tutor"]} skipFooter />}>
           <Route path="/create-assignment" element={<CreateNewAssignment />} />
         </Route>
       </Route>
 
-          {/* Fallbacks */}
-          <Route path="/dashboard" element={<Navigate to="/" replace />} /> {/* avoid duplicate unprotected path */}
-          <Route path="*" element={<Navigate to="/" replace />} />
-        </Routes>
-      </Box>
-      <Footer />
-    </Box>
+      {/* Fallbacks */}
+      <Route path="/dashboard" element={<Navigate to="/" replace />} /> {/* avoid duplicate unprotected path */}
+      <Route path="*" element={<Navigate to="/" replace />} />
+    </Routes>
   );
 };
 
