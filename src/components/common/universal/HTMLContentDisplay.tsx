@@ -12,6 +12,7 @@ const HtmlContentBox: React.FC<HtmlContentBoxProps> = ({
   padding = 5,
   height = "auto",
   bg = "white"
+
 }) => {
   return (
     <Box
