@@ -1,7 +1,9 @@
 import { Box, HStack, Spacer } from "@chakra-ui/react";
 import SearchBar from "../../../common/searchBar/SearchBar";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import StudentCardGrid from "./studentCards.tsx/StudentCardGrid";
+import StudentsTable from "./StudentsTable";
+import ViewToggle from "../../../common/universal/ViewToggle";
 import TextButton from "../../../common/universal/TextButton";
 import { useNavigate } from "react-router-dom";
 import StudentYearButtons from "../../../common/filterButtons/StudentYearButtons";
@@ -12,9 +14,16 @@ import { IoIosAddCircle } from "react-icons/io";
 import ProfileCreationDialog from "../../../profileCreation/ProfileCreationDialog";
 import useAuth from "../../../../contexts/useAuth";
 
+const VIEW_MODE_STORAGE_KEY = "studentsTabViewMode";
+
 const StudentsTab = () => {
   const [searchTerm, setSearchTerm] = useState<string>("");
   const [yearName, setYearName] = useState<string | null>(null);
+  const [viewMode, setViewMode] = useState<"card" | "table">(() => {
+    // Initialize from localStorage
+    const saved = localStorage.getItem(VIEW_MODE_STORAGE_KEY);
+    return (saved as "card" | "table") || "card";
+  });
 
   const [refetchTrigger, setRefetchTrigger] = useState<number>(0);
 
@@ -31,7 +40,7 @@ const StudentsTab = () => {
 
   const { roles } = useRoles();
 
-  const { roles: currentUserRoles} = useAuth()
+  const { roles: currentUserRoles } = useAuth();
 
   const studentRole = roles.find((role) => role.role_name === "Student");
 
@@ -64,17 +73,24 @@ const StudentsTab = () => {
     }
   };
 
+  // Persist view mode to localStorage
+  useEffect(() => {
+    localStorage.setItem(VIEW_MODE_STORAGE_KEY, viewMode);
+  }, [viewMode]);
+
   return (
     <Box p={4} spaceY={4}>
-      <HStack>
+      <HStack px={4}>
         <SearchBar
           searchTerm={searchTerm}
           setSearchTerm={setSearchTerm}
           placeholder="Search student..."
         />
+
         <Spacer />
 
-        {(currentUserRoles.includes("Admin") || currentUserRoles.includes("Advisor")) && (
+        {(currentUserRoles.includes("Admin") ||
+          currentUserRoles.includes("Advisor")) && (
           <TextButton color="#bd4f23" onClick={handleCreateStudent}>
             <HStack gap={1}>
               <IoIosAddCircle color="#bd4f23" />
@@ -83,22 +99,38 @@ const StudentsTab = () => {
           </TextButton>
         )}
       </HStack>
+      <HStack px={4}>
+        <StudentYearButtons
+          selectedYear={yearName}
+          onYearChange={(selectedYearId: string | null) =>
+            setYearName(selectedYearId)
+          }
+        />
 
-      <StudentYearButtons
-        selectedYear={yearName}
-        onYearChange={(selectedYearId: string | null) =>
-          setYearName(selectedYearId)
-        }
-      />
+        <Spacer />
 
-      <StudentCardGrid
-        students={students}
-        loading={loading}
-        error={error}
-        searchTerm={searchTerm}
-        yearName={yearName}
-        onStudentClick={handleNavigateStudentPage}
-      />
+        <ViewToggle view={viewMode} onViewChange={setViewMode} />
+      </HStack>
+
+      {viewMode === "card" ? (
+        <StudentCardGrid
+          students={students}
+          loading={loading}
+          error={error}
+          searchTerm={searchTerm}
+          yearName={yearName}
+          onStudentClick={handleNavigateStudentPage}
+        />
+      ) : (
+        <StudentsTable
+          students={students}
+          loading={loading}
+          error={error}
+          searchTerm={searchTerm}
+          yearName={yearName}
+          onStudentClick={handleNavigateStudentPage}
+        />
+      )}
 
       {isCreateStudentDialogOpen && (
         <CreateUserDialog
