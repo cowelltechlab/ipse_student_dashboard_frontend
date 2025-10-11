@@ -1,4 +1,13 @@
-import { Box, Grid, Skeleton, Alert } from "@chakra-ui/react";
+import {
+  Box,
+  Grid,
+  Skeleton,
+  Alert,
+  Flex,
+  Image,
+  Heading,
+  Icon,
+} from "@chakra-ui/react";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import useGetAssignmentVersionByDocId from "../../hooks/assignmentVersions/useGetAssignmentVersionByDocId";
@@ -9,6 +18,9 @@ import HtmlContentBox from "../common/universal/HTMLContentDisplay";
 import VersionOptionsDisplaySection from "./VersionOptionsDisplaySection";
 import { buildModifiedHtml } from "../../utils/assignmentHtml";
 import TextButton from "../common/universal/TextButton";
+import { FaEye } from "react-icons/fa";
+
+import modifiedAssignmentIcon from "../../assets/icons/note.png";
 
 interface AssignmentVersionDetailsPageContentProps {
   assignment: AssignmentDetailType | null;
@@ -31,8 +43,10 @@ const AssignmentVersionDetailsPageContent = ({
   const [isOptionsVisible, setIsOptionsVisible] = useState(true);
   const [isNewVisible, setIsNewVisible] = useState(true);
 
-  const toggleOriginalVisibility = () => setIsOriginalVisible(!isOriginalVisible);
-  const toggleVersionOptionsVisibility = () => setIsOptionsVisible(!isOptionsVisible);
+  const toggleOriginalVisibility = () =>
+    setIsOriginalVisible(!isOriginalVisible);
+  const toggleVersionOptionsVisibility = () =>
+    setIsOptionsVisible(!isOptionsVisible);
   const toggleNewVisibility = () => setIsNewVisible(!isNewVisible);
 
   const { assignmentVersion, loading: versionLoading } =
@@ -55,7 +69,7 @@ const AssignmentVersionDetailsPageContent = ({
 
   if (isLoading) {
     return (
-      <Box p={6} maxW="1800px" mx="auto">
+      <Box p={6} mx="auto">
         <Skeleton height="40px" width="200px" mb={4} />
         <Grid
           templateColumns="repeat(3, 1fr)"
@@ -73,7 +87,7 @@ const AssignmentVersionDetailsPageContent = ({
 
   if (!assignment || !assignmentVersion) {
     return (
-      <Box p={6} maxW="1800px" mx="auto">
+      <Box p={6} mx="auto">
         <Alert.Root status="error">
           <Alert.Indicator />
           <Alert.Content>
@@ -88,7 +102,22 @@ const AssignmentVersionDetailsPageContent = ({
   }
 
   return (
-    <Box p={6} maxW="1800px" mx="auto">
+    <Box p={6} mx="auto">
+      {/* Info Banner */}
+      <Alert.Root status="info" mb={4}>
+        <Alert.Indicator>
+          <Icon fontSize="xl">
+            <FaEye />
+          </Icon>
+        </Alert.Indicator>
+        <Alert.Content>
+          <Alert.Title>View-Only Mode</Alert.Title>
+          <Alert.Description>
+            This page displays the details of a saved assignment version. To make changes or generate new options, click "Change Assignment" below.
+          </Alert.Description>
+        </Alert.Content>
+      </Alert.Root>
+
       {/* Header with visibility toggles and Change Assignment button */}
       <Box
         display="flex"
@@ -111,7 +140,9 @@ const AssignmentVersionDetailsPageContent = ({
 
       {/* Three-column layout */}
       <Grid
-        templateColumns={`${isOriginalVisible ? "1fr" : "0fr"} ${isOptionsVisible ? "1fr" : "0fr"} ${isNewVisible ? "1fr" : "0fr"}`}
+        templateColumns={`${isOriginalVisible ? "1fr" : "0fr"} ${
+          isOptionsVisible ? "1fr" : "0fr"
+        } ${isNewVisible ? "1fr" : "0fr"}`}
         gap={4}
         alignItems="start"
       >
@@ -143,10 +174,30 @@ const AssignmentVersionDetailsPageContent = ({
 
         {/* Column 3: Generated Content */}
         {isNewVisible && (
-          <Box>
-            <HtmlContentBox
-              htmlContent={generatedHtml || ""}
-            />
+          <Box
+            borderWidth="1px"
+            borderRadius="md"
+            borderColor="#244d8a"
+            w="100%"
+            display="flex"
+            flexDir="column"
+            h="80vh"
+          >
+            {/* Header */}
+            <Flex
+              bg="#244d8a"
+              color="white"
+              px={4}
+              py={2}
+              align="center"
+              justify="space-between"
+              borderTopRadius="md"
+              flexShrink={0}
+            >
+              <Image src={modifiedAssignmentIcon} height="50px" />
+              <Heading size="md">Modified Assignment</Heading>
+            </Flex>
+            <HtmlContentBox htmlContent={generatedHtml || ""} />
           </Box>
         )}
       </Grid>
