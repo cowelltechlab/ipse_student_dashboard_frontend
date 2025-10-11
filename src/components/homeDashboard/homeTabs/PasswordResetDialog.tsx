@@ -11,25 +11,29 @@ import {
   Image,
 } from "@chakra-ui/react";
 import { useState } from "react";
-import { PasswordInput } from "../../../ui/password-input";
-import useAdminResetPassword from "../../../../hooks/auth/useAdminResetPassword";
-import { toaster } from "../../../ui/toaster";
-import { generateTemporaryPassword } from "../../../../utils/passwordUtils";
-import type { StudentDetailsType } from "../../../../types/StudentGroupTypes";
+import { PasswordInput } from "../../ui/password-input";
+import useAdminResetPassword from "../../../hooks/auth/useAdminResetPassword";
+import { toaster } from "../../ui/toaster";
+import { generateTemporaryPassword } from "../../../utils/passwordUtils";
+import type { StudentDetailsType } from "../../../types/StudentGroupTypes";
 
-import resetPasswordImage from "../../../../assets/Forgot password.svg"
+import resetPasswordImage from "../../../assets/Forgot password.svg";
+import type { UserType } from "../../../types/UserTypes";
 
 interface AdminPasswordResetModalProps {
   open: boolean;
   setOpen: (open: boolean) => void;
-  student: StudentDetailsType | null;
   onPasswordReset: () => void;
+
+  student?: StudentDetailsType | null;
+  user?: UserType | null;
 }
 
 const AdminPasswordResetModal = ({
   open,
   setOpen,
   student,
+  user,
   onPasswordReset,
 }: AdminPasswordResetModalProps) => {
   const [password, setPassword] = useState("");
@@ -43,7 +47,10 @@ const AdminPasswordResetModal = ({
   };
 
   const handleReset = async () => {
-    if (!student) return;
+    if (!student && !user) {
+      console.log("returing early");
+      return;
+    }
 
     // Validation
     if (!password.trim()) {
@@ -71,7 +78,10 @@ const AdminPasswordResetModal = ({
     }
 
     try {
-      const response = await handleAdminResetPassword(student.student_id, password);
+      const userId = student?.user_id || user?.id;
+      if (!userId) return; // Extra safety check
+
+      const response = await handleAdminResetPassword(userId, password);
 
       toaster.create({
         title: "Password Reset Successful",
@@ -92,10 +102,11 @@ const AdminPasswordResetModal = ({
       };
       toaster.create({
         title: "Password Reset Failed",
-        description: error.response?.data?.detail ||
-                    error.response?.data?.message ||
-                    error.message ||
-                    "Failed to reset password. Please try again.",
+        description:
+          error.response?.data?.detail ||
+          error.response?.data?.message ||
+          error.message ||
+          "Failed to reset password. Please try again.",
         type: "error",
       });
     }
@@ -107,7 +118,7 @@ const AdminPasswordResetModal = ({
     setOpen(false);
   };
 
-  if (!student) return null;
+  if (!student && !user) return null;
 
   return (
     <Dialog.Root
@@ -127,9 +138,14 @@ const AdminPasswordResetModal = ({
                   Reset Password
                 </Heading>
                 <Text fontSize="md" color="gray.600" textAlign="center">
-                  Reset password for {student.first_name} {student.last_name}
+                  Reset password for {student?.first_name || user?.first_name}{" "}
+                  {student?.last_name || user?.last_name}
                 </Text>
-                <Image src={resetPasswordImage} alt="Reset Password" boxSize="150px" />
+                <Image
+                  src={resetPasswordImage}
+                  alt="Reset Password"
+                  boxSize="150px"
+                />
               </VStack>
             </Box>
 
@@ -206,7 +222,9 @@ const AdminPasswordResetModal = ({
                   w="50%"
                   onClick={handleReset}
                   loading={loading}
-                  disabled={loading || !password || password !== confirmPassword}
+                  disabled={
+                    loading || !password || password !== confirmPassword
+                  }
                   _hover={{ bg: "#A43E1E" }}
                 >
                   Reset Password

@@ -1,13 +1,13 @@
 import { useState } from "react";
-import { updateStudentEmails } from "../../services/studentGroupsServices";
 import type { ErrorType } from "../../types/ErrorType";
+import { updateUserEmails } from "../../services/userServices";
 
-const useUpdateStudentEmails = () => {
+const useUpdateUserEmails = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<ErrorType | null>(null);
 
-  const handleUpdateStudentEmails = async (
-    studentId: number,
+  const handleUpdateUserEmails = async (
+    userId: number,
     newEmail?: string,
     newGtEmail?: string
   ) => {
@@ -19,7 +19,7 @@ const useUpdateStudentEmails = () => {
       if (newEmail) data.email = newEmail;
       if (newGtEmail) data.gt_email = newGtEmail;
 
-      await updateStudentEmails(studentId, data);
+      await updateUserEmails(userId, data);
     } catch (error) {
       setError(error as ErrorType);
     } finally {
@@ -27,7 +27,7 @@ const useUpdateStudentEmails = () => {
     }
   };
 
-  return { loading, error, handleUpdateStudentEmails };
+  return { loading, error, handleUpdateUserEmails };
 };
 
-export default useUpdateStudentEmails;
+export default useUpdateUserEmails;

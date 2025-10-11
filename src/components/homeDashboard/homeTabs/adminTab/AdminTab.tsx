@@ -13,6 +13,8 @@ import DeleteUserDialog from "../DeleteUserDialog";
 import TextButton from "../../../common/universal/TextButton";
 import { IoIosAddCircle } from "react-icons/io";
 import CreateUserDialog from "../../createUserDialog/CreateUserDialog";
+import AdminPasswordResetModal from "../PasswordResetDialog";
+import EmailUpdateModal from "../../../common/user/EmailUpdateModal";
 
 const AdminTab = () => {
   const [searchTerm, setSearchTerm] = useState<string>("");
@@ -23,7 +25,12 @@ const AdminTab = () => {
     useState<boolean>(false);
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState<boolean>(false);
 
-    const [isCreateAdminDialogOpen, setIsCreateAdminDialogOpen] =
+  const [isCreateAdminDialogOpen, setIsCreateAdminDialogOpen] =
+    useState<boolean>(false);
+
+  const [isPasswordResetModalOpen, setIsPasswordResetModalOpen] =
+    useState<boolean>(false);
+  const [isUpdateEmailModalOpen, setIsUpdateEmailModalOpen] =
     useState<boolean>(false);
 
   // Find the Admin role id
@@ -36,11 +43,16 @@ const AdminTab = () => {
     adminRole?.id ?? undefined
   );
 
-    const handleCreateAdmin = () => {
+  const handleCreateAdmin = () => {
     setIsCreateAdminDialogOpen(true);
   };
 
   const handleCardClick = (user: UserType) => {
+    if (user.invite_url) {
+      window.open(user.invite_url, "_blank");
+      if (!user.is_active) return;
+    }
+
     setSelectedUser(user);
     setIsProfileDialogOpen(true);
   };
@@ -48,6 +60,15 @@ const AdminTab = () => {
   const handleDeleteConfirmed = () => {
     setIsDeleteDialogOpen(false);
     setRefetchTrigger((v) => v + 1);
+  };
+
+  const handleOpenResetPasswordModal = () => {
+    console.log("Opening Password Reset Modal");
+    setIsPasswordResetModalOpen(true);
+  };
+
+  const handleOpenEmailEditModal = () => {
+    setIsUpdateEmailModalOpen(true);
   };
 
   return (
@@ -82,6 +103,8 @@ const AdminTab = () => {
           open={isProfileDialogOpen}
           setOpen={setIsProfileDialogOpen}
           setOpenDeleteDialog={setIsDeleteDialogOpen}
+          handleOpenResetPasswordModal={handleOpenResetPasswordModal}
+          handleOpenEmailEditModal={handleOpenEmailEditModal}
         />
       )}
 
@@ -97,12 +120,30 @@ const AdminTab = () => {
         />
       )}
 
-        {isCreateAdminDialogOpen && (
+      {isCreateAdminDialogOpen && (
         <CreateUserDialog
           open={isCreateAdminDialogOpen}
           setOpen={setIsCreateAdminDialogOpen}
           refetchTrigger={refetchTrigger}
           setRefetchTrigger={setRefetchTrigger}
+        />
+      )}
+
+      {isPasswordResetModalOpen && (
+        <AdminPasswordResetModal
+          open={isPasswordResetModalOpen}
+          setOpen={setIsPasswordResetModalOpen}
+          user={selectedUser}
+          onPasswordReset={() => {}}
+        />
+      )}
+
+      {isUpdateEmailModalOpen && (
+        <EmailUpdateModal
+          open={isUpdateEmailModalOpen}
+          setOpen={setIsUpdateEmailModalOpen}
+          user={selectedUser}
+          onUpdate={() => setRefetchTrigger(refetchTrigger + 1)}
         />
       )}
     </Box>

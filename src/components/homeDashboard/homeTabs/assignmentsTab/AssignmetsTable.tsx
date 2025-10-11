@@ -139,8 +139,16 @@ const AssignmentsTable = ({
                   {/* Column 2: Status pills */}
                   <Table.Cell textAlign="right">
                     <HStack justifyContent="right" gap={2}>
-                      <Skeleton height="24px" width="80px" borderRadius="full" />
-                      <Skeleton height="24px" width="90px" borderRadius="full" />
+                      <Skeleton
+                        height="24px"
+                        width="80px"
+                        borderRadius="full"
+                      />
+                      <Skeleton
+                        height="24px"
+                        width="90px"
+                        borderRadius="full"
+                      />
                     </HStack>
                   </Table.Cell>
 

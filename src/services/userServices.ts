@@ -1,4 +1,4 @@
-import type { ProfilePictureType, UserType } from "../types/UserTypes";
+import type { ProfilePictureType, UserDetailsResponseType, UserType } from "../types/UserTypes";
 import apiClient from "./apiClient";
 
 export const getUsers = async (
@@ -67,3 +67,16 @@ export const deleteUser = async (userId: number): Promise<void> => {
   return response.data;
 };
 
+
+
+export const updateUserEmails = async (
+  user_id: number,
+  data: { email?: string; gt_email?: string }
+): Promise<UserDetailsResponseType> => {
+  const response = await apiClient.patch(
+    `/student-groups/${user_id}/email`,
+    data
+  );
+
+  return response.data;
+};
