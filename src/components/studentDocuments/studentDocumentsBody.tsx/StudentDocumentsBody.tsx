@@ -7,6 +7,7 @@ import { IoIosAddCircle } from "react-icons/io";
 import AssignmentsFilterButtons from "../../homeDashboard/homeTabs/assignmentsTab/AssignmentsFilterButtons";
 import AssignmentsTable from "../../homeDashboard/homeTabs/assignmentsTab/AssignmetsTable";
 import useAssignments from "../../../hooks/assignments/useAssignments";
+import useClasses from "../../../hooks/classes/useClasses";
 
 interface StudentDocumentBodyProps {
     studentId: number | null
@@ -14,10 +15,13 @@ interface StudentDocumentBodyProps {
 
 const StudentDocumentBody = ({studentId}: StudentDocumentBodyProps) => {
   const [refetchTrigger, setRefetchTrigger] = useState(0);
+  const [classesRefetchTrigger, setClassesRefetchTrigger] = useState(0);
 
   const { assignments, loading, error } = useAssignments(studentId, refetchTrigger);
+  const { classes } = useClasses(classesRefetchTrigger, studentId);
 
   const [searchTerm, setSearchTerm] = useState("");
+  const [selectedClassId, setSelectedClassId] = useState<number | null>(null);
   const [dateRange, setDateRange] = useState<{
     from: Date | undefined;
     to?: Date | undefined;
@@ -65,6 +69,10 @@ const StudentDocumentBody = ({studentId}: StudentDocumentBodyProps) => {
         setDateRange={setDateRange}
         setFilterByNeedsRating={setFilterByNeedsRating}
         setFilterByNotFinalized={setFilterByNotFinalized}
+        selectedClassId={selectedClassId}
+        setSelectedClassId={setSelectedClassId}
+        classes={classes}
+        openClassAddModal={() => setClassesRefetchTrigger((prev) => prev + 1)}
       />
 
       <AssignmentsTable
@@ -73,6 +81,7 @@ const StudentDocumentBody = ({studentId}: StudentDocumentBodyProps) => {
         assignmentsError={error}
         dateRange={dateRange}
         searchTerm={searchTerm}
+        selectedClassId={selectedClassId}
         onAssignmentClick={handleNavigateAssignmentPage}
         filterByNeedsRating={filterByNeedsRating}
         filterByNotFinalized={filterByNotFinalized}
