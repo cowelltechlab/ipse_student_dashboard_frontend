@@ -18,3 +18,11 @@ export const postAdminResetPassword = async (userId: number, newPassword: string
   });
   return response.data;
 };
+
+export const postUpdateOwnPassword = async (currentPassword: string, newPassword: string): Promise<{ message: string }> => {
+  const response = await apiClient.post("/user/reset-own-password", {
+    current_password: currentPassword,
+    new_password: newPassword
+  });
+  return response.data;
+};

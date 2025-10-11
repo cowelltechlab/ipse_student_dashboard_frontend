@@ -22,6 +22,17 @@ const LogoutMenu = () => {
         <Portal>
           <Menu.Positioner>
             <Menu.Content>
+              <Menu.Item
+                value="profile"
+                onClick={() => navigate("/profile")}
+                bg={"#244D8A"}
+                color={"white"}
+                _hover={{ bg: "#1a3a6b" }}
+                borderRadius={"md"}
+                mb={2}
+              >
+                My Profile
+              </Menu.Item>
               <Menu.Item value="logout" onClick={() => logout(navigate)} bg={"#BD4F23"} color={"white"} _hover={{ bg: "#A63E1B" }} borderRadius={"md"}>
                 Logout
               </Menu.Item>

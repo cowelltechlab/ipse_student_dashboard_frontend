@@ -20,6 +20,7 @@ import ResetPassword from "./pages/ResetPassword";
 import InactiveStudentHome from "./pages/InactiveStudentHome";
 import StudentCreateNewAssignment from "./pages/StudentCreateNewAssignment";
 import AssignmentRatingAndFeedback from "./pages/AssignmentRatingAndFeedback";
+import UserProfilePage from "./pages/UserProfilePage";
 
 const App: React.FC = () => {
   return (
@@ -35,6 +36,9 @@ const App: React.FC = () => {
       <Route element={<ProtectedRoute />}>
         {/* Smart landing: sends staff to /dashboard, students to /student/:id */}
         <Route path="/" element={<AuthGate />} />
+
+        {/* User Profile - Available to all authenticated users */}
+        <Route path="/profile" element={<UserProfilePage />} />
 
         {/* Student pages (Students restricted to their own id by ProtectedRoute) */}
         <Route path="/student/:student_id" element={<Student />} />
