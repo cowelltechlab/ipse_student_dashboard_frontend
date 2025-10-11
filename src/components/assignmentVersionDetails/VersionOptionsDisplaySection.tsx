@@ -10,10 +10,12 @@ import {
   List,
   Button,
   Icon,
+  Badge,
 } from "@chakra-ui/react";
 import type { GeneratedOption } from "../../types/AssignmentVersionTypes";
 import { IoMdArrowRoundForward } from "react-icons/io";
 import { IoArrowForwardCircle } from "react-icons/io5";
+import { FaCheckCircle, FaCircle } from "react-icons/fa";
 import skillsIcon from "../../assets/icons/logical-thinking.png";
 import thinkingIcon from "../../assets/icons/design-thinking.png";
 import ideasIcon from "../../assets/icons/like.png";
@@ -33,10 +35,9 @@ const VersionOptionsDisplaySection = ({
   skillsForSuccess,
   onGenerateWithOptions,
 }: VersionOptionsDisplaySectionProps) => {
-  // Filter to show only selected options
-  const selectedGeneratedOptions = generatedOptions.filter((option) =>
-    selectedOptions.includes(option.internal_id || option.name)
-  );
+  // Check if an option is selected
+  const isOptionSelected = (option: GeneratedOption) =>
+    selectedOptions.includes(option.internal_id || option.name);
 
   return (
     <VStack>
@@ -61,8 +62,8 @@ const VersionOptionsDisplaySection = ({
           </Box>
         </Box>
       )}
-      {/* Selected Learning Pathways */}
-      {selectedGeneratedOptions.length > 0 && (
+      {/* Learning Pathways */}
+      {generatedOptions.length > 0 && (
         <Box
           borderWidth="1px"
           borderRadius="md"
@@ -80,31 +81,46 @@ const VersionOptionsDisplaySection = ({
             borderTopRadius="md"
           >
             <Image src={thinkingIcon} height="50px" />
-            <Heading>Selected Learning Pathways</Heading>
+            <Heading>Learning Pathways</Heading>
           </Flex>
-          <Box px={4} py={6} bg="blue.100" borderRadius="md" boxShadow="sm">
+          <Box px={4} py={6} bg="white" borderRadius="md" boxShadow="sm">
             <Stack gap="4">
               <Accordion.Root
                 collapsible
-                defaultValue={[selectedGeneratedOptions[0]?.internal_id || "0"]}
+                defaultValue={[generatedOptions.find(opt => isOptionSelected(opt))?.internal_id || "0"]}
               >
-                {selectedGeneratedOptions.map((option, index) => (
-                  <Accordion.Item
-                    key={option.internal_id || option.name || index}
-                    value={option.internal_id || index.toString()}
-                  >
-                    <Accordion.ItemTrigger
-                      bg="white"
-                      p={2}
-                      display="flex"
-                      alignItems="center"
-                      gap={2}
+                {generatedOptions.map((option, index) => {
+                  const isSelected = isOptionSelected(option);
+                  return (
+                    <Accordion.Item
+                      key={option.internal_id || option.name || index}
+                      value={option.internal_id || index.toString()}
                     >
-                      <Text flex="1" color="#244d8a" fontWeight="bold">
-                        {option.name}
-                      </Text>
-                      <Accordion.ItemIndicator />
-                    </Accordion.ItemTrigger>
+                      <Accordion.ItemTrigger
+                        bg={isSelected ? "#eaf4ff" : "#f5f5f5"}
+                        p={2}
+                        display="flex"
+                        alignItems="center"
+                        gap={2}
+                        borderWidth="1px"
+                        borderColor={isSelected ? "#244d8a" : "gray.200"}
+                      >
+                        <Icon
+                          fontSize="lg"
+                          color={isSelected ? "#244d8a" : "gray.400"}
+                        >
+                          {isSelected ? <FaCheckCircle /> : <FaCircle />}
+                        </Icon>
+                        <Text flex="1" color="#244d8a" fontWeight="bold">
+                          {option.name}
+                        </Text>
+                        {isSelected && (
+                          <Badge bg="#244d8a" color={"white"} p={1} mr={2}>
+                            Selected
+                          </Badge>
+                        )}
+                        <Accordion.ItemIndicator />
+                      </Accordion.ItemTrigger>
 
                     <Accordion.ItemContent w="100%">
                       <Accordion.ItemBody
@@ -168,7 +184,8 @@ const VersionOptionsDisplaySection = ({
                       </Accordion.ItemBody>
                     </Accordion.ItemContent>
                   </Accordion.Item>
-                ))}
+                  );
+                })}
               </Accordion.Root>
             </Stack>
           </Box>
@@ -201,10 +218,10 @@ const VersionOptionsDisplaySection = ({
           )}
         </Box>
       </Box>
-      
+
       {/* Empty state if nothing to display */}
       {!skillsForSuccess &&
-        selectedGeneratedOptions.length === 0 &&
+        generatedOptions.length === 0 &&
         !additionalSuggestions && (
           <Box
             p={4}
@@ -221,18 +238,19 @@ const VersionOptionsDisplaySection = ({
         )}
 
       {/* Generate with these options button */}
-      {onGenerateWithOptions && (selectedGeneratedOptions.length > 0 || additionalSuggestions) && (
-        <Button
-          borderRadius="xl"
-          bg="#bd4f23"
-          color="white"
-          w="100%"
-          onClick={onGenerateWithOptions}
-        >
-          Generate New Version with These Options
-          <Icon as={IoArrowForwardCircle} />
-        </Button>
-      )}
+      {onGenerateWithOptions &&
+        (generatedOptions.length > 0 || additionalSuggestions) && (
+          <Button
+            borderRadius="xl"
+            bg="#bd4f23"
+            color="white"
+            w="100%"
+            onClick={onGenerateWithOptions}
+          >
+            Generate New Version with These Options
+            <Icon as={IoArrowForwardCircle} />
+          </Button>
+        )}
     </VStack>
   );
 };

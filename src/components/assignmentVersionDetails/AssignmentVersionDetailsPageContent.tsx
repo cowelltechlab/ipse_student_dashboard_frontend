@@ -76,7 +76,7 @@ const AssignmentVersionDetailsPageContent = ({
   const handleChangeAssignment = () => {
     if (studentId && assignmentId) {
       navigate(
-        `/student/${studentId}/assignment/${assignmentId}/modify-assignment`
+        `/student/${studentId}/assignment/${assignmentId}/modification`
       );
     }
   };
@@ -251,16 +251,10 @@ const AssignmentVersionDetailsPageContent = ({
       </Box>
 
       {/* Three-column layout */}
-      <Grid
-        templateColumns={`${isOriginalVisible ? "1fr" : "0fr"} ${
-          isOptionsVisible ? "1fr" : "0fr"
-        } ${isNewVisible ? "1fr" : "0fr"}`}
-        gap={4}
-        alignItems="start"
-      >
+      <HStack gap={4} alignItems="start" w="100%">
         {/* Column 1: Original Assignment */}
         {isOriginalVisible && (
-          <Box>
+          <Box flex="1">
             <OriginalAssignmentSection
               originalAssignmentHTML={assignment.html_content}
               assignmentLoading={assignmentLoading}
@@ -270,7 +264,7 @@ const AssignmentVersionDetailsPageContent = ({
 
         {/* Column 2: Selected Options & Comments */}
         {isOptionsVisible && (
-          <Box>
+          <Box flex="1">
             <VersionOptionsDisplaySection
               generatedOptions={assignmentVersion.generated_options || []}
               selectedOptions={assignmentVersion.selected_options || []}
@@ -288,6 +282,7 @@ const AssignmentVersionDetailsPageContent = ({
         {/* Column 3: Generated Content */}
         {isNewVisible && (
           <Box flex="1" display="flex" flexDir="column">
+            {/* Card shell */}
             <Box
               borderWidth="1px"
               borderRadius="md"
@@ -315,7 +310,7 @@ const AssignmentVersionDetailsPageContent = ({
                     color="black"
                     bg="white"
                     borderRadius={"xl"}
-                    _hover={{ bg: "rgba(209, 209, 209, 0.2)", color:"White" }}
+                    _hover={{ bg: "rgba(209, 209, 209, 0.2)", color: "White" }}
                     onClick={handleEditClick}
                     disabled={!canEdit}
                   >
@@ -377,7 +372,7 @@ const AssignmentVersionDetailsPageContent = ({
             </Box>
           </Box>
         )}
-      </Grid>
+      </HStack>
 
       {/* Completion Modal */}
       {assignment &&
