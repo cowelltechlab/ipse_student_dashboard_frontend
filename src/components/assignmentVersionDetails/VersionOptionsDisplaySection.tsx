@@ -8,9 +8,12 @@ import {
   Stack,
   Accordion,
   List,
+  Button,
+  Icon,
 } from "@chakra-ui/react";
 import type { GeneratedOption } from "../../types/AssignmentVersionTypes";
 import { IoMdArrowRoundForward } from "react-icons/io";
+import { IoArrowForwardCircle } from "react-icons/io5";
 import skillsIcon from "../../assets/icons/logical-thinking.png";
 import thinkingIcon from "../../assets/icons/design-thinking.png";
 import ideasIcon from "../../assets/icons/like.png";
@@ -20,6 +23,7 @@ interface VersionOptionsDisplaySectionProps {
   selectedOptions: string[];
   additionalSuggestions: string;
   skillsForSuccess: string;
+  onGenerateWithOptions?: () => void;
 }
 
 const VersionOptionsDisplaySection = ({
@@ -27,6 +31,7 @@ const VersionOptionsDisplaySection = ({
   selectedOptions,
   additionalSuggestions,
   skillsForSuccess,
+  onGenerateWithOptions,
 }: VersionOptionsDisplaySectionProps) => {
   // Filter to show only selected options
   const selectedGeneratedOptions = generatedOptions.filter((option) =>
@@ -214,6 +219,20 @@ const VersionOptionsDisplaySection = ({
             </Text>
           </Box>
         )}
+
+      {/* Generate with these options button */}
+      {onGenerateWithOptions && (selectedGeneratedOptions.length > 0 || additionalSuggestions) && (
+        <Button
+          borderRadius="xl"
+          bg="#bd4f23"
+          color="white"
+          w="100%"
+          onClick={onGenerateWithOptions}
+        >
+          Generate New Version with These Options
+          <Icon as={IoArrowForwardCircle} />
+        </Button>
+      )}
     </VStack>
   );
 };

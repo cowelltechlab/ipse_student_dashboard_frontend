@@ -12,6 +12,7 @@ export interface AssignmentVersionData {
   version_document_id: string;
   skills_for_success: string;
   learning_pathways: LearningPathwayOption[];
+  additional_edit_suggestions?: string;
 }
 
 export interface AssignmentVersionDownloadData {

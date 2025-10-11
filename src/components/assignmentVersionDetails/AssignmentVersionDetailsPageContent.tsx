@@ -81,6 +81,14 @@ const AssignmentVersionDetailsPageContent = ({
     }
   };
 
+  const handleGenerateWithOptions = () => {
+    if (studentId && assignmentId && versionDocumentId) {
+      navigate(
+        `/student/${studentId}/assignment/${assignmentId}/modification?from_version=${versionDocumentId}`
+      );
+    }
+  };
+
   // Build the HTML content from structured data or fallback to legacy
   const generatedHtml = assignmentVersion
     ? buildModifiedHtml(assignmentVersion)
@@ -272,6 +280,7 @@ const AssignmentVersionDetailsPageContent = ({
                 ""
               }
               skillsForSuccess={assignmentVersion.skills_for_success || ""}
+              onGenerateWithOptions={handleGenerateWithOptions}
             />
           </Box>
         )}

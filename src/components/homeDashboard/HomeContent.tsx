@@ -75,6 +75,15 @@ const HomeContent = () => {
               Student Groups
             </Tabs.Trigger>
           )}
+
+            {isAdmin && (
+            <Tabs.Trigger
+              _selected={{ fontWeight: "bold" }}
+              value="download-center"
+            >
+              Download Center
+            </Tabs.Trigger>
+          )}
         </Tabs.List>
       </Box>
 
