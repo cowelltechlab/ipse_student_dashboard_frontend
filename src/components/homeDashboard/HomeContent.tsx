@@ -4,6 +4,7 @@ import AdvisorsTab from "./homeTabs/advisorsTab/AdvisorsTab";
 import PeerTutorsTab from "./homeTabs/peerTutorsTab/PeerTutorsTab";
 import StudentVersionsTab from "./homeTabs/studentVersionsTab/StudentVersionsTab";
 import AdminTab from "./homeTabs/adminTab/AdminTab";
+import DownloadCenterTab from "../downloadCenter/DownloadCenterTab";
 
 import { Spacer, Tabs, Box } from "@chakra-ui/react";
 import useAuth from "../../contexts/useAuth";
@@ -116,6 +117,12 @@ const HomeContent = () => {
       {isAdmin && (
         <Tabs.Content value="admin">
           <AdminTab />
+        </Tabs.Content>
+      )}
+
+      {isAdmin && (
+        <Tabs.Content value="download-center">
+          <DownloadCenterTab />
         </Tabs.Content>
       )}
     </Tabs.Root>
