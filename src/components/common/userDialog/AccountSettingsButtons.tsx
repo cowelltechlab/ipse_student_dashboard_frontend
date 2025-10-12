@@ -13,8 +13,8 @@ const AccountSettingsButtons = ({
 }: AccountSettingsButtonsProps) => {
   const { roles } = useAuth();
 
-  // Only show account settings if user is Admin or Advisor
-  if (!roles.includes("Admin") && !roles.includes("Advisor")) {
+  // Only show account settings if user is Admin
+  if (!roles.includes("Admin")) {
     return null;
   }
 

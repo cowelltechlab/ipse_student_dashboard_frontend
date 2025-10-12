@@ -9,6 +9,7 @@ import {
 } from "@chakra-ui/react";
 import { useState } from "react";
 import useUpdateOwnEmail from "../../hooks/auth/useUpdateOwnEmail";
+import useAuth from "../../contexts/useAuth";
 import { toaster } from "../ui/toaster";
 
 interface EmailUpdateSectionProps {
@@ -27,6 +28,7 @@ const EmailUpdateSection = ({
   const [isEditing, setIsEditing] = useState(false);
 
   const { handleUpdateOwnEmail, loading } = useUpdateOwnEmail();
+  const { updateGtEmail } = useAuth();
 
   const validateGtEmail = (email: string): string => {
     if (!email.trim()) return "";
@@ -76,6 +78,9 @@ const EmailUpdateSection = ({
         undefined,
         gtEmail.trim() || undefined
       );
+
+      // Immediately update the GT email in auth context for instant visual feedback
+      updateGtEmail(gtEmail.trim());
 
       toaster.create({
         description: "Georgia Tech email updated successfully.",

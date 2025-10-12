@@ -35,4 +35,6 @@ export interface AuthContextType {
     accessToken: string
   ) => Promise<{ isStudent: boolean; studentId: number | null } | null>;
   refreshAuth: () => Promise<void>;
+  updateProfilePicture: (url: string) => void;
+  updateGtEmail: (gtEmail: string) => void;
 }

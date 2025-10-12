@@ -13,7 +13,7 @@ export const postResetPasswordRequest = async (token: string, email: string, new
 
 export const postAdminResetPassword = async (userId: number, newPassword: string): Promise<{ message: string }> => {
   const response = await apiClient.post("/auth/admin-reset-password", {
-    student_id: userId,
+    user_id: userId,
     new_password: newPassword
   });
   return response.data;

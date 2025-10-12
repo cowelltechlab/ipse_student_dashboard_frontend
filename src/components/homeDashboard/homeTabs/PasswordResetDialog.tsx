@@ -98,15 +98,36 @@ const AdminPasswordResetModal = ({
     } catch (e) {
       const error = e as {
         message?: string;
-        response?: { data: { message?: string; detail?: string } };
+        response?: {
+          data?: {
+            message?: string;
+            detail?:
+              | string
+              | Array<{ type: string; loc: string[]; msg: string; input: any }>;
+          };
+        };
       };
+
+      let errorMessage = "Failed to reset password. Please try again.";
+
+      // Handle 422 validation errors (array of error objects from Pydantic)
+      if (error.response?.data?.detail) {
+        const detail = error.response.data.detail;
+        if (Array.isArray(detail)) {
+          // Extract messages from validation error array
+          errorMessage = detail.map((err) => err.msg).join(", ");
+        } else if (typeof detail === "string") {
+          errorMessage = detail;
+        }
+      } else if (error.response?.data?.message) {
+        errorMessage = error.response.data.message;
+      } else if (error.message) {
+        errorMessage = error.message;
+      }
+
       toaster.create({
         title: "Password Reset Failed",
-        description:
-          error.response?.data?.detail ||
-          error.response?.data?.message ||
-          error.message ||
-          "Failed to reset password. Please try again.",
+        description: errorMessage,
         type: "error",
       });
     }

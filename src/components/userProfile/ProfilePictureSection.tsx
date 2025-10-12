@@ -37,7 +37,7 @@ const ProfilePictureSection = ({
   const { defaultProfilePictures, loading: loadingDefaults } =
     useDefaultProfilePictures();
   const { handleUpdateProfilePicture, loading } = useUpdateProfilePicture();
-  const { refreshAuth } = useAuth();
+  const { updateProfilePicture } = useAuth();
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -60,16 +60,18 @@ const ProfilePictureSection = ({
 
   const handleSave = async () => {
     try {
-      await handleUpdateProfilePicture(selectedFile, selectedDefaultUrl);
+      const response = await handleUpdateProfilePicture(selectedFile, selectedDefaultUrl);
+
+      // Immediately update the profile picture in auth context for instant visual feedback
+      if (response.profile_picture_url) {
+        updateProfilePicture(response.profile_picture_url);
+      }
 
       toaster.create({
         title: "Profile Picture Updated",
         description: "Your profile picture has been updated successfully.",
         type: "success",
       });
-
-      // Refresh auth context to update profile picture in header
-      await refreshAuth();
 
       // Reset state
       setIsEditing(false);

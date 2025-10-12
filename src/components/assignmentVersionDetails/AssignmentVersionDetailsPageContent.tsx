@@ -93,16 +93,17 @@ const AssignmentVersionDetailsPageContent = ({
     ? buildModifiedHtml(assignmentVersion)
     : "";
 
-  // Check if assignment is finalized and rated
-  const isFinalized = assignment?.finalized || assignmentVersion?.finalized;
-  const hasRating =
-    assignment?.rating_status && assignment.rating_status !== "not_rated";
-  const canEdit = !isFinalized || !hasRating;
+  // Can only edit if assignment has NOT been rated (regardless of finalization status)
+  // An assignment is considered "rated" if it has any rating status other than "not_rated"
+  const needsRating =
+    (assignment?.rating_status === "Pending" && assignment.finalized) ||
+    assignment?.rating_status === "Partially Rated";
+  const canEdit = needsRating;
 
   const handleEditClick = () => {
     if (!canEdit) {
       toaster.create({
-        description: "Cannot edit a finalized and rated assignment version.",
+        description: "Cannot edit a rated assignment version.",
         type: "warning",
       });
       return;
