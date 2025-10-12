@@ -28,7 +28,7 @@ import useFinalizeAssignmentVerstion from "../../../hooks/assignmentVersions/use
 import { toaster } from "../../ui/toaster";
 import { Tooltip } from "../../ui/tooltip";
 import { IoCloudDownload } from "react-icons/io5";
-import { FaStar } from "react-icons/fa";
+import { FaEye, FaStar } from "react-icons/fa";
 import { BsStars } from "react-icons/bs";
 import { useNavigate } from "react-router-dom";
 import { buildModifiedHtml } from "../../../utils/assignmentHtml";
@@ -38,12 +38,14 @@ interface AssignmentDetailsBodyProps {
   assignment: AssignmentDetailType | null;
   assignmentLoading: boolean;
   triggerRefetch: () => void;
+  onViewDetails: () => void;
 }
 
 const AssignmentDetailsBody = ({
   assignment,
   assignmentLoading,
   triggerRefetch,
+  onViewDetails,
 }: AssignmentDetailsBodyProps) => {
   const navigate = useNavigate();
 
@@ -59,7 +61,7 @@ const AssignmentDetailsBody = ({
 
   const { handleFinalizeAssignmentVersion } = useFinalizeAssignmentVerstion();
 
-  const { getDownloadBlob } = useDownloadAssignmentVersion()
+  const { getDownloadBlob } = useDownloadAssignmentVersion();
 
   const handleSelectVersionClick = (selectedVersionId: string) => {
     setActiveVersion(selectedVersionId);
@@ -68,7 +70,6 @@ const AssignmentDetailsBody = ({
   const handleRatingNavigateClick = () => {
     const student_id = assignment?.student.id;
     const assignment_id = assignment?.assignment_id;
-    
 
     navigate(
       `/student/${student_id}/assignment/${assignment_id}/rating-and-feedback/${assignmentVersion?.id}`
@@ -86,7 +87,9 @@ const AssignmentDetailsBody = ({
 
       // Immediately update local state for instant UI feedback
       if (assignment?.versions) {
-        const finalizedVersion = assignment.versions.find(v => v.document_id === versionId);
+        const finalizedVersion = assignment.versions.find(
+          (v) => v.document_id === versionId
+        );
         if (finalizedVersion) {
           // Update the finalVersion state to show the Final Version section immediately
           setFinalVersion({ ...finalizedVersion, finalized: true });
@@ -130,7 +133,6 @@ const AssignmentDetailsBody = ({
     }
   }, [assignment]);
 
-
   const originalAssignmentData = async () => {
     if (!assignment?.blob_url) {
       throw new Error("No blob_url provided for assignment.");
@@ -139,13 +141,11 @@ const AssignmentDetailsBody = ({
     return res.blob();
   };
 
-
   const getFinalVersionDocx = async () => {
-
     if (!finalVersion?.document_id) {
       throw new Error("No document_id provided for final version.");
     }
-    
+
     try {
       const blob = await getDownloadBlob(finalVersion.document_id);
       return blob;
@@ -154,9 +154,6 @@ const AssignmentDetailsBody = ({
       throw new Error("Failed to download final version document.");
     }
   };
-  
-
-  
 
   return (
     <Box m={4}>
@@ -176,6 +173,16 @@ const AssignmentDetailsBody = ({
           downloadUrl={finalVersion?.document_url}
         >
           <HStack gap={2} alignItems="center" justifyContent="right">
+            <Tooltip
+              content="View Version Details"
+              positioning={{ placement: "top" }}
+            >
+              <Button variant={"ghost"} padding={0} onClick={onViewDetails}>
+                <Icon size="md">
+                  <FaEye />
+                </Icon>
+              </Button>
+            </Tooltip>
             <Tooltip
               content="Download Assignment"
               positioning={{ placement: "top" }}
@@ -200,9 +207,7 @@ const AssignmentDetailsBody = ({
               <Button
                 variant={"ghost"}
                 padding={0}
-                onClick={() =>
-                  handleRatingNavigateClick()
-                }
+                onClick={() => handleRatingNavigateClick()}
               >
                 <Icon size="md">
                   <FaStar />

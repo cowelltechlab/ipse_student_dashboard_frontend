@@ -3,7 +3,7 @@ import type { ErrorType } from "../../types/ErrorType";
 import type { AssignmentVersionData } from "../../types/AssignmentModificationTypes";
 import { getAssignmentVersionOptions } from "../../services/assignmentVersionServices";
 
-const useAssignmentVersionOptions = (assignmentId?: number) => {
+const useAssignmentVersionOptions = (assignmentId?: number, fromVersionDocId?: string) => {
   const [versionOptions, setVersionOptions] =
     useState<AssignmentVersionData | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
@@ -16,7 +16,7 @@ const useAssignmentVersionOptions = (assignmentId?: number) => {
       }
       try {
         setLoading(true);
-        const response = await getAssignmentVersionOptions(assignmentId);
+        const response = await getAssignmentVersionOptions(assignmentId, fromVersionDocId);
         setVersionOptions(response);
       } catch (e) {
         console.error(e);
@@ -29,7 +29,7 @@ const useAssignmentVersionOptions = (assignmentId?: number) => {
     };
 
     handleFetchAssignmentVersionOptions();
-  }, [assignmentId]);
+  }, [assignmentId, fromVersionDocId]);
 
   return { versionOptions, loading, error };
 };

@@ -5,6 +5,7 @@ import {
   Grid,
   GridItem,
   Icon,
+  Text,
 } from "@chakra-ui/react";
 import type { StudentProfileType } from "../../../types/StudentTypes";
 import ProfileInfoBox from "./ProfileInfoBox"; // adjust path as needed
@@ -80,6 +81,14 @@ const EditableStudentProfileGrid = ({
   const [hobbies, setHobbies] = useState<string>(initialState.hobbies);
 
   const [isSaveDisabled, setIsSaveDisabled] = useState<boolean>(true);
+  const [validationErrors, setValidationErrors] = useState<{
+    classes?: string;
+    strengths?: string;
+    weaknesses?: string;
+    longTermGoals?: string;
+    shortTermGoals?: string;
+    bestWaysToHelp?: string;
+  }>({});
 
   const { loading: loadingPatchUpdate, handlePutStudentProfile } =
     usePutStudentProfile();
@@ -122,15 +131,43 @@ const EditableStudentProfileGrid = ({
   };
 
   useEffect(() => {
-    const isInvalid =
-      longTermGoals.trim() === "" ||
-      shortTermGoals.trim() === "" ||
-      selectedClasses.length < 1 ||
-      strengths.filter((s) => s.trim() !== "").length < 3 ||
-      weaknesses.filter((w) => w.trim() !== "").length < 3 ||
-      bestWaysToHelp.filter((b) => b.trim() !== "").length < 1;
+    const errors: typeof validationErrors = {};
 
-    setIsSaveDisabled(isInvalid);
+    // Validate classes
+    if (selectedClasses.length < 1) {
+      errors.classes = "At least 1 class is required";
+    }
+
+    // Validate strengths (at least 3 non-empty)
+    const validStrengths = strengths.filter((s) => s.trim() !== "").length;
+    if (validStrengths < 3) {
+      errors.strengths = `At least 3 strengths required (${validStrengths}/3)`;
+    }
+
+    // Validate weaknesses (at least 3 non-empty)
+    const validWeaknesses = weaknesses.filter((w) => w.trim() !== "").length;
+    if (validWeaknesses < 3) {
+      errors.weaknesses = `At least 3 challenges required (${validWeaknesses}/3)`;
+    }
+
+    // Validate long term goals
+    if (longTermGoals.trim() === "") {
+      errors.longTermGoals = "This field is required";
+    }
+
+    // Validate short term goals
+    if (shortTermGoals.trim() === "") {
+      errors.shortTermGoals = "This field is required";
+    }
+
+    // Validate best ways to help (at least 1 non-empty)
+    const validBestWays = bestWaysToHelp.filter((b) => b.trim() !== "").length;
+    if (validBestWays < 1) {
+      errors.bestWaysToHelp = "At least 1 way to assist is required";
+    }
+
+    setValidationErrors(errors);
+    setIsSaveDisabled(Object.keys(errors).length > 0);
   }, [
     selectedClasses,
     strengths,
@@ -154,6 +191,20 @@ const EditableStudentProfileGrid = ({
             title="Classes & Learning Goals"
             titleIcon={studyingIcon}
           >
+            {validationErrors.classes && (
+              <Box
+                bg="red.50"
+                borderWidth="1px"
+                borderColor="red.500"
+                borderRadius="md"
+                p={2}
+                mt={2}
+              >
+                <Text color="red.500" fontSize="sm" fontWeight="semibold">
+                  {validationErrors.classes}
+                </Text>
+              </Box>
+            )}
             <Box bg={"white"} p={4} borderRadius={"lg"} mt={6}>
               <StudentClassSelection
                 selectedClasses={selectedClasses}
@@ -171,6 +222,7 @@ const EditableStudentProfileGrid = ({
             titleIcon={strengthsIcon}
             value={strengths}
             onChange={setStrengths}
+            errorMessage={validationErrors.strengths}
           />
         </GridItem>
 
@@ -180,6 +232,7 @@ const EditableStudentProfileGrid = ({
             titleIcon={challengesIcon}
             value={weaknesses}
             onChange={setWeaknesses}
+            errorMessage={validationErrors.weaknesses}
           />
         </GridItem>
 
@@ -189,6 +242,7 @@ const EditableStudentProfileGrid = ({
             titleIcon={longTermGoalsIcon}
             value={longTermGoals}
             onChange={setLongTermGoals}
+            errorMessage={validationErrors.longTermGoals}
           />
         </GridItem>
 
@@ -198,6 +252,7 @@ const EditableStudentProfileGrid = ({
             titleIcon={workinOnIcon}
             value={shortTermGoals}
             onChange={setShortTermGoals}
+            errorMessage={validationErrors.shortTermGoals}
           />
         </GridItem>
 
@@ -207,6 +262,7 @@ const EditableStudentProfileGrid = ({
             titleIcon={bestWaysIcon}
             value={bestWaysToHelp}
             onChange={setBestWaysToHelp}
+            errorMessage={validationErrors.bestWaysToHelp}
           />
         </GridItem>
 

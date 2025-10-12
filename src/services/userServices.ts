@@ -1,4 +1,4 @@
-import type { ProfilePictureType, UserType } from "../types/UserTypes";
+import type { ProfilePictureType, UserDetailsResponseType, UserType } from "../types/UserTypes";
 import apiClient from "./apiClient";
 
 export const getUsers = async (
@@ -67,3 +67,38 @@ export const deleteUser = async (userId: number): Promise<void> => {
   return response.data;
 };
 
+
+
+export const updateUserEmails = async (
+  user_id: number,
+  data: { email?: string; gt_email?: string }
+): Promise<UserDetailsResponseType> => {
+  const response = await apiClient.patch(
+    `/users/${user_id}/email`,
+    data
+  );
+
+  return response.data;
+};
+
+export const postUpdateProfilePicture = async (
+  profile_picture: File | null,
+  existingBlobUrl: string | null
+): Promise<{ profile_picture_url: string; message: string }> => {
+  const formData = new FormData();
+
+  if (profile_picture) {
+    formData.append("profile_picture", profile_picture);
+  }
+  if (existingBlobUrl) {
+    formData.append("existing_blob_url", existingBlobUrl);
+  }
+
+  const response = await apiClient.post("/auth/user/profile-picture", formData, {
+    headers: {
+      "Content-Type": "multipart/form-data",
+    },
+  });
+
+  return response.data;
+};

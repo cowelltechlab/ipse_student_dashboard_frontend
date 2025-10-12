@@ -5,10 +5,10 @@ import { postAdminResetPassword } from "../../services/authServices";
 const useAdminResetPassword = () => {
   const [loading, setLoading] = useState(false);
 
-  const handleAdminResetPassword = async (studentId: number, newPassword: string) => {
+  const handleAdminResetPassword = async (userId: number, newPassword: string) => {
     setLoading(true);
     try {
-      const response = await postAdminResetPassword(studentId, newPassword);
+      const response = await postAdminResetPassword(userId, newPassword);
       return response;
     } catch (e) {
       throw e as ErrorType;

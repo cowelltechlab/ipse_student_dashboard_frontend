@@ -1,10 +1,12 @@
 import apiClient from "./apiClient";
 
 //  For Version Generation
-export const getAssignmentVersionOptions = async (assignment_id: number) => {
-  const response = await apiClient.get(
-    `/assignment-generation/${assignment_id}`
-  );
+export const getAssignmentVersionOptions = async (assignment_id: number, from_version_doc_id?: string) => {
+  const url = from_version_doc_id
+    ? `/assignment-generation/${assignment_id}?from_version=${from_version_doc_id}`
+    : `/assignment-generation/${assignment_id}`;
+
+  const response = await apiClient.get(url);
   return response.data;
 };
 

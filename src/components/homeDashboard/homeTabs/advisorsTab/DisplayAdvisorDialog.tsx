@@ -1,24 +1,24 @@
 import {
-  Text,
-  Button,
   CloseButton,
   Dialog,
   Flex,
   Portal,
-  HStack,
-  VStack,
-  Icon,
   Separator,
 } from "@chakra-ui/react";
 import type { UserType } from "../../../../types/UserTypes";
-import { FaTrashCan } from "react-icons/fa6";
+import AccountSettingsButtons from "../../../common/userDialog/AccountSettingsButtons";
+import DialogActionButtons from "../../../common/userDialog/DialogActionButtons";
+import UserInfoHeader from "../../../common/userDialog/UserInfoHeader";
 import { useState } from "react";
+import AdminPasswordResetModal from "../PasswordResetDialog";
+import EmailUpdateModal from "../../../common/user/EmailUpdateModal";
 
 interface DisplayAdvisorDialogProps {
   user: UserType;
   open: boolean;
   setOpen: (open: boolean) => void;
   setOpenDeleteDialog: (open: boolean) => void;
+  onUpdate: () => void;
 }
 
 const UserCardClickDialog = ({
@@ -26,21 +26,32 @@ const UserCardClickDialog = ({
   open,
   setOpen,
   setOpenDeleteDialog,
+  onUpdate,
 }: DisplayAdvisorDialogProps) => {
-  const [trashHover, setTrashHover] = useState(false);
+  const [isPasswordResetModalOpen, setIsPasswordResetModalOpen] = useState(false);
+  const [isUpdateEmailModalOpen, setIsUpdateEmailModalOpen] = useState(false);
 
   const handleDeleteProfileClick = () => {
     setOpenDeleteDialog(true);
     setOpen(false);
   };
 
+  const handleOpenResetPasswordModal = () => {
+    setIsPasswordResetModalOpen(true);
+  };
+
+  const handleOpenEmailEditModal = () => {
+    setIsUpdateEmailModalOpen(true);
+  };
+
   return (
-    <Dialog.Root
-      lazyMount
-      open={open}
-      onOpenChange={(e) => setOpen(e.open)}
-      placement={"center"}
-    >
+    <>
+      <Dialog.Root
+        lazyMount
+        open={open}
+        onOpenChange={(e) => setOpen(e.open)}
+        placement={"center"}
+      >
       <Portal>
         <Dialog.Backdrop />
         <Dialog.Positioner>
@@ -61,46 +72,18 @@ const UserCardClickDialog = ({
               </Flex>
             </Dialog.Header>
             <Dialog.Body>
-              <HStack mb={2} justifyContent="space-between">
-                <Text fontSize="md" mb={2} color={"#6F6F6F"}>
-                  {user.roles?.[0] || "No Role Assigned"}
-                </Text>
+              <UserInfoHeader user={user} />
 
-                <Text fontSize="md" mb={2} color={"#6F6F6F"}>
-                  {user.email || "No Email Provided"}
-                </Text>
-              </HStack>
               <Separator orientation="horizontal" mb={4} />
 
-              <VStack m={2} align="center" mt={4}>
-                <Dialog.ActionTrigger asChild>
-                  <Button bg={"#BD4F23"} color={"white"} w={"50%"}>
-                    Back to Dashboard
-                  </Button>
-                </Dialog.ActionTrigger>
-                <Button
-                  onClick={handleDeleteProfileClick}
-                  variant="outline"
-                  borderColor="#BD4F23"
-                  color="#BD4F23"
-                  w={"50%"}
-                  _hover={{
-                    bg: "#BD4F23",
-                    borderColor: "#BD4F23",
-                    color: "white",
-                  }}
-                  onMouseEnter={() => setTrashHover(true)}
-                  onMouseLeave={() => setTrashHover(false)}
-                >
-                  Delete Profile
-                  <Icon
-                    as={FaTrashCan}
-                    ml={2}
-                    color={trashHover ? "white" : "#BD4F23"}
-                    _hover={{ color: "white" }}
-                  />
-                </Button>
-              </VStack>
+              <AccountSettingsButtons
+                onResetPassword={handleOpenResetPasswordModal}
+                onUpdateEmail={handleOpenEmailEditModal}
+              />
+
+              <Separator orientation="horizontal" mb={4} />
+
+              <DialogActionButtons onDelete={handleDeleteProfileClick} />
             </Dialog.Body>
 
             <Dialog.CloseTrigger asChild>
@@ -109,7 +92,26 @@ const UserCardClickDialog = ({
           </Dialog.Content>
         </Dialog.Positioner>
       </Portal>
-    </Dialog.Root>
+      </Dialog.Root>
+
+      {isPasswordResetModalOpen && (
+        <AdminPasswordResetModal
+          open={isPasswordResetModalOpen}
+          setOpen={setIsPasswordResetModalOpen}
+          user={user}
+          onPasswordReset={() => {}}
+        />
+      )}
+
+      {isUpdateEmailModalOpen && (
+        <EmailUpdateModal
+          open={isUpdateEmailModalOpen}
+          setOpen={setIsUpdateEmailModalOpen}
+          user={user}
+          onUpdate={onUpdate}
+        />
+      )}
+    </>
   );
 };
 

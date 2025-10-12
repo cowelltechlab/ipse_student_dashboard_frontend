@@ -9,7 +9,7 @@ import PowerPointUrlsModal from "./PowerPointUrlsModal";
 import useStudentsWithDetails from "../../../../hooks/studentGroups/useStudentsWithDetails";
 import type { StudentDetailsType } from "../../../../types/StudentGroupTypes";
 import useDownloadAllStudentProfiles from "../../../../hooks/studentProfiles/useDownloadAllStudentProfiles";
-import StudentVersionsEmailUpdateModal from "./StudentVersionsEmailUpdateModal";
+import StudentVersionsEmailUpdateModal from "../../../common/user/EmailUpdateModal";
 import { IoCloudDownloadSharp } from "react-icons/io5";
 
 const StudentVersionsTab = () => {

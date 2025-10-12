@@ -1,10 +1,9 @@
-// file: AssignmentVersionHistoryTable.tsx
-
 import { Box, Table, Text, Heading, VStack, Separator } from "@chakra-ui/react";
 import type { AssignmentDetailType } from "../../../types/AssignmentTypes";
 import AssignmentDetailsDocLine from "./AssignmentDetailsDocLine";
 import AssignmentsVersionHistoryTableRowButtons from "./AssignmentVersionHistoryTableButtons";
 import useDownloadAssignmentVersion from "../../../hooks/assignmentVersions/useDownloadAssignmentVersion";
+import { useNavigate } from "react-router-dom";
 
 interface AssignmentVersionHistoryTableProps {
   assignment: AssignmentDetailType | null;
@@ -18,7 +17,17 @@ const AssignmentVersionHistoryTable = ({
   handleSelectVersionClick,
   finalizeVersion,
 }: AssignmentVersionHistoryTableProps) => {
+  const navigate = useNavigate();
   const { getDownloadBlob } = useDownloadAssignmentVersion();
+
+  const handleViewDetails = (versionDocumentId: string) => {
+    const studentId = assignment?.student.id;
+    const assignmentId = assignment?.assignment_id;
+
+    if (studentId && assignmentId) {
+      navigate(`/student/${studentId}/assignment/${assignmentId}/version/${versionDocumentId}`);
+    }
+  };
 
   const handleDownload = async (version_document_id: string, fileName: string) => {
     if (!version_document_id) {
@@ -106,12 +115,12 @@ const AssignmentVersionHistoryTable = ({
                           fileName={assignment.title}
                           fileType={assignment.source_format}
                           onDownload={() => handleDownload(version.document_id, assignment.title)}
-
                           handleVersionFinalization={() =>
                             version.version_number
                               ? finalizeVersion(version.document_id)
                               : () => {}
                           }
+                          onViewDetails={() => handleViewDetails(version.document_id)}
                         />
                       </AssignmentDetailsDocLine>
                     </Table.Cell>

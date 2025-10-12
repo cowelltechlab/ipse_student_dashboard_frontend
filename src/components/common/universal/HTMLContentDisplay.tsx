@@ -4,18 +4,21 @@ interface HtmlContentBoxProps {
   htmlContent?: string;
   padding?: number | string;
   height?: string | number;
+  bg?: string;
 }
 
 const HtmlContentBox: React.FC<HtmlContentBoxProps> = ({
   htmlContent = "",
   padding = 5,
   height = "auto",
+  bg = "white"
+
 }) => {
   return (
     <Box
       p={padding}
       h={height}
-      bg={"white"}
+      bg={bg}
       overflow={"auto"}
       css={{
         "& p": { marginBottom: "1em" },

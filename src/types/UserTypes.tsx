@@ -31,3 +31,17 @@ export interface ProfilePictureType {
   id: number;
   url: string;
 }
+
+
+export interface UserDetailsResponseType {
+   student_id?: number
+    user_id: number
+    first_name: string
+    last_name: string
+    email?: string
+    gt_email?: string
+    profile_picture_url?: string
+    group_type?: string
+    ppt_embed_url?: string
+    ppt_edit_url?: string
+}

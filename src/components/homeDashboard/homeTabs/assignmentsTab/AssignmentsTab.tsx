@@ -9,13 +9,20 @@ import AssignmentsFilterButtons from "./AssignmentsFilterButtons";
 import { useNavigate } from "react-router-dom";
 import { IoIosAddCircle } from "react-icons/io";
 import useAssignments from "../../../../hooks/assignments/useAssignments";
+import useClasses from "../../../../hooks/classes/useClasses";
 
 const AssignmentsTab = () => {
   const [refetchTrigger, setRefetchTrigger] = useState(0);
+  const [classesRefetchTrigger, setClassesRefetchTrigger] = useState(0);
 
-  const { assignments, loading, error } = useAssignments(undefined, refetchTrigger);
+  const { assignments, loading, error } = useAssignments(
+    undefined,
+    refetchTrigger
+  );
+  const { classes } = useClasses(classesRefetchTrigger);
 
   const [searchTerm, setSearchTerm] = useState("");
+  const [selectedClassId, setSelectedClassId] = useState<number | null>(null);
   const [dateRange, setDateRange] = useState<{
     from: Date | undefined;
     to?: Date | undefined;
@@ -44,7 +51,7 @@ const AssignmentsTab = () => {
 
   return (
     <Box p={4} spaceY={4}>
-      <HStack>
+      <HStack px={4}>
         <SearchBar
           searchTerm={searchTerm}
           setSearchTerm={setSearchTerm}
@@ -59,12 +66,18 @@ const AssignmentsTab = () => {
         </TextButton>
       </HStack>
 
-      <AssignmentsFilterButtons
-        dateRange={dateRange}
-        setDateRange={setDateRange}
-        setFilterByNeedsRating={setFilterByNeedsRating}
-        setFilterByNotFinalized={setFilterByNotFinalized}
-      />
+      <HStack px={4}>
+        <AssignmentsFilterButtons
+          dateRange={dateRange}
+          setDateRange={setDateRange}
+          setFilterByNeedsRating={setFilterByNeedsRating}
+          setFilterByNotFinalized={setFilterByNotFinalized}
+          selectedClassId={selectedClassId}
+          setSelectedClassId={setSelectedClassId}
+          classes={classes}
+          openClassAddModal={() => setClassesRefetchTrigger((prev) => prev + 1)}
+        />
+      </HStack>
 
       <AssignmentsTable
         assignments={assignments}
@@ -72,6 +85,7 @@ const AssignmentsTab = () => {
         assignmentsError={error}
         dateRange={dateRange}
         searchTerm={searchTerm}
+        selectedClassId={selectedClassId}
         onAssignmentClick={handleNavigateAssignmentPage}
         filterByNeedsRating={filterByNeedsRating}
         filterByNotFinalized={filterByNotFinalized}

@@ -1,6 +1,8 @@
-import { Button, ButtonGroup, Portal, Popover } from "@chakra-ui/react";
+import { Button, ButtonGroup, Portal, Popover, Box } from "@chakra-ui/react";
 import CustomDatePicker from "../../../common/universal/DatePicker";
+import ClassDropdown from "../../../common/classDropdown/ClassDropdown";
 import { useState } from "react";
+import type { ClassType } from "../../../../types/ClassTypes";
 
 interface AssignmentsFilterButtonsProps {
   dateRange: { from: Date | undefined; to?: Date | undefined };
@@ -9,6 +11,10 @@ interface AssignmentsFilterButtonsProps {
   >;
   setFilterByNeedsRating: (filter: boolean) => void;
   setFilterByNotFinalized: (filter: boolean) => void;
+  selectedClassId: number | null;
+  setSelectedClassId: (classId: number | null) => void;
+  classes: ClassType[];
+  openClassAddModal: () => void;
 }
 
 const AssignmentsFilterButtons = ({
@@ -16,6 +22,10 @@ const AssignmentsFilterButtons = ({
   setDateRange,
   setFilterByNeedsRating,
   setFilterByNotFinalized,
+  selectedClassId,
+  setSelectedClassId,
+  classes,
+  openClassAddModal,
 }: AssignmentsFilterButtonsProps) => {
   const [open, setOpen] = useState(false);
   const [activeButton, setActiveButton] = useState<string>("allAssignments");
@@ -40,6 +50,7 @@ const AssignmentsFilterButtons = ({
           setDateRange({ from: undefined, to: undefined });
           setFilterByNotFinalized(false);
           setFilterByNeedsRating(false);
+          setSelectedClassId(null);
         }}
       >
         All Assignments
@@ -52,6 +63,7 @@ const AssignmentsFilterButtons = ({
           setDateRange({ from: undefined, to: undefined });
           setFilterByNotFinalized(false);
           setFilterByNeedsRating(true);
+          setSelectedClassId(null);
         }}
       >
         Needs Rating
@@ -63,6 +75,7 @@ const AssignmentsFilterButtons = ({
           setActiveButton("notFinalized");
           setDateRange({ from: undefined, to: undefined });
           setFilterByNotFinalized(true);
+          setSelectedClassId(null);
         }}
       >
         Not Finalized
@@ -76,6 +89,7 @@ const AssignmentsFilterButtons = ({
               setActiveButton("dateFilter");
               setFilterByNeedsRating(false);
               setFilterByNotFinalized(false);
+              setSelectedClassId(null);
             }}
           >
             Filter By Modified Date
@@ -100,6 +114,23 @@ const AssignmentsFilterButtons = ({
           </Popover.Positioner>
         </Portal>
       </Popover.Root>
+
+      <Box minW="300px">
+        <ClassDropdown
+          selectedClassId={selectedClassId}
+          setSelectedClassId={(id) => {
+            setSelectedClassId(id);
+            if (id !== null) {
+              setActiveButton("");
+              setDateRange({ from: undefined, to: undefined });
+              setFilterByNeedsRating(false);
+              setFilterByNotFinalized(false);
+            }
+          }}
+          openClassAddModal={openClassAddModal}
+          classes={classes}
+        />
+      </Box>
     </ButtonGroup>
   );
 };

@@ -2,7 +2,7 @@ import {
   HStack,
   Spacer,
   Image,
-  Separator,
+  Box,
 } from "@chakra-ui/react";
 
 import CreateNewDropdown from "./CreateNewDropdown";
@@ -13,35 +13,51 @@ import { useNavigate } from "react-router-dom";
 import LogoutMenu from "./LogoutMenu";
 
 const PageHeader = () => {
-
-
-
   const navigate = useNavigate();
 
   const onHomeClick = () => {
-    // TODO: Update so student role is redirected to student home page instead
     navigate("/dashboard");
   };
 
   return (
-    <HStack p={4}>
-      <HStack gap={1} onClick={onHomeClick} cursor="pointer">
-        <Image src={myChoiceText} alt="MyChoice" />
-        <Image src="/app_icon.svg" alt="MyChoice" boxSize="65px" />
+    <Box>
+      <HStack p={{ base: 2, md: 4 }} gap={{ base: 2, md: 4 }}>
+        {/* Logo Section */}
+        <HStack
+          gap={{ base: 0.5, md: 1 }}
+          onClick={onHomeClick}
+          cursor="pointer"
+          flexShrink={0}
+        >
+          <Image
+            src={myChoiceText}
+            alt="MyChoice"
+            maxW={{ base: "90px", sm: "120px", md: "200px" }}
+            h="auto"
+          />
+          <Image
+            src="/app_icon.svg"
+            alt="MyChoice"
+            boxSize={{ base: "40px", sm: "50px", md: "65px" }}
+          />
+        </HStack>
+
+        <Spacer />
+
+        {/* Menu Section */}
+        <HStack gap={{ base: 1, sm: 2, md: 4 }} flexShrink={0}>
+          {/* Hide Home button on very small screens */}
+          <Box display={{ base: "none", sm: "block" }}>
+            <TextButton fontSize="md" onClick={onHomeClick}>
+              Home
+            </TextButton>
+          </Box>
+          <CreateNewDropdown />
+          <LogoutMenu />
+        </HStack>
       </HStack>
 
-      <Spacer />
-      <HStack gap={4}>
-        <TextButton fontSize="lg" onClick={onHomeClick}>
-          Home
-        </TextButton>
-        <CreateNewDropdown />
-        <LogoutMenu
-        />
-      </HStack>
-
-      <Separator my={6} />
-    </HStack>
+    </Box>
   );
 };
 

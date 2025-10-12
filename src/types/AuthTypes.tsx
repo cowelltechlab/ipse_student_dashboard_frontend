@@ -4,6 +4,7 @@ export type JwtPayload = {
   last_name: string | null;
   student_id: number | null;
   email: string;
+  gt_email?: string | null;
   school_email?: string | null;
   role_ids?: number[];
   role_names?: string[];
@@ -16,6 +17,7 @@ export interface AuthContextType {
   userId: number | null;
   studentId: number | null;
   email: string | null;
+  gtEmail: string | null;
   first_name: string | null;
   last_name: string | null;
   roles: string[];
@@ -33,4 +35,6 @@ export interface AuthContextType {
     accessToken: string
   ) => Promise<{ isStudent: boolean; studentId: number | null } | null>;
   refreshAuth: () => Promise<void>;
+  updateProfilePicture: (url: string) => void;
+  updateGtEmail: (gtEmail: string) => void;
 }
