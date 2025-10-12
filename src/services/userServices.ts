@@ -84,7 +84,7 @@ export const updateUserEmails = async (
 export const postUpdateProfilePicture = async (
   profile_picture: File | null,
   existingBlobUrl: string | null
-): Promise<{ profile_picture_url: string }> => {
+): Promise<{ profile_picture_url: string; message: string }> => {
   const formData = new FormData();
 
   if (profile_picture) {
@@ -94,7 +94,7 @@ export const postUpdateProfilePicture = async (
     formData.append("existing_blob_url", existingBlobUrl);
   }
 
-  const response = await apiClient.post("/users/profile-picture", formData, {
+  const response = await apiClient.post("/auth/user/profile-picture", formData, {
     headers: {
       "Content-Type": "multipart/form-data",
     },

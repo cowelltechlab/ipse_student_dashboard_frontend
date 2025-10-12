@@ -8,18 +8,16 @@ import {
   Input,
 } from "@chakra-ui/react";
 import { useState } from "react";
-import useUpdateUserEmails from "../../hooks/users/useUpdateUserEmails";
+import useUpdateOwnEmail from "../../hooks/auth/useUpdateOwnEmail";
 import { toaster } from "../ui/toaster";
 
 interface EmailUpdateSectionProps {
-  userId: number;
   currentEmail: string | null;
   currentGtEmail: string | null;
   onUpdate: () => void;
 }
 
 const EmailUpdateSection = ({
-  userId,
   currentEmail,
   currentGtEmail,
   onUpdate,
@@ -28,7 +26,7 @@ const EmailUpdateSection = ({
   const [gtEmailError, setGtEmailError] = useState<string>("");
   const [isEditing, setIsEditing] = useState(false);
 
-  const { handleUpdateUserEmails, loading } = useUpdateUserEmails();
+  const { handleUpdateOwnEmail, loading } = useUpdateOwnEmail();
 
   const validateGtEmail = (email: string): string => {
     if (!email.trim()) return "";
@@ -74,8 +72,7 @@ const EmailUpdateSection = ({
     }
 
     try {
-      await handleUpdateUserEmails(
-        userId,
+      await handleUpdateOwnEmail(
         undefined,
         gtEmail.trim() || undefined
       );

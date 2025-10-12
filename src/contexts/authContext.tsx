@@ -19,6 +19,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [userId, setUserId] = useState<number | null>(null);
   const [studentId, setStudentId] = useState<number | null>(null);
   const [email, setEmail] = useState<string | null>(null);
+  const [gtEmail, setGtEmail] = useState<string | null>(null);
   const [firstName, setFirstName] = useState<string | null>(null);
   const [lastName, setLastName] = useState<string | null>(null);
   const [roles, setRoles] = useState<string[]>([]);
@@ -38,6 +39,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     setUserId(null);
     setStudentId(null);
     setEmail(null);
+    setGtEmail(null);
     setFirstName(null);
     setLastName(null);
     setRoles([]);
@@ -68,11 +70,12 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       setUserId(decoded.user_id);
       setStudentId(decoded.student_id ?? null);
       setEmail(decoded.email ?? null);
+      setGtEmail(decoded.gt_email ?? null);
       setFirstName(decoded.first_name ?? null);
       setLastName(decoded.last_name ?? null);
       setRoles(decoded.role_names ?? []);
       setProfilePictureUrl(decoded.profile_picture_url ?? null);
-      
+
       return decoded;
     } catch (e) {
       console.error("Failed to decode token:", e);
@@ -294,14 +297,16 @@ const loginWithGT = () => {
   const refreshAuth = useCallback(async () => {
     try {
       const me = await apiClient.get("/auth/me");
-            
+
       // Extract student_id from student_profile if it exists
       const studentId = me.data?.student_profile?.student_id ?? me.data?.student_id ?? null;
       if (studentId != null) setStudentId(studentId);
-      
+
       if (me.data?.first_name) setFirstName(me.data.first_name);
       if (me.data?.last_name) setLastName(me.data.last_name);
       if (me.data?.email) setEmail(me.data.email);
+      if (me.data?.gt_email) setGtEmail(me.data.gt_email);
+      if (me.data?.profile_picture_url) setProfilePictureUrl(me.data.profile_picture_url);
 
       if (Array.isArray(me.data?.roles)) setRoles(me.data.roles);
     } catch (e) {
@@ -315,6 +320,7 @@ const loginWithGT = () => {
         userId,
         studentId,
         email,
+        gtEmail,
         first_name: firstName,
         last_name: lastName,
         roles,

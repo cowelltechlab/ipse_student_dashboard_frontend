@@ -9,10 +9,10 @@ import ProfileIcon from "../../assets/Create Profile.svg";
 
 const UserProfilePageContent = () => {
   const {
-    userId,
     first_name,
     last_name,
     email,
+    gtEmail,
     profilePictureUrl,
     refreshAuth,
   } = useAuth();
@@ -40,14 +40,11 @@ const UserProfilePageContent = () => {
 
           <PasswordChangeSection />
 
-          {userId && (
-            <EmailUpdateSection
-              userId={userId}
-              currentEmail={email}
-              currentGtEmail={email}
-              onUpdate={handleUpdate}
-            />
-          )}
+          <EmailUpdateSection
+            currentEmail={email}
+            currentGtEmail={gtEmail}
+            onUpdate={handleUpdate}
+          />
         </VStack>
       </Box>
     </Box>

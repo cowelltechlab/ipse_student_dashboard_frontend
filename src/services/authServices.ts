@@ -20,9 +20,14 @@ export const postAdminResetPassword = async (userId: number, newPassword: string
 };
 
 export const postUpdateOwnPassword = async (currentPassword: string, newPassword: string): Promise<{ message: string }> => {
-  const response = await apiClient.post("/user/reset-own-password", {
+  const response = await apiClient.post("/auth/user/reset-password", {
     current_password: currentPassword,
     new_password: newPassword
   });
+  return response.data;
+};
+
+export const patchUpdateOwnEmail = async (data: { email?: string; gt_email?: string }): Promise<{ message: string }> => {
+  const response = await apiClient.patch("/auth/user/email", data);
   return response.data;
 };
