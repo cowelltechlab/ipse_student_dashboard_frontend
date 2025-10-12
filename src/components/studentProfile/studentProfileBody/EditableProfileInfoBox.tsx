@@ -8,6 +8,7 @@ import {
   HStack,
   Button,
   Icon,
+  Text,
 } from "@chakra-ui/react";
 import { Tooltip } from "../../ui/tooltip";
 import { IoIosRemoveCircle } from "react-icons/io";
@@ -18,6 +19,7 @@ interface EditableProfileInfoBoxProps<T extends string | string[]> {
   titleIcon?: string;
   value: T;
   onChange: (val: T) => void;
+  errorMessage?: string;
 }
 
 const EditableProfileInfoBox = <T extends string | string[]>({
@@ -25,10 +27,10 @@ const EditableProfileInfoBox = <T extends string | string[]>({
   titleIcon,
   value,
   onChange,
+  errorMessage,
 }: EditableProfileInfoBoxProps<T>) => {
   const isArray = Array.isArray(value);
   const safeArray: string[] = isArray ? (value as string[]) : [];
-  const minLength = 3;
 
   const handleChange = (index: number, newVal: string) => {
     const updated = [...safeArray];
@@ -37,11 +39,9 @@ const EditableProfileInfoBox = <T extends string | string[]>({
   };
 
   const handleRemove = (index: number) => {
-    if (safeArray.length > minLength) {
-      const updated = [...safeArray];
-      updated.splice(index, 1);
-      onChange(updated as T);
-    }
+    const updated = [...safeArray];
+    updated.splice(index, 1);
+    onChange(updated as T);
   };
 
   const handleAdd = () => {
@@ -57,6 +57,8 @@ const EditableProfileInfoBox = <T extends string | string[]>({
       h="100%"
       display="flex"
       flexDirection="column"
+      borderWidth={errorMessage ? "2px" : "0px"}
+      borderColor={errorMessage ? "red.500" : "transparent"}
     >
       <HStack align="center" mb={2}>
         {titleIcon && (
@@ -64,6 +66,12 @@ const EditableProfileInfoBox = <T extends string | string[]>({
         )}
         <Heading>{title}</Heading>
       </HStack>
+
+      {errorMessage && (
+        <Text color="red.500" fontSize="sm" mb={2} fontWeight="semibold">
+          {errorMessage}
+        </Text>
+      )}
 
       <VStack gap={3} flex="1">
         {isArray ? (
@@ -75,13 +83,7 @@ const EditableProfileInfoBox = <T extends string | string[]>({
                   bg="white"
                   onChange={(e) => handleChange(idx, e.target.value)}
                 />
-                <Tooltip
-                  content={
-                    safeArray.length <= minLength
-                      ? `At least ${minLength} required`
-                      : "Remove item"
-                  }
-                >
+                <Tooltip content="Remove item">
                   <Icon
                     as={IoIosRemoveCircle}
                     color="#BD4F23"
