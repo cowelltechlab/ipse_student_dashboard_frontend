@@ -1,5 +1,5 @@
 import { Box, Skeleton } from "@chakra-ui/react";
-import { useParams } from "react-router-dom";
+import { useParams, useSearchParams } from "react-router-dom";
 import PageHeader from "../components/common/pageHeader/PageHeader";
 import useStudent from "../hooks/students/useStudent";
 import BreadcrumbNav from "../components/common/breadcrumb/BreadcrumbNav";
@@ -11,6 +11,9 @@ const AssignmentModifications = () => {
     student_id: string;
     assignment_id: string;
   }>();
+
+  const [searchParams] = useSearchParams();
+  const fromVersionDocId = searchParams.get("from_version") || undefined;
 
   const { student, loading: StudentLoading } = useStudent(student_id);
   const { assignment, loading: AssignmentLoading } = useAssignment(
@@ -53,8 +56,8 @@ const AssignmentModifications = () => {
       <AssignmentModificationPageContent
         assignment={assignment}
         assignmentLoading={AssignmentLoading}
-
         studentId={student_id}
+        fromVersionDocId={fromVersionDocId}
       />
     </Box>
   );

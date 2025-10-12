@@ -17,7 +17,7 @@ import { useState } from "react";
 import type { ErrorType } from "../../../../types/ErrorType";
 import useUpdateStudentGroupType from "../../../../hooks/studentGroups/useUpdateStudentGroupType";
 import { toaster } from "../../../ui/toaster";
-import AdminPasswordResetModal from "./AdminPasswordResetModal";
+import AdminPasswordResetModal from "../PasswordResetDialog";
 
 import studentIcon from "../../../../assets/profile_default.png";
 

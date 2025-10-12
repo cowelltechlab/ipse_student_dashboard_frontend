@@ -1,5 +1,3 @@
-
-
 import {
   Box,
   Button,
@@ -13,28 +11,33 @@ import {
   Heading,
 } from "@chakra-ui/react";
 import { useState, useEffect } from "react";
-import useUpdateStudentEmails from "../../../../hooks/studentGroups/useUpdateStudentEmails";
-import { toaster } from "../../../ui/toaster";
-import type { StudentDetailsType } from "../../../../types/StudentGroupTypes";
+import { toaster } from "../../ui/toaster";
+import type { StudentDetailsType } from "../../../types/StudentGroupTypes";
+import useUpdateUserEmails from "../../../hooks/users/useUpdateUserEmails";
+import type { UserType } from "../../../types/UserTypes";
+import type { ErrorType } from "../../../types/ErrorType";
 
-interface StudentVersionsEmailUpdateModalProps {
+interface EmailUpdateModalProps {
   open: boolean;
   setOpen: (open: boolean) => void;
-  student: StudentDetailsType | null;
+  student?: StudentDetailsType | null;
+  user?: UserType | null;
   onUpdate: () => void;
 }
 
-const StudentVersionsEmailUpdateModal = ({
+const EmailUpdateModal = ({
   open,
   setOpen,
   student,
+  user,
   onUpdate,
-}: StudentVersionsEmailUpdateModalProps) => {
+}: EmailUpdateModalProps) => {
   const [email, setEmail] = useState("");
   const [gtEmail, setGtEmail] = useState("");
   const [emailError, setEmailError] = useState<string>("");
   const [gtEmailError, setGtEmailError] = useState<string>("");
-  const { handleUpdateStudentEmails, loading } = useUpdateStudentEmails();
+
+  const { handleUpdateUserEmails, loading } = useUpdateUserEmails();
 
   // Email validation functions
   const validateEmail = (email: string): string => {
@@ -56,7 +59,10 @@ const StudentVersionsEmailUpdateModal = ({
       return "Please enter a valid email address";
     }
 
-    if (!email.toLowerCase().includes("gatech.edu") && !email.toLowerCase().includes("georgia.edu")) {
+    if (
+      !email.toLowerCase().includes("gatech.edu") &&
+      !email.toLowerCase().includes("georgia.edu")
+    ) {
       return "GT email should be a Georgia Tech domain (@gatech.edu or @georgia.edu)";
     }
 
@@ -73,12 +79,16 @@ const StudentVersionsEmailUpdateModal = ({
     setGtEmailError(validateGtEmail(value));
   };
 
-
-  // Initialize form values when student changes
+  // Initialize form values when student or user changes
   useEffect(() => {
     if (student) {
       setEmail(student.email || "");
       setGtEmail(student.gt_email || "");
+      setEmailError("");
+      setGtEmailError("");
+    } else if (user) {
+      setEmail(user.email || "");
+      setGtEmail(user.school_email || "");
       setEmailError("");
       setGtEmailError("");
     } else {
@@ -87,10 +97,10 @@ const StudentVersionsEmailUpdateModal = ({
       setEmailError("");
       setGtEmailError("");
     }
-  }, [student]);
+  }, [student, user]);
 
   const handleSave = async () => {
-    if (!student) return;
+    if (!student && !user) return;
 
     // Validate emails before saving
     const currentEmailError = validateEmail(email);
@@ -117,8 +127,10 @@ const StudentVersionsEmailUpdateModal = ({
     }
 
     try {
-      await handleUpdateStudentEmails(
-        student.student_id,
+      const userId = student ? student.user_id : user!.id;
+
+      await handleUpdateUserEmails(
+        userId,
         email.trim() || undefined,
         gtEmail.trim() || undefined
       );
@@ -131,9 +143,12 @@ const StudentVersionsEmailUpdateModal = ({
       onUpdate();
       setOpen(false);
     } catch (e) {
-      const error = e as { message?: string };
+      const error = e as ErrorType;
+      const errorMessage =
+        error.response?.data?.detail || error.message || "Unknown error";
+
       toaster.create({
-        description: `Error updating email addresses: ${error.message || "Unknown error"}`,
+        description: `Error updating email addresses: ${errorMessage}`,
         type: "error",
       });
     }
@@ -143,13 +158,16 @@ const StudentVersionsEmailUpdateModal = ({
     if (student) {
       setEmail(student.email || "");
       setGtEmail(student.gt_email || "");
+    } else if (user) {
+      setEmail(user.email || "");
+      setGtEmail(user.school_email || "");
     }
     setEmailError("");
     setGtEmailError("");
     setOpen(false);
   };
 
-  if (!student) return null;
+  if (!student && !user) return null;
 
   return (
     <Dialog.Root
@@ -166,10 +184,12 @@ const StudentVersionsEmailUpdateModal = ({
             <Box bg={"white"} w={"100%"} mb={4} roundedTop={"md"}>
               <VStack p={6} spaceY={2}>
                 <Heading fontSize="xl" color="#244d8a">
-                  Student Email Addresses
+                  User Email Addresses
                 </Heading>
                 <Text fontSize="md" color="gray.600" textAlign="center">
-                  Manage email addresses for {student.first_name} {student.last_name}
+                  Manage email addresses for{" "}
+                  {student?.first_name || user?.first_name}{" "}
+                  {student?.last_name || user?.last_name}
                 </Text>
               </VStack>
             </Box>
@@ -261,4 +281,4 @@ const StudentVersionsEmailUpdateModal = ({
   );
 };
 
-export default StudentVersionsEmailUpdateModal;
+export default EmailUpdateModal;

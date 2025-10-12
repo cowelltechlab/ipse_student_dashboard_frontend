@@ -11,10 +11,23 @@ export const postResetPasswordRequest = async (token: string, email: string, new
   return response.data;
 };
 
-export const postAdminResetPassword = async (studentId: number, newPassword: string): Promise<{ message: string }> => {
+export const postAdminResetPassword = async (userId: number, newPassword: string): Promise<{ message: string }> => {
   const response = await apiClient.post("/auth/admin-reset-password", {
-    student_id: studentId,
+    user_id: userId,
     new_password: newPassword
   });
+  return response.data;
+};
+
+export const postUpdateOwnPassword = async (currentPassword: string, newPassword: string): Promise<{ message: string }> => {
+  const response = await apiClient.post("/auth/user/reset-password", {
+    current_password: currentPassword,
+    new_password: newPassword
+  });
+  return response.data;
+};
+
+export const patchUpdateOwnEmail = async (data: { email?: string; gt_email?: string }): Promise<{ message: string }> => {
+  const response = await apiClient.patch("/auth/user/email", data);
   return response.data;
 };

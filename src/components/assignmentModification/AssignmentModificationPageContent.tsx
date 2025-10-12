@@ -10,7 +10,7 @@ import {
   Textarea,
 } from "@chakra-ui/react";
 import type { AssignmentDetailType } from "../../types/AssignmentTypes";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import modifiedAssignmentIcon from "../../assets/icons/note.png";
 
 import { FaCircleCheck } from "react-icons/fa6";
@@ -30,14 +30,15 @@ import { sanitizeForSave } from "../../utils/sanitizeForSave";
 interface AssignmentDetailsPageContentProps {
   assignment: AssignmentDetailType | null;
   assignmentLoading: boolean;
-
   studentId?: string;
+  fromVersionDocId?: string;
 }
 
 const AssignmentDetailsPageContent = ({
   assignment,
   assignmentLoading,
   studentId,
+  fromVersionDocId,
 }: AssignmentDetailsPageContentProps) => {
   const [isOriginalVisible, setIsOriginalVisible] = useState<boolean>(true);
   const [isOptionsVisible, setIsOptionsVisible] = useState<boolean>(true);
@@ -58,7 +59,7 @@ const AssignmentDetailsPageContent = ({
     useState<boolean>(false);
 
   const { versionOptions, loading: versionsLoading } =
-    useAssignmentVersionOptions(assignment?.assignment_id);
+    useAssignmentVersionOptions(assignment?.assignment_id, fromVersionDocId);
 
   const { handlePutAssignmentVersion, loading: loadingAssignmentUpdate } =
     usePutAssignmentVersion();
@@ -66,6 +67,24 @@ const AssignmentDetailsPageContent = ({
   const [isGenerating, setIsGenerating] = useState(false);
   const [generationError, setGenerationError] = useState<string | null>(null);
 
+  // Pre-fill form when loading from a version
+  useEffect(() => {
+    if (versionOptions && fromVersionDocId && !versionsLoading) {
+      // Pre-select learning pathways that were selected in the version
+      const selectedPathways = versionOptions.learning_pathways
+        ?.filter(pathway => pathway.selected === true)
+        .map(pathway => pathway.internal_id) || [];
+
+      if (selectedPathways.length > 0) {
+        setSelectedLearningPathways(selectedPathways);
+      }
+
+      // Pre-fill additional edit suggestions
+      if (versionOptions.additional_edit_suggestions) {
+        setIdeasForChange(versionOptions.additional_edit_suggestions);
+      }
+    }
+  }, [versionOptions, fromVersionDocId, versionsLoading]);
 
   const handleAssignmentGenerationClick = async () => {
     if (!versionOptions?.version_document_id) return;

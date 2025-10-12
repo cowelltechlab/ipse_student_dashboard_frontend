@@ -20,6 +20,8 @@ import ResetPassword from "./pages/ResetPassword";
 import InactiveStudentHome from "./pages/InactiveStudentHome";
 import StudentCreateNewAssignment from "./pages/StudentCreateNewAssignment";
 import AssignmentRatingAndFeedback from "./pages/AssignmentRatingAndFeedback";
+import UserProfilePage from "./pages/UserProfilePage";
+import AssignmentVersionDetails from "./pages/AssignmentVersionDetails";
 
 const App: React.FC = () => {
   return (
@@ -36,6 +38,9 @@ const App: React.FC = () => {
         {/* Smart landing: sends staff to /dashboard, students to /student/:id */}
         <Route path="/" element={<AuthGate />} />
 
+        {/* User Profile - Available to all authenticated users */}
+        <Route path="/profile" element={<UserProfilePage />} />
+
         {/* Student pages (Students restricted to their own id by ProtectedRoute) */}
         <Route path="/student/:student_id" element={<Student />} />
         <Route path="/student/:student_id/profile" element={<StudentProfile />} />
@@ -44,6 +49,7 @@ const App: React.FC = () => {
         <Route path="/student/:student_id/achievements" element={<StudentAchievements />} />
         <Route path="/student/:student_id/assignment/:assignment_id" element={<AssignmentDetails />} />
         <Route path="/student/:student_id/assignment/:assignment_id/modification" element={<AssignmentModifications />} />
+        <Route path="/student/:student_id/assignment/:assignment_id/version/:version_document_id" element={<AssignmentVersionDetails />} />
         <Route path="/student/:student_id/assignment/:assignment_id/rating-and-feedback/:assignment_version_id" element={<AssignmentRatingAndFeedback />} />
 
         {/* Student profile creation (authenticated) */}
@@ -53,11 +59,11 @@ const App: React.FC = () => {
         <Route path="/complete-account/:user_id" element={<InactiveStudentHome />} />
 
         {/* Staff-only sections */}
-        <Route element={<ProtectedRoute requiredRoles={["Admin", "Advisor", "Peer Tutor"]} />}>
+        <Route element={<ProtectedRoute requiredRoles={["Admin", "Advisor", "Peer Tutor"]} skipFooter />}>
           <Route path="/dashboard" element={<Home />} />
         </Route>
 
-        <Route element={<ProtectedRoute requiredRoles={["Admin", "Advisor", "Peer Tutor"]} />}>
+        <Route element={<ProtectedRoute requiredRoles={["Admin", "Advisor", "Peer Tutor"]} skipFooter />}>
           <Route path="/create-assignment" element={<CreateNewAssignment />} />
         </Route>
       </Route>

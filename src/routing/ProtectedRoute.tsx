@@ -1,10 +1,12 @@
 import React from "react";
 import { Navigate, Outlet, useLocation, useParams } from "react-router-dom";
 import useAuth from "../contexts/useAuth";
-import { Flex, Spinner } from "@chakra-ui/react";
+import { Flex, Spinner, Box } from "@chakra-ui/react";
+import Footer from "../components/common/universal/Footer";
 
 interface ProtectedRouteProps {
   requiredRoles?: string[]; // optional: adds role gating on top of auth
+  skipFooter?: boolean; // optional: skip footer rendering for nested ProtectedRoutes
 }
 
 const FullscreenSpinner = () => (
@@ -13,7 +15,10 @@ const FullscreenSpinner = () => (
   </Flex>
 );
 
-const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ requiredRoles }) => {
+const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
+  requiredRoles,
+  skipFooter = false
+}) => {
   const location = useLocation();
   const params = useParams();
   const { isAuthenticated, roles, studentId, loading } = useAuth();
@@ -36,8 +41,7 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ requiredRoles }) => {
     if (!requiredRoles.some((r) => roles.includes(r))) {
       // NEW: soft-redirect to "/" so AuthGate can route properly
       return <Navigate to="/" replace />;
-      // If you want a hard deny, use:
-      // return <Navigate to="/unauthorized" replace />;
+     
     }
   }
 
@@ -55,7 +59,14 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ requiredRoles }) => {
     }
   }
 
-  return <Outlet />;
+  return (
+    <Box display="flex" flexDirection="column" minH="100vh">
+      <Box flex="1">
+        <Outlet />
+      </Box>
+      {!skipFooter && <Footer />}
+    </Box>
+  );
 };
 
 export default ProtectedRoute;

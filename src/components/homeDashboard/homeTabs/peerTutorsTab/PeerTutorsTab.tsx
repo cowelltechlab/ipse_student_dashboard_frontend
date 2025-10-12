@@ -1,10 +1,12 @@
 import { Box, HStack, Spacer } from "@chakra-ui/react";
 import SearchBar from "../../../common/searchBar/SearchBar";
-import { useMemo, useState } from "react";
+import { useMemo, useState, useEffect } from "react";
 import TextButton from "../../../common/universal/TextButton";
 import useRoles from "../../../../hooks/roles/useRoles";
 import useUsers, { invalidateUsersCache } from "../../../../hooks/users/useUsers";
 import UserCardGrid from "../../../common/userCards/UserCardGrid";
+import PeerTutorsTable from "./PeerTutorsTable";
+import ViewToggle from "../../../common/universal/ViewToggle";
 import type { TutoredStudent, UserType } from "../../../../types/UserTypes";
 import CreateUserDialog from "../../createUserDialog/CreateUserDialog";
 import DisplayTutorDialog from "./displayTutorDialog/DisplayTutorDialog";
@@ -12,9 +14,15 @@ import DeleteUserDialog from "../DeleteUserDialog";
 import { IoIosAddCircle } from "react-icons/io";
 import TutorYearButtons from "../../../common/filterButtons/TutorYearButtons";
 
+const VIEW_MODE_STORAGE_KEY = "peerTutorsTabViewMode";
+
 const PeerTutorsTab = () => {
   const [searchTerm, setSearchTerm] = useState<string>("");
   const [yearName, setYearName] = useState<string | null>(null);
+  const [viewMode, setViewMode] = useState<"card" | "table">(() => {
+    const saved = localStorage.getItem(VIEW_MODE_STORAGE_KEY);
+    return (saved as "card" | "table") || "card";
+  });
 
   const [refetchTrigger, setRefetchTrigger] = useState<number>(0);
 
@@ -39,6 +47,11 @@ const PeerTutorsTab = () => {
   const handleCreatePeerTutor = () => setIsCreateTutorDialogOpen(true);
 
   const handleClickPeerTutorCard = (user: UserType) => {
+    if (user.invite_url) {
+      window.open(user.invite_url, "_blank");
+      if (!user.is_active) return;
+    }
+
     setSelectedUser(user);
     setIsProfileDialogOpen(true);
   };
@@ -67,9 +80,14 @@ const PeerTutorsTab = () => {
     return byYear.filter((u) => `${u.first_name} ${u.last_name}`.toLowerCase().includes(q));
   }, [peerTutors, yearName, searchTerm]);
 
+  // Persist view mode to localStorage
+  useEffect(() => {
+    localStorage.setItem(VIEW_MODE_STORAGE_KEY, viewMode);
+  }, [viewMode]);
+
   return (
     <Box p={4} spaceY={4}>
-      <HStack>
+      <HStack px={4}>
         <SearchBar searchTerm={searchTerm} setSearchTerm={setSearchTerm} placeholder="Search peer tutor..." />
         <Spacer />
         <TextButton color="#bd4f23" onClick={handleCreatePeerTutor}>
@@ -80,15 +98,29 @@ const PeerTutorsTab = () => {
         </TextButton>
       </HStack>
 
-      <TutorYearButtons selectedYear={yearName} onYearChange={setYearName} />
+      <HStack px={4}>
+        <TutorYearButtons selectedYear={yearName} onYearChange={setYearName} />
+        <Spacer />
+        <ViewToggle view={viewMode} onViewChange={setViewMode} />
+      </HStack>
 
-      <UserCardGrid
-        searchTerm={searchTerm}
-        users={displayedPeerTutors}
-        loading={loading}
-        error={error}
-        onCardClick={handleClickPeerTutorCard}
-      />
+      {viewMode === "card" ? (
+        <UserCardGrid
+          searchTerm={searchTerm}
+          users={displayedPeerTutors}
+          loading={loading}
+          error={error}
+          onCardClick={handleClickPeerTutorCard}
+        />
+      ) : (
+        <PeerTutorsTable
+          searchTerm={searchTerm}
+          users={displayedPeerTutors}
+          loading={loading}
+          error={error}
+          onCardClick={handleClickPeerTutorCard}
+        />
+      )}
 
       {selectedUser && (
         <DisplayTutorDialog
