@@ -45,7 +45,7 @@ const AssignmentModifications = () => {
     { label: "Home", href: "/dashboard" },
     { label: nameLabel, href: `/student/${student_id}` },
     { label: "Documents", href: `/student/${student_id}/documents` },
-    { label: assignmentLabel, href: `/student/${student_id}/documents` },
+    { label: assignmentLabel, href: `/student/${student_id}/assignment/${assignment_id}` },
     { label: "Modification" },
   ];
 
