@@ -76,6 +76,15 @@ const AssignmentDetailsBody = ({
     );
   };
 
+const handleChangeClick = () => {
+  const student_id = assignment?.student.id;
+    const assignment_id = assignment?.assignment_id;
+
+  navigate(
+    `/student/${student_id}/assignment/${assignment_id}/modification`
+  )
+}
+
   const finalizeVersion = async (versionId: string) => {
     if (!versionId) {
       console.error("No version ID provided to finalize.");
@@ -244,7 +253,7 @@ const AssignmentDetailsBody = ({
             content="Change Assignment"
             positioning={{ placement: "top" }}
           >
-            <Button variant={"ghost"} padding={0}>
+            <Button variant={"ghost"} padding={0} onClick={handleChangeClick}>
               <Icon size="md">
                 <BsStars />
               </Icon>
