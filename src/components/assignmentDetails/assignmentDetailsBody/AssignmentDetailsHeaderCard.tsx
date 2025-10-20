@@ -51,7 +51,13 @@ const AssignmentDetailsHeaderCard = ({
             </VStack>
           )}
         </For>
-        <Button color="white" bg="#BD4F23" borderRadius={"xl"} onClick={handleModificationClick}>
+        <Button 
+        borderRadius={"xl"} 
+        onClick={handleModificationClick}
+        fontWeight="bold"
+        color="white" 
+        bg="#BD4F23"
+        boxShadow="0 4px 8px rgba(0,0,0,0.4)">
           Change <BsStars />
         </Button>
       </HStack>

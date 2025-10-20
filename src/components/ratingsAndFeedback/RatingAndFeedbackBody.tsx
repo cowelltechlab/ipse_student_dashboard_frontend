@@ -139,21 +139,18 @@ const RatingAndFeedbackBody = ({
     };
 
     const isFormValid = () => {
-        return (
-            helpedWorkTowardsGoals &&
-            whichGoals.length > 0 &&
-            goalsExplanation.trim() &&
-            mostHelpfulParts.length > 0 &&
-            mostHelpfulPartsExplanation.trim() &&
-            leastHelpfulParts.length > 0 &&
-            leastHelpfulPartsExplanation.trim() &&
-            foundWayToKeepUsing &&
-            wayToKeepExplanation.trim() &&
-            canDescribeImprovements &&
-            improvementsExplanation.trim() &&
-            confidenceMakingChanges &&
-            confidenceExplanation.trim()
-        );
+    return (
+        helpedWorkTowardsGoals &&
+        goalsExplanation.trim() &&
+        mostHelpfulPartsExplanation.trim() &&
+        leastHelpfulPartsExplanation.trim() &&
+        foundWayToKeepUsing &&
+        wayToKeepExplanation.trim() &&
+        canDescribeImprovements &&
+        improvementsExplanation.trim() &&
+        confidenceMakingChanges &&
+        confidenceExplanation.trim()
+    );
     };
 
     return (
