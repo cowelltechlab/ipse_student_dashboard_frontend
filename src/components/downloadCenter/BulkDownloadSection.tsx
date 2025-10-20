@@ -1,12 +1,15 @@
 import { Box, Grid, Heading } from "@chakra-ui/react";
-import { FaFileCsv, FaFileCode } from "react-icons/fa";
+import { FaFileCsv, FaFileCode, FaFileArchive } from "react-icons/fa";
 import DownloadCard from "./DownloadCard";
 import useDownloadAllStudentProfiles from "../../hooks/studentProfiles/useDownloadAllStudentProfiles";
+import useExportAllStudentsCompleteData from "../../hooks/exports/useExportAllStudentsCompleteData";
 import { toaster } from "../ui/toaster";
 
 const BulkDownloadSection = () => {
   const { downloadProfiles, loading } =
     useDownloadAllStudentProfiles();
+  const { downloadAllStudentsData, loading: loadingCompleteData } =
+    useExportAllStudentsCompleteData();
 
   const handleDownloadCSV = async () => {
     try {
@@ -38,6 +41,21 @@ const BulkDownloadSection = () => {
     }
   };
 
+  const handleDownloadAllStudentsData = async () => {
+    try {
+      await downloadAllStudentsData();
+      toaster.create({
+        description: "All students complete data downloaded successfully",
+        type: "success",
+      });
+    } catch {
+      toaster.create({
+        description: "Failed to download all students data",
+        type: "error",
+      });
+    }
+  };
+
   return (
     <Box>
       <Heading size="lg" mb={4}>
@@ -45,7 +63,7 @@ const BulkDownloadSection = () => {
       </Heading>
 
       <Grid
-        templateColumns={{ base: "1fr", md: "1fr 1fr" }}
+        templateColumns={{ base: "1fr", md: "1fr 1fr 1fr" }}
         gap={4}
       >
         <DownloadCard
@@ -62,6 +80,16 @@ const BulkDownloadSection = () => {
           icon={FaFileCode}
           onDownload={handleDownloadJSON}
           loading={loading}
+        />
+
+        <DownloadCard
+          title="All Students Complete Data (ZIP)"
+          description="Download comprehensive data for all students including profiles, assignments, versions, and ratings in a master ZIP file with organized folder structure."
+          icon={FaFileArchive}
+          onDownload={handleDownloadAllStudentsData}
+          loading={loadingCompleteData}
+          accentColor="#244D8A"
+          warningMessage="This download may take some time due to the large amount of data being processed."
         />
       </Grid>
     </Box>

@@ -94,3 +94,32 @@ export const exportCompleteStudentData = async (
   );
   return response.data;
 };
+
+/**
+ * Export all students' complete data (profiles + assignments) as a master ZIP
+ * @param studentIds - Optional array of specific student IDs to export
+ * @param assignmentIds - Optional array of specific assignment IDs to include
+ */
+export const exportAllStudentsCompleteData = async (
+  studentIds?: number[],
+  assignmentIds?: number[]
+) => {
+  const params: Record<string, string> = {};
+
+  if (studentIds?.length) {
+    params.student_ids = studentIds.join(",");
+  }
+
+  if (assignmentIds?.length) {
+    params.assignment_ids = assignmentIds.join(",");
+  }
+
+  const response = await apiClient.get(
+    "/assignments/export/all-students/download",
+    {
+      params: Object.keys(params).length > 0 ? params : undefined,
+      responseType: "blob",
+    }
+  );
+  return response.data;
+};
