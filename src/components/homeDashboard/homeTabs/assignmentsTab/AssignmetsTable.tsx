@@ -288,6 +288,9 @@ const AssignmentsTable = ({
                         fileType={assignment.source_format}
                         fileName={assignment.title}
                         triggerAssignmentsRefetch={triggerAssignmentsRefetch}
+                          student_first_name={assignment.first_name}
+                          student_last_name={assignment.last_name}
+                          assignment_date_modified={assignment.date_modified || assignment.date_created}
                       />
                     </Table.Cell>
                   </MotionTableRow>
