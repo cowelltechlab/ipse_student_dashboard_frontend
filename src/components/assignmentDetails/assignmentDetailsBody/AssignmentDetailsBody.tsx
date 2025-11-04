@@ -198,7 +198,7 @@ const handleChangeClick = () => {
             >
               <DownloadTrigger
                 data={getFinalVersionDocx}
-                fileName={assignment?.title + "_final_version"}
+                fileName={`${assignment?.title}_${assignment?.student.first_name}_${assignment?.student.last_name}_final_version`}
                 mimeType={""}
                 asChild
               >
@@ -238,7 +238,7 @@ const handleChangeClick = () => {
           >
             <DownloadTrigger
               data={originalAssignmentData}
-              fileName={assignment?.title + "_original.docx"}
+              fileName={`${assignment?.title}_${assignment?.student.first_name}_${assignment?.student.last_name}_original.docx`}
               mimeType="application/vnd.openxmlformats-officedocument.wordprocessingml.document"
               asChild
             >
