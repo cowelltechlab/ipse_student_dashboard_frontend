@@ -5,19 +5,25 @@ import { useNavigate } from "react-router-dom";
 import TextButton from "../../common/universal/TextButton";
 import { IoIosAddCircle } from "react-icons/io";
 import AssignmentsFilterButtons from "../../homeDashboard/homeTabs/assignmentsTab/AssignmentsFilterButtons";
-import AssignmentsTable from "../../homeDashboard/homeTabs/assignmentsTab/AssignmetsTable";
+import AssignmentsTable from "../../homeDashboard/homeTabs/assignmentsTab/AssignmentsTable";
 import useAssignments from "../../../hooks/assignments/useAssignments";
 import useClasses from "../../../hooks/classes/useClasses";
+import AssignmentsSortDropdown, {
+  type SortOption,
+} from "../../common/assignments/AssignmentsSortDropdown";
 
 interface StudentDocumentBodyProps {
-    studentId: number | null
+  studentId: number | null;
 }
 
-const StudentDocumentBody = ({studentId}: StudentDocumentBodyProps) => {
+const StudentDocumentBody = ({ studentId }: StudentDocumentBodyProps) => {
   const [refetchTrigger, setRefetchTrigger] = useState(0);
   const [classesRefetchTrigger, setClassesRefetchTrigger] = useState(0);
 
-  const { assignments, loading, error } = useAssignments(studentId, refetchTrigger);
+  const { assignments, loading, error } = useAssignments(
+    studentId,
+    refetchTrigger
+  );
   const { classes } = useClasses(classesRefetchTrigger, studentId);
 
   const [searchTerm, setSearchTerm] = useState("");
@@ -33,6 +39,8 @@ const StudentDocumentBody = ({studentId}: StudentDocumentBodyProps) => {
     useState<boolean>(false);
   const [filterByNotFinalized, setFilterByNotFinalized] =
     useState<boolean>(false);
+
+  const [selectedSort, setSelectedSort] = useState<SortOption | null>(null);
 
   const navigate = useNavigate();
 
@@ -64,16 +72,25 @@ const StudentDocumentBody = ({studentId}: StudentDocumentBodyProps) => {
         </TextButton>
       </HStack>
 
-      <AssignmentsFilterButtons
-        dateRange={dateRange}
-        setDateRange={setDateRange}
-        setFilterByNeedsRating={setFilterByNeedsRating}
-        setFilterByNotFinalized={setFilterByNotFinalized}
-        selectedClassId={selectedClassId}
-        setSelectedClassId={setSelectedClassId}
-        classes={classes}
-        openClassAddModal={() => setClassesRefetchTrigger((prev) => prev + 1)}
-      />
+      <HStack>
+        <AssignmentsFilterButtons
+          dateRange={dateRange}
+          setDateRange={setDateRange}
+          setFilterByNeedsRating={setFilterByNeedsRating}
+          setFilterByNotFinalized={setFilterByNotFinalized}
+          selectedClassId={selectedClassId}
+          setSelectedClassId={setSelectedClassId}
+          classes={classes}
+          openClassAddModal={() => setClassesRefetchTrigger((prev) => prev + 1)}
+        />
+        <Spacer />
+        <Box minW="250px">
+          <AssignmentsSortDropdown
+            selectedSort={selectedSort}
+            setSelectedSort={setSelectedSort}
+          />
+        </Box>
+      </HStack>
 
       <AssignmentsTable
         assignments={assignments}
@@ -85,8 +102,8 @@ const StudentDocumentBody = ({studentId}: StudentDocumentBodyProps) => {
         onAssignmentClick={handleNavigateAssignmentPage}
         filterByNeedsRating={filterByNeedsRating}
         filterByNotFinalized={filterByNotFinalized}
+        selectedSort={selectedSort}
         triggerAssignmentsRefetch={() => setRefetchTrigger((prev) => prev + 1)}
-
       />
     </Box>
   );

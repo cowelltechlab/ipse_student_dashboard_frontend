@@ -19,6 +19,7 @@ import type { ErrorType } from "../../../../types/ErrorType";
 import assignmentIcon from "../../../../assets/contract.png";
 
 import { DotLottieReact } from "@lottiefiles/dotlottie-react";
+import type { SortOption } from "../../../common/assignments/AssignmentsSortDropdown";
 
 const MotionTableRow = motion.create(Table.Row);
 
@@ -33,6 +34,7 @@ interface AssignmentsTableProps {
   onAssignmentClick?: (studentId: number, assignmentId: number) => void;
   filterByNeedsRating: boolean;
   filterByNotFinalized: boolean;
+  selectedSort: SortOption | null;
 
   triggerAssignmentsRefetch: () => void;
 }
@@ -47,15 +49,15 @@ const AssignmentsTable = ({
   onAssignmentClick,
   filterByNeedsRating,
   filterByNotFinalized,
+  selectedSort,
   triggerAssignmentsRefetch,
 }: AssignmentsTableProps) => {
   const [visibleCount, setVisibleCount] = useState(10);
 
- useEffect(() => {
+  useEffect(() => {
+    console.log("AssignmentsTable render - assignments:", assignments);
+  }, [assignments]);
 
-  console.log("AssignmentsTable render - assignments:", assignments);
- }, [assignments]);
- 
   // Only animate on the very first render after data is present
   const didAnimateRef = useRef(false);
   const shouldAnimate = !didAnimateRef.current;
@@ -108,8 +110,40 @@ const AssignmentsTable = ({
     );
   });
 
-  const visibleAssignments = filteredAssignments.slice(0, visibleCount);
-  const hasMore = visibleCount < filteredAssignments.length;
+  // Sort filtered assignments
+  const sortedAssignments = [...filteredAssignments].sort((a, b) => {
+    if (!selectedSort) return 0;
+
+    switch (selectedSort.value) {
+      case "name-asc":
+        return (a.title || "").localeCompare(b.title || "");
+      case "name-desc":
+        return (b.title || "").localeCompare(a.title || "");
+      case "student-asc":
+        return `${a.first_name} ${a.last_name}`.localeCompare(
+          `${b.first_name} ${b.last_name}`
+        );
+      case "student-desc":
+        return `${b.first_name} ${b.last_name}`.localeCompare(
+          `${a.first_name} ${a.last_name}`
+        );
+      case "date-asc":
+        return (
+          new Date(a.date_modified || a.date_created || 0).getTime() -
+          new Date(b.date_modified || b.date_created || 0).getTime()
+        );
+      case "date-desc":
+        return (
+          new Date(b.date_modified || b.date_created || 0).getTime() -
+          new Date(a.date_modified || a.date_created || 0).getTime()
+        );
+      default:
+        return 0;
+    }
+  });
+
+  const visibleAssignments = sortedAssignments.slice(0, visibleCount);
+  const hasMore = visibleCount < sortedAssignments.length;
 
   if (assignmentsLoading && assignments.length === 0) {
     return (
