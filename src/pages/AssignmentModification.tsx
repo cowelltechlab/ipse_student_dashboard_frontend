@@ -12,6 +12,7 @@ const AssignmentModifications = () => {
     assignment_id: string;
   }>();
 
+
   const [searchParams] = useSearchParams();
   const fromVersionDocId = searchParams.get("from_version") || undefined;
 
@@ -58,6 +59,7 @@ const AssignmentModifications = () => {
         assignmentLoading={AssignmentLoading}
         studentId={student_id}
         fromVersionDocId={fromVersionDocId}
+        student={student}
       />
     </Box>
   );
