@@ -3,9 +3,11 @@ import type { AssignmentDetailType } from "../../../types/AssignmentTypes";
 import AssignmentsTableRowButtons from "../../common/assignments/AssignmentsTableRowButtons";
 
 import AssignmentIcon from "../../../assets/contract.png"
+import { useEffect } from "react";
 
 interface AssignmentDetailsDocLineProps {
   assignment: AssignmentDetailType | null;
+  assignmentVersionId?: number;
   fileName?: string;
   downloadUrl?: string;
   versionNumber?: string;
@@ -21,6 +23,10 @@ const AssignmentDetailsDocLine = ({
   dateModified,
   children,
 }: AssignmentDetailsDocLineProps) => {
+
+  useEffect(() => {
+    console.log("AssignmentDetailsDocLine rendered with assignment:", assignment);
+  }, [assignment]);
   return (
     <HStack align={"center"} w={"100%"} my={2} p={2}>
       <HStack align="start" spaceX={3}>
@@ -43,7 +49,7 @@ const AssignmentDetailsDocLine = ({
             </Text>
           )}
           <Text fontSize="sm" color="gray.500">
-            Date Modified:{" "}
+            Date Modified:{""}
             {(() => {
               const date =
                 dateModified ??

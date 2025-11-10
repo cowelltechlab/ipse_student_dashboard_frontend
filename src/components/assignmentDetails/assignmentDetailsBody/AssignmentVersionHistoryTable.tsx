@@ -120,6 +120,7 @@ const AssignmentVersionHistoryTable = ({
                       <AssignmentDetailsDocLine
                         assignment={assignment}
                         versionNumber={`Version ${version.version_number}`}
+                        dateModified={version.date_modified}
                       >
                         <AssignmentsVersionHistoryTableRowButtons
                           fileName={assignment.title}
@@ -130,7 +131,8 @@ const AssignmentVersionHistoryTable = ({
                               assignment.title,
                               assignment.student.first_name,
                               assignment.student.last_name,
-                              assignment.date_modified ||
+                              version.date_modified ||
+                                assignment.date_modified ||
                                 assignment.date_created
                             )
                           }

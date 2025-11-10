@@ -51,6 +51,11 @@ const AssignmentsTable = ({
 }: AssignmentsTableProps) => {
   const [visibleCount, setVisibleCount] = useState(10);
 
+ useEffect(() => {
+
+  console.log("AssignmentsTable render - assignments:", assignments);
+ }, [assignments]);
+ 
   // Only animate on the very first render after data is present
   const didAnimateRef = useRef(false);
   const shouldAnimate = !didAnimateRef.current;
@@ -288,9 +293,11 @@ const AssignmentsTable = ({
                         fileType={assignment.source_format}
                         fileName={assignment.title}
                         triggerAssignmentsRefetch={triggerAssignmentsRefetch}
-                          student_first_name={assignment.first_name}
-                          student_last_name={assignment.last_name}
-                          assignment_date_modified={assignment.date_modified || assignment.date_created}
+                        student_first_name={assignment.first_name}
+                        student_last_name={assignment.last_name}
+                        assignment_date_modified={
+                          assignment.date_modified || assignment.date_created
+                        }
                       />
                     </Table.Cell>
                   </MotionTableRow>

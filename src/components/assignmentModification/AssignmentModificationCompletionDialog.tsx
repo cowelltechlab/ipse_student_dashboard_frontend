@@ -24,7 +24,7 @@ interface AssignmentModificationCompletionDialogProps {
   assignmentHtml: string;
   versionDocumentId: string;
   assignmentTitle: string;
-  student: StudentProfileType | null;
+  student?: StudentProfileType | null;
 
   isModalOpen: boolean;
   setIsModalOpen: (isModalOpen: boolean) => void;
