@@ -26,20 +26,23 @@ import SingleHTMLEditor from "./SingleHTMLEditor";
 import { postAssignmentVersion } from "../../services/assignmentVersionServices";
 import LoadingGenerationLottie from "./LoadingGenerationLottie";
 import { sanitizeForSave } from "../../utils/sanitizeForSave";
+import type { StudentProfileType } from "../../types/StudentTypes";
 
-interface AssignmentDetailsPageContentProps {
+interface AssignmentModificationPageContentProps {
   assignment: AssignmentDetailType | null;
   assignmentLoading: boolean;
   studentId?: string;
   fromVersionDocId?: string;
+  student?: StudentProfileType | null;
 }
 
-const AssignmentDetailsPageContent = ({
+const AssignmentModificationPageContent = ({
   assignment,
   assignmentLoading,
   studentId,
   fromVersionDocId,
-}: AssignmentDetailsPageContentProps) => {
+  student,
+}: AssignmentModificationPageContentProps) => {
   const [isOriginalVisible, setIsOriginalVisible] = useState<boolean>(true);
   const [isOptionsVisible, setIsOptionsVisible] = useState<boolean>(true);
   const [isNewVisible, setIsNewVisible] = useState<boolean>(true);
@@ -329,10 +332,11 @@ const AssignmentDetailsPageContent = ({
           assignmentTitle={assignment.title || 'modified-assignment'}
           isModalOpen={isCompletionModalOpen}
           setIsModalOpen={setIsCompletionModalOpen}
+          student={student}
         />
       )}
     </Box>
   );
 };
 
-export default AssignmentDetailsPageContent;
+export default AssignmentModificationPageContent;

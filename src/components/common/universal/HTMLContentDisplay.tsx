@@ -22,17 +22,34 @@ const HtmlContentBox: React.FC<HtmlContentBoxProps> = ({
       overflow={"auto"}
       css={{
         "& p": { marginBottom: "1em" },
-        "& ul": {
-          paddingLeft: "1.5em",
-          listStyleType: "disc",
+        "& ul, & ol": {
+          paddingLeft: "0",
           marginBottom: "1em",
         },
+        "& li": {
+          marginBottom: "0.5em",
+          marginLeft: "1.5em",
+        },
+        // Top-level ordered lists: 1, 2, 3...
         "& ol": {
-          paddingLeft: "1.5em",
           listStyleType: "decimal",
-          marginBottom: "1em",
         },
-        "& li": { marginBottom: "0.5em" },
+        // Nested ordered lists: a, b, c...
+        "& ol ol": {
+          listStyleType: "lower-alpha",
+        },
+        // Double-nested ordered lists: i, ii, iii...
+        "& ol ol ol": {
+          listStyleType: "lower-roman",
+        },
+        // Top-level unordered lists: solid bullets
+        "& ul": {
+          listStyleType: "disc",
+        },
+        // Nested unordered lists: hollow bullets
+        "& ul ul": {
+          listStyleType: "circle",
+        },
         "& h1, & h2, & h3": {
           fontWeight: "bold",
           marginTop: "1em",

@@ -7,6 +7,7 @@ import { HiDotsVertical } from "react-icons/hi";
 import { Tooltip } from "../../ui/tooltip";
 import AssignmentMetadataModal from "./AssignmentMetadataModal";
 import { useState } from "react";
+import useDownloadAssignmentVersion from "../../../hooks/assignmentVersions/useDownloadAssignmentVersion";
 
 interface AssignmentsTableRowButtonsProps {
   assignment_id: number;
@@ -16,6 +17,9 @@ interface AssignmentsTableRowButtonsProps {
   fileType?: string;
   downloadUrl?: string;
   triggerAssignmentsRefetch: () => void;
+  student_first_name?: string | null;
+  student_last_name?: string | null;
+  assignment_date_modified?: string | null;
 }
 
 const AssignmentsTableRowButtons = ({
@@ -25,18 +29,39 @@ const AssignmentsTableRowButtons = ({
   downloadUrl = "",
   fileName = "",
   fileType = "",
+  student_first_name,
+  student_last_name,
+  assignment_date_modified,
   triggerAssignmentsRefetch,
 }: AssignmentsTableRowButtonsProps) => {
-
   const [openAssignmentMenu, setOpenAssignmentMenu] = useState(false);
+  const { getDownloadBlob } = useDownloadAssignmentVersion();
 
-  
+  const getFinalVersionDocx = async () => {
+    if (!final_version_id) {
+      throw new Error("No document_id provided for final version.");
+    }
+
+    try {
+      const blob = await getDownloadBlob(final_version_id);
+      return blob;
+    } catch (error) {
+      console.error("Error downloading final version:", error);
+      throw new Error("Failed to download final version document.");
+    }
+  };
+
   const data = async () => {
+    if (final_version_id) {
+      return getFinalVersionDocx();
+    }
     const res = await fetch(downloadUrl);
     return res.blob();
   };
 
-  const handleRatingNavigateClick = (e: React.MouseEvent<HTMLButtonElement>) => {
+  const handleRatingNavigateClick = (
+    e: React.MouseEvent<HTMLButtonElement>
+  ) => {
     e.stopPropagation();
 
     const assignment_version_id = final_version_id;
@@ -47,7 +72,9 @@ const AssignmentsTableRowButtons = ({
     window.location.href = `/student/${student_id}/assignment/${assignment_id}/rating-and-feedback/${assignment_version_id}`;
   };
 
-  const handleModificationNavigateClick = (e: React.MouseEvent<HTMLButtonElement>) => {
+  const handleModificationNavigateClick = (
+    e: React.MouseEvent<HTMLButtonElement>
+  ) => {
     e.stopPropagation();
 
     window.location.href = `/student/${student_id}/assignment/${assignment_id}/modification`;
@@ -70,8 +97,8 @@ const AssignmentsTableRowButtons = ({
         >
           <DownloadTrigger
             data={data}
-            fileName={fileName}
-            mimeType={fileType}
+            fileName={`${fileName}_${student_first_name}_${student_last_name}_${assignment_date_modified}${final_version_id ? "_final_version" : ""}.${fileType}`}
+            mimeType="application/vnd.openxmlformats-officedocument.wordprocessingml.document"
             asChild
           >
             <Button

@@ -13,8 +13,10 @@ import {
 
 import { useNavigate } from "react-router-dom";
 import { FaArrowCircleLeft, FaDownload } from "react-icons/fa";
+import { format } from "date-fns";
 import HtmlContentBox from "../common/universal/HTMLContentDisplay";
 import useDownloadAssignmentVersion from "../../hooks/assignmentVersions/useDownloadAssignmentVersion";
+import type { StudentProfileType } from "../../types/StudentTypes";
 
 interface AssignmentModificationCompletionDialogProps {
   student_id: string;
@@ -22,6 +24,7 @@ interface AssignmentModificationCompletionDialogProps {
   assignmentHtml: string;
   versionDocumentId: string;
   assignmentTitle: string;
+  student?: StudentProfileType | null;
 
   isModalOpen: boolean;
   setIsModalOpen: (isModalOpen: boolean) => void;
@@ -36,6 +39,8 @@ const AssignmentModificationCompletionDialog = ({
 
   isModalOpen,
   setIsModalOpen,
+
+  student,
 }: AssignmentModificationCompletionDialogProps) => {
   const navigate = useNavigate();
   const { getDownloadBlob } = useDownloadAssignmentVersion();
@@ -61,7 +66,7 @@ const AssignmentModificationCompletionDialog = ({
       const url = URL.createObjectURL(blob);
       const link = document.createElement("a");
       link.href = url;
-      link.download = assignmentTitle || "modified-assignment";
+      link.download = `${assignmentTitle}_${student?.first_name}_${student?.last_name}_${format(new Date(), "yyyy-MM-dd")}.docx`;
       document.body.appendChild(link);
       link.click();
       document.body.removeChild(link);

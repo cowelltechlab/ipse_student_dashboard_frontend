@@ -4,8 +4,11 @@ import { Box, HStack, Spacer } from "@chakra-ui/react";
 import { useState } from "react";
 import SearchBar from "../../../common/searchBar/SearchBar";
 import TextButton from "../../../common/universal/TextButton";
-import AssignmentsTable from "./AssignmetsTable";
+import AssignmentsTable from "./AssignmentsTable";
 import AssignmentsFilterButtons from "./AssignmentsFilterButtons";
+import AssignmentsSortDropdown, {
+  type SortOption,
+} from "../../../common/assignments/AssignmentsSortDropdown";
 import { useNavigate } from "react-router-dom";
 import { IoIosAddCircle } from "react-icons/io";
 import useAssignments from "../../../../hooks/assignments/useAssignments";
@@ -35,6 +38,8 @@ const AssignmentsTab = () => {
 
   const [filterByNotFinalized, setFilterByNotFinalized] =
     useState<boolean>(false);
+
+  const [selectedSort, setSelectedSort] = useState<SortOption | null>(null);
 
   const navigate = useNavigate();
 
@@ -66,7 +71,7 @@ const AssignmentsTab = () => {
         </TextButton>
       </HStack>
 
-      <HStack px={4}>
+      <HStack px={4} gap={3}>
         <AssignmentsFilterButtons
           dateRange={dateRange}
           setDateRange={setDateRange}
@@ -77,6 +82,13 @@ const AssignmentsTab = () => {
           classes={classes}
           openClassAddModal={() => setClassesRefetchTrigger((prev) => prev + 1)}
         />
+        <Spacer />
+        <Box minW="250px">
+          <AssignmentsSortDropdown
+            selectedSort={selectedSort}
+            setSelectedSort={setSelectedSort}
+          />
+        </Box>
       </HStack>
 
       <AssignmentsTable
@@ -89,6 +101,7 @@ const AssignmentsTab = () => {
         onAssignmentClick={handleNavigateAssignmentPage}
         filterByNeedsRating={filterByNeedsRating}
         filterByNotFinalized={filterByNotFinalized}
+        selectedSort={selectedSort}
         triggerAssignmentsRefetch={() => setRefetchTrigger((prev) => prev + 1)}
       />
     </Box>
