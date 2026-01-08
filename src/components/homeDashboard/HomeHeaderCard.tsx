@@ -7,7 +7,7 @@ const HomeHeaderCard = () => {
 
   return (
     <HeaderCard
-      cardHeading={`Hello, ${first_name} ${last_name}`}
+      cardHeading={`Hello, ${first_name} ${last_name}!`}
       cardText="Let's make space for every story, celebrate every voice, and build
               a world where everyone belongs."
       cardImageUrl={HomeIcon}
