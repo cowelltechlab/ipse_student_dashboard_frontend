@@ -3,11 +3,12 @@ import {
   Stack,
   Image,
   VStack,
-  Heading,
   HStack,
   Box,
   Text,
 } from "@chakra-ui/react";
+import { useNavigate, useLocation } from "react-router-dom";
+import useStudents from "../../../hooks/students/useStudents";
 import type { StudentProfileType } from "../../../types/StudentTypes";
 
 import defaultProfileImage from "../../../assets/default_profile_picture.jpg";
@@ -53,9 +54,13 @@ const StudentSummaryHeaderCard = ({
           w={{ base: "100%", sm: "200px" }}
           h="40px"
         >
-          <Heading size="2xl" w={"100%"} color="white" whiteSpace="nowrap">
-            {student?.first_name} {student?.last_name}
-          </Heading>
+          <Box w="100%">
+            { }
+            <StudentNameSwitcher
+              student={student}
+              profileLoading={profileLoading}
+            />
+          </Box>
         </Skeleton>
 
         <HStack align={"center"}>
@@ -114,6 +119,55 @@ const StudentSummaryHeaderCard = ({
         </HStack>
       </VStack>
     </Stack>
+  );
+};
+
+const StudentNameSwitcher = ({
+  student,
+  profileLoading,
+}: {
+  student: StudentProfileType | null;
+  profileLoading: boolean;
+}) => {
+  const navigate = useNavigate();
+  const location = useLocation();
+  const { students, loading: studentsLoading } = useStudents();
+
+  const currentId = student ? String(student.student_id) : "";
+
+  if (profileLoading || studentsLoading) {
+    return null;
+  }
+
+  return (
+    <div style={{ width: "100%" }}>
+      <select
+        aria-label="Select student"
+        value={currentId}
+        onChange={(e) => {
+          const val = e.target.value;
+          if (!val) return;
+          const newPath = location.pathname.replace(/^\/student\/[^/]+/, `/student/${val}`);
+          navigate(newPath);
+        }}
+        style={{
+          minWidth: 280,
+          maxWidth: "100%",
+          background: "transparent",
+          color: "white",
+          border: "none",
+          fontSize: 22,
+          fontWeight: 700,
+          display: "inline-block",
+        }}
+      >
+        {students.map((s) => (
+          <option key={s.id} value={s.id}>
+            {`${s.first_name ?? ""} ${s.last_name ?? ""}`.trim()}
+          </option>
+        ))}
+      </select>
+    </div>
   );
 };
 
