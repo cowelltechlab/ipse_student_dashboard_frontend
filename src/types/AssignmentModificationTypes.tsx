@@ -6,6 +6,8 @@ export interface LearningPathwayOption {
   why_challenge: string;
   internal_id: string;
   selected?: boolean;
+  /** Emoji representing this pathway (from backend, based on name/description). */
+  emoji?: string | null;
 }
 
 export interface AssignmentVersionData {

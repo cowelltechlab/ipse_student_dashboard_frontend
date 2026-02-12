@@ -6,6 +6,8 @@ export interface GeneratedOption {
   why_good_growth: string;
   why_challenge: string;
   internal_id?: string;
+  /** Emoji representing this option (from backend, based on name/description). */
+  emoji?: string | null;
 }
 
 export interface FinalGeneratedJsonContent {
