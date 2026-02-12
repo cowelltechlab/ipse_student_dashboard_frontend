@@ -39,10 +39,10 @@ const StudentNameSwitcher = ({
     }, students[0]);
   }, [students]);
 
-  const longestNameStr = useMemo(
-    () => `${longestName?.first_name ?? ""} ${longestName?.last_name ?? ""}`.trim() || "Student",
-    [longestName]
-  );
+  const longestNameStr = useMemo(() => {
+    if (typeof longestName === "string") return longestName || "Student";
+    return `${longestName.first_name ?? ""} ${longestName.last_name ?? ""}`.trim() || "Student";
+  }, [longestName]);
 
   const fontSize = variant === "standalone" ? 16 : 22;
   const paddingRight = 44; // room for larger arrow
@@ -59,12 +59,10 @@ const StudentNameSwitcher = ({
     return (
       <Box
         as="span"
-        sx={{
-          fontSize: 22,
-          fontWeight: 700,
-          color: "white",
-          display: "inline-block",
-        }}
+        fontSize={22}
+        fontWeight={700}
+        color="white"
+        display="inline-block"
       >
         {name || "Student"}
       </Box>

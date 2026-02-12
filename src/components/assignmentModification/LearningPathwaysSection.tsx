@@ -59,6 +59,11 @@ const LearningPathwaysSection = ({
                   }}
                 />
               </Checkbox.Root>
+              {learningPathway.emoji && (
+                <Text fontSize="xl" aria-hidden>
+                  {learningPathway.emoji}
+                </Text>
+              )}
               <Text flex="1" color="#244d8a" fontWeight="bold">
                 {learningPathway.name}
               </Text>

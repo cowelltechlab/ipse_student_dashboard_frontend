@@ -111,6 +111,11 @@ const VersionOptionsDisplaySection = ({
                         >
                           {isSelected ? <FaCheckCircle /> : <FaCircle />}
                         </Icon>
+                        {option.emoji && (
+                          <Text fontSize="xl" aria-hidden>
+                            {option.emoji}
+                          </Text>
+                        )}
                         <Text flex="1" color="#244d8a" fontWeight="bold">
                           {option.name}
                         </Text>
