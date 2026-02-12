@@ -7,9 +7,8 @@ import {
   Box,
   Text,
 } from "@chakra-ui/react";
-import { useNavigate, useLocation } from "react-router-dom";
-import useStudents from "../../../hooks/students/useStudents";
 import type { StudentProfileType } from "../../../types/StudentTypes";
+import StudentNameSwitcher from "./StudentNameSwitcher";
 
 import defaultProfileImage from "../../../assets/default_profile_picture.jpg";
 
@@ -51,19 +50,21 @@ const StudentSummaryHeaderCard = ({
         <Skeleton
           loading={profileLoading}
           borderRadius="xl"
-          w={{ base: "100%", sm: "200px" }}
+          w="100%"
+          minW="280px"
           h="40px"
+          mb={4}
         >
-          <Box w="100%">
-            { }
+          <Box w="100%" minW="280px">
             <StudentNameSwitcher
               student={student}
               profileLoading={profileLoading}
+              variant="header"
             />
           </Box>
         </Skeleton>
 
-        <HStack align={"center"}>
+        <HStack align={"center"} mb={4}>
           {!profileLoading && (
             <Text>"{student?.profile_summaries.vision}"</Text>
           )}
@@ -73,7 +74,6 @@ const StudentSummaryHeaderCard = ({
           flexWrap={{ base: "wrap", md: "nowrap" }}
           align="start"
           w="100%"
-          mt={1}
         >
           <Skeleton
             loading={profileLoading}
@@ -81,8 +81,8 @@ const StudentSummaryHeaderCard = ({
             w={{ base: "100%", sm: "auto" }}
           >
             <HStack
-              bg="#BD4F23"
-              color="white"
+              bg="gray.200"
+              color="black"
               px={3}
               py={1}
               borderRadius="xl"
@@ -90,7 +90,7 @@ const StudentSummaryHeaderCard = ({
               shadow={"xl"}
             >
               <Box>
-                Year <b>{student?.year_name}</b>
+                <b>Year:</b> <b>{student?.year_name}</b>
               </Box>
               {/* <Icon as={FaEdit} /> */}
             </HStack>
@@ -102,15 +102,15 @@ const StudentSummaryHeaderCard = ({
             w={{ base: "100%", sm: "auto" }}
           >
             <HStack
-              bg="#BD4F23"
-              color="white"
+              bg="gray.200"
+              color="black"
               px={3}
               py={1}
               borderRadius="xl"
               w="100%"
             >
               <Box>
-                Classes{" "}
+                <b>Classes:</b>{" "}
                 <b>{student?.classes.map((c) => c.class_name).join(", ")}</b>
               </Box>
               {/* <Icon as={FaEdit} /> */}
@@ -119,55 +119,6 @@ const StudentSummaryHeaderCard = ({
         </HStack>
       </VStack>
     </Stack>
-  );
-};
-
-const StudentNameSwitcher = ({
-  student,
-  profileLoading,
-}: {
-  student: StudentProfileType | null;
-  profileLoading: boolean;
-}) => {
-  const navigate = useNavigate();
-  const location = useLocation();
-  const { students, loading: studentsLoading } = useStudents();
-
-  const currentId = student ? String(student.student_id) : "";
-
-  if (profileLoading || studentsLoading) {
-    return null;
-  }
-
-  return (
-    <div style={{ width: "100%" }}>
-      <select
-        aria-label="Select student"
-        value={currentId}
-        onChange={(e) => {
-          const val = e.target.value;
-          if (!val) return;
-          const newPath = location.pathname.replace(/^\/student\/[^/]+/, `/student/${val}`);
-          navigate(newPath);
-        }}
-        style={{
-          minWidth: 280,
-          maxWidth: "100%",
-          background: "transparent",
-          color: "white",
-          border: "none",
-          fontSize: 22,
-          fontWeight: 700,
-          display: "inline-block",
-        }}
-      >
-        {students.map((s) => (
-          <option key={s.id} value={s.id}>
-            {`${s.first_name ?? ""} ${s.last_name ?? ""}`.trim()}
-          </option>
-        ))}
-      </select>
-    </div>
   );
 };
 
