@@ -1,7 +1,6 @@
 import {
   Box,
   Text,
-  Heading,
   HStack,
   VStack,
   Spacer,
@@ -15,6 +14,7 @@ import {
 import type { StudentProfileType } from "../../types/StudentTypes";
 import { BsStars } from "react-icons/bs";
 import ProfileImageSection from "./ProfileImageSection";
+import StudentNameSwitcher from "../common/studentProfilePages/StudentNameSwitcher";
 
 import visionIcon from "../../assets/map.png";
 import skillIcon from "../,,/../../assets/icons/like.png";
@@ -56,10 +56,14 @@ const StudentPageCard = ({
       ) : (
         <VStack align="start" flex={1} bg="#244D8A" borderRadius="lg" p={6}>
           {/* Name and Year */}
-          <HStack w="100%">
-            <Heading size="2xl">
-              {student?.first_name} {student?.last_name}
-            </Heading>
+          <HStack w="100%" align="center" mb={4}>
+            <Box flex={1} minW={0}>
+              <StudentNameSwitcher
+                student={student}
+                profileLoading={profileLoading}
+                variant="header"
+              />
+            </Box>
             <Spacer />
             <HStack
               bg="#BD4F23"
@@ -87,8 +91,7 @@ const StudentPageCard = ({
           </HStack> */}
 
           {/* Vision Statement (Full width) */}
-          <Box w="100%">
-
+          <Box w="100%" mb={4}>
             <Text bg={"white"} p={2} borderRadius={"lg"} color={"black"}>
               {" "}
               <Span fontWeight="bold" pr={3}>Vision Statement:</Span>
