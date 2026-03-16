@@ -215,8 +215,8 @@ const AssignmentModificationPageContent = ({
               versionOptionsLoading={versionsLoading}
               selectedLearningPathways={selectedLearningPathways}
               setSelectedLearningPathways={setSelectedLearningPathways}
-              ideasForChange={ideasForChange}
-              setIdeasForChange={setIdeasForChange}
+              // ideasForChange={ideasForChange}
+              // setIdeasForChange={setIdeasForChange}
             />
             <Button
               borderRadius="xl"
