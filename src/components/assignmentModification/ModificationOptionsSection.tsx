@@ -1,16 +1,7 @@
-import {
-  Box,
-  Heading,
-  Image,
-  VStack,
-  Text,
-  Textarea,
-  Flex,
-  SkeletonText,
-} from "@chakra-ui/react";
+import { Box, Heading, Image, VStack, Text, Textarea, Flex, Accordion } from "@chakra-ui/react";
 import LearningPathwaysSection from "./LearningPathwaysSection";
 import thinkingIcon from "../../assets/icons/design-thinking.png";
-import skillsIcon from "../../assets/icons/logical-thinking.png";
+import reflectionIcon from "../../assets/icons/logical-thinking.png";
 import type { AssignmentVersionData } from "../../types/AssignmentModificationTypes";
 import { DotLottieReact } from "@lottiefiles/dotlottie-react";
 
@@ -20,9 +11,8 @@ interface ModificationOptionsSectionProps {
 
   selectedLearningPathways: string[];
   setSelectedLearningPathways: (selection: string[]) => void;
-
-  ideasForChange: string;
-  setIdeasForChange: (ideas: string) => void;
+  // ideasForChange: string;
+  // setIdeasForChange: (ideas: string) => void;
 }
 
 const ModificationOptionsSection = ({
@@ -31,39 +21,11 @@ const ModificationOptionsSection = ({
 
   selectedLearningPathways,
   setSelectedLearningPathways,
-
-  ideasForChange,
-  setIdeasForChange,
+  // ideasForChange,
+  // setIdeasForChange,
 }: ModificationOptionsSectionProps) => {
   return (
     <VStack>
-      {/* Skills for Success */}
-      <Box borderWidth="1px" borderRadius="md" borderColor="#244d8a" w="100%">
-        <Flex
-          bg="#244d8a"
-          color="white"
-          px={4}
-          py={2}
-          align="center"
-          justify="space-between"
-          borderTopRadius="md"
-        >
-          <Image src={skillsIcon} height="50px" />
-          <Heading>Skills for Success</Heading>
-        </Flex>
-
-        <Box px={4} py={3} bg="white" w="100%">
-          {versionOptionsLoading ? (
-            // Show skeleton while loading
-            <SkeletonText mt="4" noOfLines={3} spaceY="4" />
-          ) : versionOptions?.skills_for_success ? (
-            <Text color="#244d8a">{versionOptions.skills_for_success}</Text>
-          ) : (
-            <Text color="gray.400">No skills data available.</Text>
-          )}
-        </Box>
-      </Box>
-
       {/* Learning Pathways */}
       <Box
         borderWidth="1px"
@@ -126,18 +88,96 @@ const ModificationOptionsSection = ({
         </Box>
       </Box>
 
-      {/* Ideas for Change */}
-      <Box w="100%">
-        <Textarea
-          borderWidth="1px"
-          borderRadius="md"
-          borderColor="#244d8a"
-          h="150px"
-          placeholder="Add your ideas for changes here."
-          value={ideasForChange}
-          onChange={(e) => setIdeasForChange(e.target.value)}
-        />
+      {/* Reflection Questions */}
+      <Box borderWidth="1px" borderRadius="md" borderColor="#244d8a" w="100%" overflow="hidden">
+        <Flex
+          bg="#244d8a"
+          color="white"
+          px={4}
+          py={2}
+          align="center"
+          justify="space-between"
+          borderTopRadius="md"
+        >
+          <Image src={reflectionIcon} height="50px" />
+          <Heading>Reflection Questions</Heading>
+        </Flex>
+        <Box px={4} py={3} bg="white" w="100%">
+          <Accordion.Root defaultValue={["q1"]}>
+            <Accordion.Item value="q1">
+              <Accordion.ItemTrigger
+                bg="#eaeef4"
+                p={2}
+                borderRadius="md"
+                _hover={{ bg: "#dde4f0" }}
+              >
+                <Text color="#244d8a" fontWeight="semibold" textAlign="left">
+                  Why did you choose these changes?
+                </Text>
+              </Accordion.ItemTrigger>
+              <Accordion.ItemContent>
+                <Box mt={2}>
+                  <Textarea
+                    borderColor="#244d8a"
+                    borderRadius="md"
+                    minH="80px"
+                    placeholder="I chose this because…"
+                  />
+                </Box>
+              </Accordion.ItemContent>
+            </Accordion.Item>
+
+            <Accordion.Item value="q2">
+              <Accordion.ItemTrigger
+                bg="#eaeef4"
+                p={2}
+                borderRadius="md"
+                mt={3}
+                _hover={{ bg: "#dde4f0" }}
+              >
+                <Text color="#244d8a" fontWeight="semibold" textAlign="left">
+                  How will this help you in the future?
+                </Text>
+              </Accordion.ItemTrigger>
+              <Accordion.ItemContent>
+                <Box mt={2}>
+                  <Textarea
+                    borderColor="#244d8a"
+                    borderRadius="md"
+                    minH="80px"
+                    placeholder="This will help me because…"
+                  />
+                </Box>
+              </Accordion.ItemContent>
+            </Accordion.Item>
+
+            <Accordion.Item value="q3">
+              <Accordion.ItemTrigger
+                bg="#eaeef4"
+                p={2}
+                borderRadius="md"
+                mt={3}
+                _hover={{ bg: "#dde4f0" }}
+              >
+                <Text color="#244d8a" fontWeight="semibold" textAlign="left">
+                  Do you want to change or add anything?
+                </Text>
+              </Accordion.ItemTrigger>
+              <Accordion.ItemContent>
+                <Box mt={2}>
+                  <Textarea
+                    borderColor="#244d8a"
+                    borderRadius="md"
+                    minH="80px"
+                    placeholder="I want to add or change…"
+                  />
+                </Box>
+              </Accordion.ItemContent>
+            </Accordion.Item>
+          </Accordion.Root>
+        </Box>
       </Box>
+
     </VStack>
   );
 };
