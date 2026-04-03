@@ -1,7 +1,8 @@
 import { Stack, Text, Accordion, List, Checkbox, Box, Image } from "@chakra-ui/react";
 import type { LearningPathwayOption } from "../../types/AssignmentModificationTypes";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { IoMdArrowRoundForward } from "react-icons/io";
+import InlineHtmlText from "../common/universal/InlineHtmlText";
 
 interface LearningPathwaysSectionProps {
   learningPathways: LearningPathwayOption[];
@@ -14,7 +15,12 @@ const LearningPathwaysSection = ({
   selectedLearningPaths,
   setSelectedLearningPaths,
 }: LearningPathwaysSectionProps) => {
-  const [value, setValue] = useState([learningPathways[0].internal_id]);
+  const [value, setValue] = useState<string[]>([]);
+
+  const pathwayIdsKey = learningPathways.map((p) => p.internal_id).join("\0");
+  useEffect(() => {
+    setValue([]);
+  }, [pathwayIdsKey]);
 
   const handleCheckboxChange = (id: string, checked: boolean) => {
     if (checked) {
@@ -28,15 +34,24 @@ const LearningPathwaysSection = ({
 
   return (
     <Stack gap="4">
-      <Accordion.Root value={value} onValueChange={(e) => setValue(e.value)}>
+      <Accordion.Root
+        variant="plain"
+        multiple
+        collapsible
+        value={value}
+        onValueChange={(e) => setValue(e.value)}
+      >
         {learningPathways.map((learningPathway, index) => (
           <Accordion.Item key={index} value={learningPathway.internal_id}>
             <Accordion.ItemTrigger
               bg="#eaeef4"
               p={2}
+              borderRadius="md"
+              mt={index > 0 ? 3 : 0}
               display="flex"
               alignItems="center"
               gap={2}
+              _hover={{ bg: "#dde4f0" }}
             >
               <Checkbox.Root
                 checked={selectedLearningPaths.includes(
@@ -72,14 +87,12 @@ const LearningPathwaysSection = ({
                 flexDirection="column"
                 alignItems="flex-start"
               >
-                <Text
-                  fontWeight="bold"
+                <InlineHtmlText
+                  html={learningPathway.description}
                   color="#244d8a"
                   textAlign="left"
                   w="100%"
-                >
-                  {learningPathway.description}
-                </Text>
+                />
                 {learningPathway.image_url && (
                   <Box
                     w="100%"
@@ -122,7 +135,7 @@ const LearningPathwaysSection = ({
                     <List.Indicator asChild color="#244d8a">
                       <IoMdArrowRoundForward />
                     </List.Indicator>
-                    <Box flex="1">{learningPathway.why_good_existing}</Box>
+                    <InlineHtmlText flex="1" html={learningPathway.why_good_existing} />
                   </List.Item>
                   <List.Item
                     color="black"
@@ -134,7 +147,7 @@ const LearningPathwaysSection = ({
                     <List.Indicator asChild color="#244d8a">
                       <IoMdArrowRoundForward />
                     </List.Indicator>
-                    <Box flex="1">{learningPathway.why_challenge}</Box>
+                    <InlineHtmlText flex="1" html={learningPathway.why_challenge} />
                   </List.Item>
                   <List.Item
                     color="black"
@@ -146,7 +159,7 @@ const LearningPathwaysSection = ({
                     <List.Indicator asChild color="#244d8a">
                       <IoMdArrowRoundForward />
                     </List.Indicator>
-                    <Box flex="1">{learningPathway.why_good_growth}</Box>
+                    <InlineHtmlText flex="1" html={learningPathway.why_good_growth} />
                   </List.Item>
                 </List.Root>
               </Accordion.ItemBody>

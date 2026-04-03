@@ -13,6 +13,7 @@ import {
   Badge,
 } from "@chakra-ui/react";
 import type { GeneratedOption } from "../../types/AssignmentVersionTypes";
+import InlineHtmlText from "../common/universal/InlineHtmlText";
 import { IoMdArrowRoundForward } from "react-icons/io";
 import { IoArrowForwardCircle } from "react-icons/io5";
 import { FaCheckCircle, FaCircle } from "react-icons/fa";
@@ -134,14 +135,12 @@ const VersionOptionsDisplaySection = ({
                         flexDirection="column"
                         alignItems="flex-start"
                       >
-                        <Text
-                          fontWeight="bold"
+                        <InlineHtmlText
+                          html={option.description}
                           color="#244d8a"
                           textAlign="left"
                           w="100%"
-                        >
-                          {option.description}
-                        </Text>
+                        />
                         <List.Root mt={2} gap={2} w="100%">
                           {option.why_good_existing && (
                             <List.Item
@@ -154,7 +153,7 @@ const VersionOptionsDisplaySection = ({
                               <List.Indicator asChild color="#244d8a">
                                 <IoMdArrowRoundForward />
                               </List.Indicator>
-                              <Box flex="1">{option.why_good_existing}</Box>
+                              <InlineHtmlText flex="1" html={option.why_good_existing} />
                             </List.Item>
                           )}
                           {option.why_challenge && (
@@ -168,7 +167,7 @@ const VersionOptionsDisplaySection = ({
                               <List.Indicator asChild color="#244d8a">
                                 <IoMdArrowRoundForward />
                               </List.Indicator>
-                              <Box flex="1">{option.why_challenge}</Box>
+                              <InlineHtmlText flex="1" html={option.why_challenge} />
                             </List.Item>
                           )}
                           {option.why_good_growth && (
@@ -182,7 +181,7 @@ const VersionOptionsDisplaySection = ({
                               <List.Indicator asChild color="#244d8a">
                                 <IoMdArrowRoundForward />
                               </List.Indicator>
-                              <Box flex="1">{option.why_good_growth}</Box>
+                              <InlineHtmlText flex="1" html={option.why_good_growth} />
                             </List.Item>
                           )}
                         </List.Root>

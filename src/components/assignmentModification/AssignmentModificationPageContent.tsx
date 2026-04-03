@@ -28,6 +28,35 @@ import LoadingGenerationLottie from "./LoadingGenerationLottie";
 import { sanitizeForSave } from "../../utils/sanitizeForSave";
 import type { StudentProfileType } from "../../types/StudentTypes";
 
+function buildAdditionalEditSuggestionsPayload(
+  ideasForChange: string,
+  reflectionWhyChosen: string,
+  reflectionFutureHelp: string,
+  reflectionAddOrChange: string
+): string {
+  const blocks: string[] = [];
+  const t = (s: string) => s.trim();
+  if (t(ideasForChange)) {
+    blocks.push(`Additional edit suggestions:\n${t(ideasForChange)}`);
+  }
+  if (t(reflectionWhyChosen)) {
+    blocks.push(
+      `Reflection — Why did you choose these changes?\n${t(reflectionWhyChosen)}`
+    );
+  }
+  if (t(reflectionFutureHelp)) {
+    blocks.push(
+      `Reflection — How will this help you now or in the future?\n${t(reflectionFutureHelp)}`
+    );
+  }
+  if (t(reflectionAddOrChange)) {
+    blocks.push(
+      `Reflection — Do you want to change or add anything?\n${t(reflectionAddOrChange)}`
+    );
+  }
+  return blocks.join("\n\n");
+}
+
 interface AssignmentModificationPageContentProps {
   assignment: AssignmentDetailType | null;
   assignmentLoading: boolean;
@@ -48,6 +77,9 @@ const AssignmentModificationPageContent = ({
   const [isNewVisible, setIsNewVisible] = useState<boolean>(true);
 
   const [ideasForChange, setIdeasForChange] = useState<string>("");
+  const [reflectionWhyChosen, setReflectionWhyChosen] = useState("");
+  const [reflectionFutureHelp, setReflectionFutureHelp] = useState("");
+  const [reflectionAddOrChange, setReflectionAddOrChange] = useState("");
   const [selectedLearningPathways, setSelectedLearningPathways] = useState<
     string[]
   >([]);
@@ -97,10 +129,17 @@ const AssignmentModificationPageContent = ({
     setUpdatedHtml(null);
 
     try {
+      const additionalEditSuggestions = buildAdditionalEditSuggestionsPayload(
+        ideasForChange,
+        reflectionWhyChosen,
+        reflectionFutureHelp,
+        reflectionAddOrChange
+      );
+
       const response = await postAssignmentVersion(
         versionOptions.version_document_id,
         selectedLearningPathways,
-        ideasForChange
+        additionalEditSuggestions
       );
 
       setUpdatedHtml(response.html_content);
@@ -215,15 +254,27 @@ const AssignmentModificationPageContent = ({
               versionOptionsLoading={versionsLoading}
               selectedLearningPathways={selectedLearningPathways}
               setSelectedLearningPathways={setSelectedLearningPathways}
-              // ideasForChange={ideasForChange}
-              // setIdeasForChange={setIdeasForChange}
+              reflectionWhyChosen={reflectionWhyChosen}
+              setReflectionWhyChosen={setReflectionWhyChosen}
+              reflectionFutureHelp={reflectionFutureHelp}
+              setReflectionFutureHelp={setReflectionFutureHelp}
+              reflectionAddOrChange={reflectionAddOrChange}
+              setReflectionAddOrChange={setReflectionAddOrChange}
             />
             <Button
               borderRadius="xl"
               bg="#bd4f23"
               color="white"
               w="100%"
-              disabled={(selectedLearningPathways.length < 1 && ideasForChange.trim() === "") || isGenerating}
+              mt={4}
+              disabled={
+                (selectedLearningPathways.length < 1 &&
+                  ideasForChange.trim() === "" &&
+                  reflectionWhyChosen.trim() === "" &&
+                  reflectionFutureHelp.trim() === "" &&
+                  reflectionAddOrChange.trim() === "") ||
+                isGenerating
+              }
               onClick={handleAssignmentGenerationClick}
             >
               Generate Assignment
