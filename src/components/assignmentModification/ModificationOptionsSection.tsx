@@ -4,6 +4,7 @@ import thinkingIcon from "../../assets/icons/design-thinking.png";
 import reflectionIcon from "../../assets/icons/logical-thinking.png";
 import type { AssignmentVersionData } from "../../types/AssignmentModificationTypes";
 import { DotLottieReact } from "@lottiefiles/dotlottie-react";
+import { useEffect, useState } from "react";
 
 interface ModificationOptionsSectionProps {
   versionOptions: AssignmentVersionData | null;
@@ -11,8 +12,12 @@ interface ModificationOptionsSectionProps {
 
   selectedLearningPathways: string[];
   setSelectedLearningPathways: (selection: string[]) => void;
-  // ideasForChange: string;
-  // setIdeasForChange: (ideas: string) => void;
+  reflectionWhyChosen: string;
+  setReflectionWhyChosen: (value: string) => void;
+  reflectionFutureHelp: string;
+  setReflectionFutureHelp: (value: string) => void;
+  reflectionAddOrChange: string;
+  setReflectionAddOrChange: (value: string) => void;
 }
 
 const ModificationOptionsSection = ({
@@ -21,9 +26,19 @@ const ModificationOptionsSection = ({
 
   selectedLearningPathways,
   setSelectedLearningPathways,
-  // ideasForChange,
-  // setIdeasForChange,
+  reflectionWhyChosen,
+  setReflectionWhyChosen,
+  reflectionFutureHelp,
+  setReflectionFutureHelp,
+  reflectionAddOrChange,
+  setReflectionAddOrChange,
 }: ModificationOptionsSectionProps) => {
+  const [reflectionAccordionValue, setReflectionAccordionValue] = useState<string[]>([]);
+
+  useEffect(() => {
+    setReflectionAccordionValue([]);
+  }, [versionOptions?.version_document_id]);
+
   return (
     <VStack>
       {/* Learning Pathways */}
@@ -76,6 +91,7 @@ const ModificationOptionsSection = ({
             </VStack>
           ) : Array.isArray(versionOptions?.learning_pathways) && versionOptions.learning_pathways.length > 0 ? (
             <LearningPathwaysSection
+              key={versionOptions!.version_document_id}
               learningPathways={versionOptions!.learning_pathways}
               selectedLearningPaths={selectedLearningPathways}
               setSelectedLearningPaths={setSelectedLearningPathways}
@@ -103,17 +119,28 @@ const ModificationOptionsSection = ({
           <Heading>Reflection Questions</Heading>
         </Flex>
         <Box px={4} py={3} bg="white" w="100%">
-          <Accordion.Root defaultValue={["q1"]}>
+          <Accordion.Root
+            variant="plain"
+            multiple
+            collapsible
+            value={reflectionAccordionValue}
+            onValueChange={(e) => setReflectionAccordionValue(e.value)}
+          >
             <Accordion.Item value="q1">
               <Accordion.ItemTrigger
                 bg="#eaeef4"
                 p={2}
                 borderRadius="md"
                 _hover={{ bg: "#dde4f0" }}
+                display="flex"
+                alignItems="center"
+                gap={2}
+                w="100%"
               >
-                <Text color="#244d8a" fontWeight="semibold" textAlign="left">
+                <Text flex="1" color="#244d8a" fontWeight="semibold" textAlign="left">
                   Why did you choose these changes?
                 </Text>
+                <Accordion.ItemIndicator />
               </Accordion.ItemTrigger>
               <Accordion.ItemContent>
                 <Box mt={2}>
@@ -122,6 +149,8 @@ const ModificationOptionsSection = ({
                     borderRadius="md"
                     minH="80px"
                     placeholder="I chose this because…"
+                    value={reflectionWhyChosen}
+                    onChange={(e) => setReflectionWhyChosen(e.target.value)}
                   />
                 </Box>
               </Accordion.ItemContent>
@@ -134,10 +163,15 @@ const ModificationOptionsSection = ({
                 borderRadius="md"
                 mt={3}
                 _hover={{ bg: "#dde4f0" }}
+                display="flex"
+                alignItems="center"
+                gap={2}
+                w="100%"
               >
-                <Text color="#244d8a" fontWeight="semibold" textAlign="left">
-                  How will this help you in the future?
+                <Text flex="1" color="#244d8a" fontWeight="semibold" textAlign="left">
+                  How will this help you now or in the future?
                 </Text>
+                <Accordion.ItemIndicator />
               </Accordion.ItemTrigger>
               <Accordion.ItemContent>
                 <Box mt={2}>
@@ -146,6 +180,8 @@ const ModificationOptionsSection = ({
                     borderRadius="md"
                     minH="80px"
                     placeholder="This will help me because…"
+                    value={reflectionFutureHelp}
+                    onChange={(e) => setReflectionFutureHelp(e.target.value)}
                   />
                 </Box>
               </Accordion.ItemContent>
@@ -158,10 +194,15 @@ const ModificationOptionsSection = ({
                 borderRadius="md"
                 mt={3}
                 _hover={{ bg: "#dde4f0" }}
+                display="flex"
+                alignItems="center"
+                gap={2}
+                w="100%"
               >
-                <Text color="#244d8a" fontWeight="semibold" textAlign="left">
+                <Text flex="1" color="#244d8a" fontWeight="semibold" textAlign="left">
                   Do you want to change or add anything?
                 </Text>
+                <Accordion.ItemIndicator />
               </Accordion.ItemTrigger>
               <Accordion.ItemContent>
                 <Box mt={2}>
@@ -170,6 +211,8 @@ const ModificationOptionsSection = ({
                     borderRadius="md"
                     minH="80px"
                     placeholder="I want to add or change…"
+                    value={reflectionAddOrChange}
+                    onChange={(e) => setReflectionAddOrChange(e.target.value)}
                   />
                 </Box>
               </Accordion.ItemContent>
