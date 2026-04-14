@@ -26,8 +26,12 @@ const useAssignment = (assignmentId: number | null, refetchTrigger?:number) => {
       }
     };
 
-    // Only fetch if assignmentId is a valid number
-    if (assignmentId !== null && assignmentId !== undefined) {
+    // Only fetch if assignmentId is a finite number (NaN must be skipped)
+    if (
+      assignmentId !== null &&
+      assignmentId !== undefined &&
+      Number.isFinite(assignmentId)
+    ) {
       fetchAssignments();
     } else {
       setLoading(false);

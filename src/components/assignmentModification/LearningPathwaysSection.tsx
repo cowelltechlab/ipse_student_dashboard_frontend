@@ -1,8 +1,9 @@
-import { Stack, Text, Accordion, List, Checkbox, Box, Image } from "@chakra-ui/react";
+import { Stack, Accordion, List, Checkbox, Box, Image } from "@chakra-ui/react";
 import type { LearningPathwayOption } from "../../types/AssignmentModificationTypes";
 import { useEffect, useState } from "react";
 import { IoMdArrowRoundForward } from "react-icons/io";
 import InlineHtmlText from "../common/universal/InlineHtmlText";
+import { stripHtmlTags } from "../../utils/stripHtmlTags";
 
 interface LearningPathwaysSectionProps {
   learningPathways: LearningPathwayOption[];
@@ -74,9 +75,12 @@ const LearningPathwaysSection = ({
                   }}
                 />
               </Checkbox.Root>
-              <Text flex="1" color="#244d8a" fontWeight="bold">
-                {learningPathway.name}
-              </Text>
+              <InlineHtmlText
+                flex="1"
+                color="#244d8a"
+                fontWeight="bold"
+                html={learningPathway.name}
+              />
               <Accordion.ItemIndicator />
             </Accordion.ItemTrigger>
 
@@ -114,7 +118,7 @@ const LearningPathwaysSection = ({
                     >
                       <Image
                         src={learningPathway.image_url}
-                        alt={learningPathway.name}
+                        alt={stripHtmlTags(learningPathway.name)}
                         objectFit="contain"
                         w="100%"
                         h="auto"

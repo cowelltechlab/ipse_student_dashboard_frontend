@@ -62,6 +62,8 @@ const AssignmentDetails = () => {
       <PageHeader />
       <BreadcrumbNav items={breadcrumbItems} />
       <AssignmentDetailsPageContent
+        routeStudentId={student_id}
+        routeAssignmentId={assignment_id}
         student={student}
         assignment={assignment}
         profileLoading={StudentLoading}

@@ -35,6 +35,8 @@ import { buildModifiedHtml } from "../../../utils/assignmentHtml";
 import useDownloadAssignmentVersion from "../../../hooks/assignmentVersions/useDownloadAssignmentVersion";
 
 interface AssignmentDetailsBodyProps {
+  routeStudentId: string;
+  routeAssignmentId: string;
   assignment: AssignmentDetailType | null;
   assignmentLoading: boolean;
   triggerRefetch: () => void;
@@ -42,6 +44,8 @@ interface AssignmentDetailsBodyProps {
 }
 
 const AssignmentDetailsBody = ({
+  routeStudentId,
+  routeAssignmentId,
   assignment,
   assignmentLoading,
   triggerRefetch,
@@ -68,22 +72,19 @@ const AssignmentDetailsBody = ({
   };
 
   const handleRatingNavigateClick = () => {
-    const student_id = assignment?.student.id;
-    const assignment_id = assignment?.assignment_id;
+    const student_id = assignment?.student.id ?? routeStudentId;
+    const assignment_id = assignment?.assignment_id ?? Number(routeAssignmentId);
 
     navigate(
       `/student/${student_id}/assignment/${assignment_id}/rating-and-feedback/${assignmentVersion?.id}`
     );
   };
 
-const handleChangeClick = () => {
-  const student_id = assignment?.student.id;
-    const assignment_id = assignment?.assignment_id;
-
-  navigate(
-    `/student/${student_id}/assignment/${assignment_id}/modification`
-  )
-}
+  const handleChangeClick = () => {
+    navigate(
+      `/student/${routeStudentId}/assignment/${routeAssignmentId}/modification`
+    );
+  };
 
   const finalizeVersion = async (versionId: string) => {
     if (!versionId) {
@@ -166,7 +167,11 @@ const handleChangeClick = () => {
 
   return (
     <Box m={4}>
-      <AssignmentDetailsHeaderCard assignment={assignment} />
+      <AssignmentDetailsHeaderCard
+        assignment={assignment}
+        routeStudentId={routeStudentId}
+        routeAssignmentId={routeAssignmentId}
+      />
 
       <AssignmentPreviews
         assignment={assignment}
