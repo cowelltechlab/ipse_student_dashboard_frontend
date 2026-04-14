@@ -60,6 +60,8 @@ function buildAdditionalEditSuggestionsPayload(
 interface AssignmentModificationPageContentProps {
   assignment: AssignmentDetailType | null;
   assignmentLoading: boolean;
+  /** Same id as URL param; used so learning pathways can load before assignment detail finishes. */
+  routeAssignmentId?: number;
   studentId?: string;
   fromVersionDocId?: string;
   student?: StudentProfileType | null;
@@ -68,6 +70,7 @@ interface AssignmentModificationPageContentProps {
 const AssignmentModificationPageContent = ({
   assignment,
   assignmentLoading,
+  routeAssignmentId,
   studentId,
   fromVersionDocId,
   student,
@@ -93,8 +96,11 @@ const AssignmentModificationPageContent = ({
   const [isCompletionModalOpen, setIsCompletionModalOpen] =
     useState<boolean>(false);
 
+  const pathwaysAssignmentId =
+    assignment?.assignment_id ?? routeAssignmentId;
+
   const { versionOptions, loading: versionsLoading } =
-    useAssignmentVersionOptions(assignment?.assignment_id, fromVersionDocId);
+    useAssignmentVersionOptions(pathwaysAssignmentId, fromVersionDocId);
 
   const { handlePutAssignmentVersion, loading: loadingAssignmentUpdate } =
     usePutAssignmentVersion();

@@ -10,17 +10,22 @@ export type AssignmentHeaderDisplay = {
 
 interface AssignmentDetailsHeaderCardProps {
   assignment: AssignmentDetailType | null;
+  routeStudentId: string;
+  routeAssignmentId: string;
 }
 
 const AssignmentDetailsHeaderCard = ({
   assignment,
+  routeStudentId,
+  routeAssignmentId,
 }: AssignmentDetailsHeaderCardProps) => {
+  const navigate = useNavigate();
 
-    const navigate = useNavigate()
-
-    const handleModificationClick = () => {
-        navigate(`/student/${assignment?.student.id}/assignment/${assignment?.assignment_id}/modification`)
-    }
+  const handleModificationClick = () => {
+    navigate(
+      `/student/${routeStudentId}/assignment/${routeAssignmentId}/modification`
+    );
+  };
 
   const sections: AssignmentHeaderDisplay[] = [
     {

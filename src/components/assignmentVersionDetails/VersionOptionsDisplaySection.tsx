@@ -59,7 +59,7 @@ const VersionOptionsDisplaySection = ({
           </Flex>
 
           <Box px={4} py={3} bg="white" w="100%">
-            <Text color="#244d8a">{skillsForSuccess}</Text>
+            <InlineHtmlText color="#244d8a" html={skillsForSuccess} w="100%" />
           </Box>
         </Box>
       )}
@@ -117,9 +117,12 @@ const VersionOptionsDisplaySection = ({
                             {option.emoji}
                           </Text>
                         )}
-                        <Text flex="1" color="#244d8a" fontWeight="bold">
-                          {option.name}
-                        </Text>
+                        <InlineHtmlText
+                          flex="1"
+                          color="#244d8a"
+                          fontWeight="bold"
+                          html={option.name}
+                        />
                         {isSelected && (
                           <Badge bg="#244d8a" color={"white"} p={1} mr={2}>
                             Selected

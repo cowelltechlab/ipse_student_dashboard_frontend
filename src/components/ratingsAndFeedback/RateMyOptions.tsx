@@ -12,7 +12,8 @@ import {
 import { Checkbox } from "@chakra-ui/react";
 import type { AssignmentRatingDataType } from "../../types/AssignmentRatingTypes";
 
-import RateOptionsIcon from "../../assets/icons/rating.png"
+import RateOptionsIcon from "../../assets/icons/rating.png";
+import InlineHtmlText from "../common/universal/InlineHtmlText";
 
 interface RateMyOptionsProps {
   assignmentRatingDetails?: AssignmentRatingDataType | null;
@@ -91,7 +92,7 @@ const RateMyOptions = ({
             >
               <Checkbox.HiddenInput />
               <Checkbox.Control bg={"white"} borderColor={"black"} />
-              <Text ml={2}>{option}</Text>
+              <InlineHtmlText ml={2} flex="1" html={option} />
             </Checkbox.Root>
           </Box>
         ))}

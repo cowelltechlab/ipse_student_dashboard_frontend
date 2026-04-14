@@ -17,6 +17,11 @@ const AssignmentModifications = () => {
   const fromVersionDocId = searchParams.get("from_version") || undefined;
 
   const { student, loading: StudentLoading } = useStudent(student_id);
+  const parsedRouteAssignmentId = assignment_id ? Number(assignment_id) : NaN;
+  const routeAssignmentId = Number.isFinite(parsedRouteAssignmentId)
+    ? parsedRouteAssignmentId
+    : undefined;
+
   const { assignment, loading: AssignmentLoading } = useAssignment(
     Number(assignment_id)
   );
@@ -57,6 +62,7 @@ const AssignmentModifications = () => {
       <AssignmentModificationPageContent
         assignment={assignment}
         assignmentLoading={AssignmentLoading}
+        routeAssignmentId={routeAssignmentId}
         studentId={student_id}
         fromVersionDocId={fromVersionDocId}
         student={student}

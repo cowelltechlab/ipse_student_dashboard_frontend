@@ -11,7 +11,7 @@ const useAssignmentVersionOptions = (assignmentId?: number, fromVersionDocId?: s
 
   useEffect(() => {
     const handleFetchAssignmentVersionOptions = async () => {
-      if (!assignmentId) {
+      if (assignmentId === undefined || !Number.isFinite(assignmentId)) {
         return;
       }
       try {

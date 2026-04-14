@@ -10,7 +10,7 @@ const studentCache = new Map<string, CacheEntry>();
 const inflight = new Map<string, Promise<StudentProfileType>>();
 
 function getCached(studentId?: string | null): StudentProfileType | null {
-  if (!studentId) return null;
+  if (!studentId || studentId === "undefined" || studentId === "NaN") return null;
   const hit = studentCache.get(studentId);
   if (!hit) return null;
   if (Date.now() - hit.ts > CACHE_TTL_MS) {
@@ -28,7 +28,8 @@ const useStudent = (studentId: string | undefined, refetchTrigger?: number) => {
   const [error, setError] = useState<ErrorType | null>(null);
 
   useEffect(() => {
-    if (!studentId) {
+    // Bad navigations can produce the literal "undefined" in the URL path
+    if (!studentId || studentId === "undefined" || studentId === "NaN") {
       setStudent(null);
       setLoading(false);
       setError(null);

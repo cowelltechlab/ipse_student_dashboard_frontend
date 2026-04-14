@@ -16,6 +16,9 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 interface AssignmentDetailsPageContentProps {
+  /** From URL; use for navigation before assignment payload has loaded */
+  routeStudentId: string;
+  routeAssignmentId: string;
   student: StudentProfileType | null;
   assignment: AssignmentDetailType | null;
   profileLoading: boolean;
@@ -24,6 +27,8 @@ interface AssignmentDetailsPageContentProps {
 }
 
 const AssignmentDetailsPageContent = ({
+  routeStudentId,
+  routeAssignmentId,
   student,
   assignment,
   profileLoading,
@@ -75,6 +80,8 @@ const AssignmentDetailsPageContent = ({
       />
       <Separator my={6} />
       <AssignmentDetailsBody
+        routeStudentId={routeStudentId}
+        routeAssignmentId={routeAssignmentId}
         assignment={assignment}
         assignmentLoading={assignmentLoading}
         triggerRefetch={triggerRefetch}
