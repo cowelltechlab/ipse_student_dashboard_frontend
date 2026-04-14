@@ -1,9 +1,8 @@
-import { Stack, Accordion, List, Checkbox, Box, Image } from "@chakra-ui/react";
+import { Stack, Accordion, List, Checkbox, Text } from "@chakra-ui/react";
 import type { LearningPathwayOption } from "../../types/AssignmentModificationTypes";
 import { useEffect, useState } from "react";
 import { IoMdArrowRoundForward } from "react-icons/io";
 import InlineHtmlText from "../common/universal/InlineHtmlText";
-import { stripHtmlTags } from "../../utils/stripHtmlTags";
 
 interface LearningPathwaysSectionProps {
   learningPathways: LearningPathwayOption[];
@@ -75,6 +74,11 @@ const LearningPathwaysSection = ({
                   }}
                 />
               </Checkbox.Root>
+              {learningPathway.emoji && (
+                <Text fontSize="xl" aria-hidden>
+                  {learningPathway.emoji}
+                </Text>
+              )}
               <InlineHtmlText
                 flex="1"
                 color="#244d8a"
@@ -97,37 +101,6 @@ const LearningPathwaysSection = ({
                   textAlign="left"
                   w="100%"
                 />
-                {learningPathway.image_url && (
-                  <Box
-                    w="100%"
-                    mt={4}
-                    mb={3}
-                    display="flex"
-                    justifyContent="center"
-                  >
-                    <Box
-                      maxW="260px"
-                      w="100%"
-                      borderRadius="md"
-                      overflow="hidden"
-                      boxShadow="md"
-                      borderWidth="1px"
-                      borderColor="#244d8a"
-                      bg="#f5f7fb"
-                      p={2}
-                    >
-                      <Image
-                        src={learningPathway.image_url}
-                        alt={stripHtmlTags(learningPathway.name)}
-                        objectFit="contain"
-                        w="100%"
-                        h="auto"
-                        display="block"
-                        mx="auto"
-                      />
-                    </Box>
-                  </Box>
-                )}
                 <List.Root mt={2} gap={2} w="100%">
                   <List.Item
                     color="black"

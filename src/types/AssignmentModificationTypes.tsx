@@ -8,8 +8,6 @@ export interface LearningPathwayOption {
   selected?: boolean;
   /** Emoji representing this pathway (from backend, based on name/description). */
   emoji?: string | null;
-  /** Optional image URL chosen by the backend for this pathway. */
-  image_url?: string | null;
 }
 
 export interface AssignmentVersionData {
