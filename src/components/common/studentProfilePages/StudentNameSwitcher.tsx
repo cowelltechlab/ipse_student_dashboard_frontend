@@ -30,8 +30,8 @@ const StudentNameSwitcher = ({
   const currentId = student ? String(student.student_id) : "";
   const isLoading = profileLoading || studentsLoading;
 
-  const longestName = useMemo(() => {
-    if (!students.length) return "";
+  const longestName = useMemo<(typeof students)[number] | null>(() => {
+    if (!students.length) return null;
     return students.reduce((longest, s) => {
       const name = `${s.first_name ?? ""} ${s.last_name ?? ""}`.trim();
       const longestStr = `${longest.first_name ?? ""} ${longest.last_name ?? ""}`.trim();
@@ -39,10 +39,10 @@ const StudentNameSwitcher = ({
     }, students[0]);
   }, [students]);
 
-  const longestNameStr = useMemo(
-    () => `${longestName?.first_name ?? ""} ${longestName?.last_name ?? ""}`.trim() || "Student",
-    [longestName]
-  );
+  const longestNameStr = useMemo(() => {
+    if (!longestName) return "Student";
+    return `${longestName.first_name ?? ""} ${longestName.last_name ?? ""}`.trim() || "Student";
+  }, [longestName]);
 
   const fontSize = variant === "standalone" ? 16 : 22;
   const paddingRight = 44; // room for larger arrow
@@ -57,15 +57,7 @@ const StudentNameSwitcher = ({
   if (isLoading && variant === "header" && student) {
     const name = `${student.first_name ?? ""} ${student.last_name ?? ""}`.trim();
     return (
-      <Box
-        as="span"
-        sx={{
-          fontSize: 22,
-          fontWeight: 700,
-          color: "white",
-          display: "inline-block",
-        }}
-      >
+      <Box as="span" fontSize={22} fontWeight={700} color="white" display="inline-block">
         {name || "Student"}
       </Box>
     );
