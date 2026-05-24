@@ -41,27 +41,34 @@ const AssignmentDetailsHeaderCard = ({
   ];
 
   return (
-    <Box bg={"#244d8a"} w={"100%"} p={4} borderRadius={"md"}>
-      <HStack color={"white"}>
-        <For each={sections}>
-          {(item, index) => (
-            <VStack key={index} w={"100%"}>
-              <Text fontWeight={"bold"}>{item.heading}</Text>
-              <Text>{item.subHeading}</Text>
-            </VStack>
-          )}
-        </For>
-        <Button 
-        borderRadius={"xl"} 
+    <HStack w="100%" align="stretch" gap={4}>
+      <Box bg="#244d8a" w="100%" p={4} borderRadius="md">
+        <HStack color="white">
+          <For each={sections}>
+            {(item, index) => (
+              <VStack key={index} w="100%">
+                <Text fontWeight="bold">{item.heading}</Text>
+                <Text>{item.subHeading}</Text>
+              </VStack>
+            )}
+          </For>
+        </HStack>
+      </Box>
+      <Button
+        borderRadius="xl"
         onClick={handleModificationClick}
         fontWeight="bold"
-        color="white" 
+        color="white"
         bg="#BD4F23"
-        boxShadow="0 4px 8px rgba(0,0,0,0.4)">
-          Change <BsStars />
-        </Button>
-      </HStack>
-    </Box>
+        boxShadow="0 4px 8px rgba(0,0,0,0.4)"
+        px={6}
+        py={6}
+        _hover={{ bg: "#a6441d" }}
+        alignSelf="center"
+      >
+        Change Document <BsStars />
+      </Button>
+    </HStack>
   );
 };
 
